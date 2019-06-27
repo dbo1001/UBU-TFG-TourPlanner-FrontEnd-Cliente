@@ -7,6 +7,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 /**
  * Clase que implementa ela notificaci�n de la descarga de mapas.
  * 
@@ -26,11 +29,11 @@ public class MapNotification {
 	/**
 	 * Notificacion que muestra el progreso de la descarga del mapa.
 	 * */
-	private Notification mapNotification;
+	private NotificationCompat.Builder mapNotification;
 	/**
 	 * Notificacion que indica el final de la descarga del mapa.
 	 * */
-	private Notification finishNotification;
+	private NotificationCompat.Builder finishNotification;
 	/**
 	 * ID de la notificacion.
 	 * */
@@ -71,13 +74,19 @@ public class MapNotification {
 		notificationManager = (NotificationManager) notifContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		// Creamos la notificaci�n.
+
 		int icon = android.R.drawable.stat_sys_download;
 		String strInfoDownloadFormat = notifContext.getResources().getString(R.string.notification_download);
 		CharSequence notifText = String.format(strInfoDownloadFormat, mapName);
 		long time = System.currentTimeMillis();
-		mapNotification = new Notification(icon, notifText, time);
+		mapNotification = new NotificationCompat.Builder(notifContext)
+				.setSmallIcon(icon)
+				.setContentTitle(notifText)
+				.setWhen(time);
+		//mapNotification = new NotificationCompat(icon, notifText, time);
 		
-		mapNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+		mapNotification.setAutoCancel(true);
+		//notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
 		// Configuramos el Intent
 		title = String.format(strInfoDownloadFormat, mapName);
@@ -86,12 +95,14 @@ public class MapNotification {
 		Intent notifIntent = new Intent();
 		contentIntent = PendingIntent.getActivity(notifContext, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
-		mapNotification.setLatestEventInfo(notifContext, title, description, contentIntent);
+		mapNotification.setContentIntent(contentIntent);
+	//(notifContext, title, description, contentIntent);
 		
-		mapNotification.flags = Notification.FLAG_ONGOING_EVENT;
+		mapNotification.setOngoing(true);
+		//flags = Notification.FLAG_ONGOING_EVENT;
 		
 		// Mostramos la notificacion
-        notificationManager.notify(NOTIFICATION_ID, mapNotification);
+        notificationManager.notify(NOTIFICATION_ID, mapNotification.build());
         
 	}
 
@@ -106,8 +117,9 @@ public class MapNotification {
 		// Configuramos el nuevo mensaje a mostrar.
 		 CharSequence description = percentage + "%";
 		 
-		 mapNotification.setLatestEventInfo(notifContext, title, description, contentIntent);
-		 notificationManager.notify(NOTIFICATION_ID, mapNotification);
+		 mapNotification.setContentIntent(contentIntent);
+		//setLatestEventInfo(notifContext, title, description, contentIntent);
+		 notificationManager.notify(NOTIFICATION_ID, mapNotification.build());
 		
 	}
 	
@@ -122,22 +134,29 @@ public class MapNotification {
 		int icon = android.R.drawable.stat_sys_download_done;
 		CharSequence notifText = notifContext.getString(R.string.notification_finish);
 		long time = System.currentTimeMillis();
-		finishNotification = new Notification(icon, notifText, time);
+		//finishNotification = new Notification(icon, notifText, time);
+		finishNotification = new NotificationCompat.Builder(notifContext)
+				.setSmallIcon(icon)
+				.setContentTitle(notifText)
+				.setWhen(time);
 		
 		// AutoCancel: cuando se pulsa la notificaci�n �sta desaparece.
-		finishNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+		finishNotification.setAutoCancel(true);
+		//flags |= Notification.FLAG_AUTO_CANCEL;
 
-		finishNotification.flags |= Notification.FLAG_ONGOING_EVENT;
+		finishNotification.setOngoing(true);
+		//flags |= Notification.FLAG_ONGOING_EVENT;
 		
 		Intent notifIntent = new Intent();
 		contentIntent = PendingIntent.getActivity(notifContext, 0, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		
 		title = notifContext.getString(R.string.notification_finish);
-		finishNotification.setLatestEventInfo(notifContext, title, "", contentIntent);
+		finishNotification.setContentIntent(contentIntent);
+		//setLatestEventInfo(notifContext, title, "", contentIntent);
 		
 		
 		// Mostramos la notificacion
-        notificationManager.notify(NOTIFICATION_ID, finishNotification);              
+        notificationManager.notify(NOTIFICATION_ID, finishNotification.build());
 	}
 	
 	/**

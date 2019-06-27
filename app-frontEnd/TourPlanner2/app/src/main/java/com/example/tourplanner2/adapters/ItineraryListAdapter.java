@@ -17,6 +17,8 @@ import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.RowItineraryList;

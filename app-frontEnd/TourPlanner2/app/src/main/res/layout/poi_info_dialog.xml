@@ -92,6 +92,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/poi_info"
+                android:backgroundTint="@color/Orange"
                 android:text="@string/accept" />
 
             <LinearLayout

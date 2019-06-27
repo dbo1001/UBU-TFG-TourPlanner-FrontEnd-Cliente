@@ -27,7 +27,7 @@ import com.example.tourplanner2.dialog.DialogTextView;
 import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.MyRoutesItem;
 import com.example.tourplanner2.util.PropertiesParser;
-import com.example.tourplanner2.util.SlidingMenuController;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,21 +40,22 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.MenuItem;
+import android.widget.ToggleButton;
 
-import com.actionbarsherlock.view.MenuItem;
 
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 
 /**
  * Clase que se corresponde con la pantalla de mis rutas.
@@ -63,7 +64,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
  * @author aca0073@alu.ubu.es
  */
 @SuppressLint("SimpleDateFormat")
-public class MyRoutesActivity extends SlidingActivity 
+public class MyRoutesActivity extends androidx.fragment.app.Fragment
 implements IWebServiceTaskResult{
 	/**
 	 * Nombre de la ruta.
@@ -103,12 +104,168 @@ implements IWebServiceTaskResult{
 	 * */
 	private SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm");
 
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.my_tracks, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		setServiceDirections();
+
+		final SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+		registered = pref.getBoolean("registered", false);
+
+		// Opci�n "Guardar ruta".
+		final EditText etRouteName = (EditText) view.findViewById(R.id.editTextRouteName);
+		TextView tvSaveMode = (TextView) view.findViewById(R.id.textViewSaveOptions);
+
+		final String[] saveMode = new String[] {
+				getResources().getString(R.string.mobile),
+				getResources().getString(R.string.server),
+				getResources().getString(R.string.all)};
+		final DialogTextView dialogSaveMode = new DialogTextView(getActivity(),
+				saveMode, tvSaveMode);
+		dialogSaveMode.setTitle(getResources().getString(
+				R.string.selectMode));
+
+		if (pref.getString("save_mode", "mobile").equals("mobile")) {
+			tvSaveMode.setText(getResources().getString(R.string.mobile));
+			loadListRoutesMobile(rows);
+		} else if (pref.getString("save_mode", "mobile").equals("server")) {
+			tvSaveMode.setText(getResources().getString(R.string.server));
+			loadListRoutesServer(pref.getString("email", ""));
+		} else {
+			tvSaveMode.setText(getResources().getString(R.string.all));
+			loadListRoutesMobile(rows);
+		}
+
+		tvSaveMode.setOnClickListener(v -> dialogSaveMode.show());
+
+		((ListView) dialogSaveMode.findViewById(R.id.list_view))
+				.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
+					SharedPreferences pref1 = PreferenceManager
+							.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+					Editor edit = pref1.edit();
+					if (saveMode[arg2].equals(getResources().getString(
+							R.string.mobile))) {
+						edit.putString("save_mode", "mobile");
+						loadListRoutesMobile(rows);
+					} else if (saveMode[arg2].equals(getResources().getString(
+							R.string.server)))  {
+						edit.putString("save_mode", "server");
+						loadListRoutesServer(pref1.getString("email", ""));
+					} else {
+						edit.putString("save_mode", "all");
+						if (ok){
+							loadListRoutesMobile(rows);
+						}
+					}
+					adaptador.notifyDataSetChanged();
+					edit.apply();
+					((TextView) view.findViewById(R.id.textViewSaveOptions))
+							.setText(saveMode[arg2]);
+					dialogSaveMode.dismiss();
+				});
+
+		Button saveButton = (Button) view.findViewById(R.id.btnSave);
+		saveButton.setOnClickListener(v -> {
+			// Obtenemos las coordenadas del Intent pasado por la clase MapMain.
+			Bundle extras = getActivity().getIntent().getExtras();
+			String email = pref.getString("email", "");
+			String coordinates = extras.getString("coordinates");
+			routeName = etRouteName.getText().toString();
+
+			if (coordinates != null){
+				if (!routeName.equals("")){
+					// Comprobamos donde se desea guardar la ruta.
+					// Guardar en el m�vil.
+					if (pref.getString("save_mode", "mobile").equals("mobile")){
+						saveRouteMobile();
+						// Guardar en el servidor.
+					} else if (pref.getString("save_mode", "mobile").equals("server")){
+						if (registered){
+							saveRouteServer(extras, coordinates, email, routeName);
+						} else {
+							Toast.makeText(view.getContext().getApplicationContext(), R.string.register_route_save,
+									Toast.LENGTH_SHORT).show();
+						}
+						// Guardar en m�vil y servidor.
+					} else {
+						if (registered){
+							saveRouteMobile();
+							saveRouteServer(extras, coordinates, email, routeName);
+							ok = true;
+						} else {
+							Toast.makeText(view.getContext().getApplicationContext(), R.string.register_route_save,
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+
+
+				} else {
+					Toast.makeText(view.getContext().getApplicationContext(), R.string.route_empty_name,
+							Toast.LENGTH_SHORT).show();
+				}
+
+			} else {
+				Toast.makeText(view.getContext().getApplicationContext(), R.string.route_notfound,
+						Toast.LENGTH_SHORT).show();
+			}
+
+		});
+
+		// Opci�n "Cargar Ruta".
+		ListView allRoutes = (ListView) view.findViewById(R.id.listViewAllRoutes);
+		adaptador = new MyRoutesAdapter(getActivity(), rows);
+		allRoutes.setAdapter(adaptador);
+
+		// Listener para borrar ruta guardada.
+		allRoutes.setOnItemLongClickListener((arg0, arg1, arg2, arg3) -> {
+			buildAlertMessageDeleteRoute(arg2);
+			return false;
+		});
+
+		// Listener para cargar ruta guardada.
+		allRoutes.setOnItemClickListener((arg0, arg1, arg2, arg3) -> showRoute(arg2));
+
+		// Opci�n "Mapas descargados"
+		ListView allMaps = (ListView) view.findViewById(R.id.listViewMaps);
+		adapterMaps = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1,
+				maps);
+		allMaps.setAdapter(adapterMaps);
+		loadListMaps();
+
+		// Habilitamos el listener de visualizar mapas descargados cuando no haya conexi�n.
+		if (!isNetworkAvailable()){
+			allMaps.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
+				SharedPreferences pref12 = PreferenceManager
+						.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+				Editor edit = pref12.edit();
+				edit.putString("recently_map", maps.get(arg2));
+				edit.apply();
+				showMap(arg2);
+			});
+
+		}
+
+		allMaps.setOnItemLongClickListener((arg0, arg1, arg2, arg3) -> {
+			buildAlertMessageDeleteMap(arg2);
+			return false;
+		});
+	}
+
 	/**
 	 * Método que se invoca cuando la actividad es creada.
 	 * 
 	 * @param savedInstanceState
 	 *            Bundle que contiene el estado de ejecuciones pasadas.
 	 */
+	/*
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -297,6 +454,7 @@ implements IWebServiceTaskResult{
 		});
 
 	}
+	*/
 
 	/**
 	 * Método que establece las direcciones del servicio usado.
@@ -304,7 +462,7 @@ implements IWebServiceTaskResult{
 	private void setServiceDirections(){
 		try {
 
-			String address = PropertiesParser.getConnectionSettings(this);
+			String address = PropertiesParser.getConnectionSettings(getActivity());
 			SAVE_ROUTE_SERVICE = "https://" + address + "/osm_server/get/route/save";
 			DELETE_ROUTE_SERVICE = "https://" + address + "/osm_server/get/route/delete";
 			ALL_ROUTES_SERVICE = "https://" + address + "/osm_server/get/route/all";
@@ -380,11 +538,11 @@ implements IWebServiceTaskResult{
 
 				wst.execute(new String[] { ALL_ROUTES_SERVICE });
 			} else {
-				Toast.makeText(getApplicationContext(), R.string.register_route_show,
+				Toast.makeText(getActivity().getApplicationContext(), R.string.register_route_show,
 						Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.networkNotEnabledLoadRoute,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledLoadRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -414,7 +572,7 @@ implements IWebServiceTaskResult{
 	 * M�todo que guarda una ruta en el m�vil.
 	 * */
 	private void saveRouteMobile(){
-		getCity(getIntent().getExtras());
+		getCity(getActivity().getIntent().getExtras());
 	}
 
 	/**
@@ -448,7 +606,7 @@ implements IWebServiceTaskResult{
 			wst.execute(new String[] { SAVE_ROUTE_SERVICE });
 
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.networkNotEnabledSaveRoute,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledSaveRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -462,8 +620,8 @@ implements IWebServiceTaskResult{
 	 * */
 	private void buildAlertMessageDeleteRoute(final int index){
 		final SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				.getDefaultSharedPreferences(getActivity().getApplicationContext());
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getResources().getString(R.string.route_delete_dialog))
 		.setCancelable(false)
 		.setPositiveButton((getResources().getString(R.string.yes)),
@@ -483,12 +641,7 @@ implements IWebServiceTaskResult{
 			}
 		})
 		.setNegativeButton((getResources().getString(R.string.no)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				dialog.cancel();
-			}
-		});
+				(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -504,7 +657,7 @@ implements IWebServiceTaskResult{
 				+ "/tourplanner/routes/" + rows.get(index).getName() + ".json");
 
 		if(route.delete()){
-			Toast.makeText(getApplicationContext(), R.string.route_delete,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.route_delete,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -536,7 +689,7 @@ implements IWebServiceTaskResult{
 			wst.execute(new String[] { DELETE_ROUTE_SERVICE });
 
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.networkNotEnabledDeleteRoute,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledDeleteRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -553,7 +706,7 @@ implements IWebServiceTaskResult{
 				+ "/tourplanner/maps/" + maps.get(index) + ".map");
 
 		if(map.delete()){
-			Toast.makeText(getApplicationContext(), R.string.map_delete,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.map_delete,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -570,7 +723,7 @@ implements IWebServiceTaskResult{
 	 * */
 	private void showRoute(int index){
 		final SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
+				.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		StringBuilder coordinates = new StringBuilder();
 
 		// Obtenemos las coordenadas de la ruta seleccionada desde el m�vil.
@@ -602,8 +755,8 @@ implements IWebServiceTaskResult{
 			// Pasamos el resultado a la actividad principal.
 			Intent intent = new Intent();
 			intent.putExtra("load_coordinates", coordinates.toString());
-			setResult(MapMain.SHOW_SAVE_ROUTE, intent);
-			finish();
+			getActivity().setResult(MapMain.SHOW_SAVE_ROUTE, intent);
+			startActivityForResult(intent,1);
 
 			// Obtenemos las coordenadas de la ruta seleccionada desde el servidor.	
 		} else {
@@ -616,7 +769,7 @@ implements IWebServiceTaskResult{
 
 				wst.execute(new String[] { GET_ROUTE_SERVICE });
 			} else {
-				Toast.makeText(getApplicationContext(), R.string.networkNotEnabledShowRoute,
+				Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledShowRoute,
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -633,8 +786,8 @@ implements IWebServiceTaskResult{
 		// Pasamos el resultado a la actividad principal.
 		Intent intent = new Intent();
 		intent.putExtra("map_name", maps.get(index));
-		setResult(MapMain.SHOW_MAP, intent);
-		finish();
+		getActivity().setResult(MapMain.SHOW_MAP, intent);
+		startActivityForResult(intent,1);
 
 	}
 
@@ -665,24 +818,14 @@ implements IWebServiceTaskResult{
 	 *          Nombre del mapa a descargar.
 	 * */
 	private void buildAlertMessageDownloadMap(final String mapName){
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		String strInfoDownloadFormat = getResources().getString(R.string.info_download);
 		builder.setMessage(String.format(strInfoDownloadFormat, mapName))
 		.setCancelable(false)
 		.setPositiveButton((getResources().getString(R.string.yes)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				downloadMap(mapName);
-			}
-		})
+				(dialog, id) -> downloadMap(mapName))
 		.setNegativeButton((getResources().getString(R.string.no)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				dialog.cancel();
-			}
-		});
+				(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -694,23 +837,13 @@ implements IWebServiceTaskResult{
 	 *          �ndice del mapa eliminado.
 	 * */
 	private void buildAlertMessageDeleteMap(final int index){
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getResources().getString(R.string.delete_map))
 		.setCancelable(false)
 		.setPositiveButton((getResources().getString(R.string.yes)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				deleteMap(index);
-			}
-		})
+				(dialog, id) -> deleteMap(index))
 		.setNegativeButton((getResources().getString(R.string.no)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				dialog.cancel();
-			}
-		});
+				(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -729,7 +862,7 @@ implements IWebServiceTaskResult{
 			dmt.execute(new String[] { GET_MAP_SERVICE });
 
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.networkNotEnabled,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabled,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -754,13 +887,13 @@ implements IWebServiceTaskResult{
 						JSONObject routeJSON = jso.getJSONObject("route");
 						addRouteItem(routeJSON);
 						adaptador.notifyDataSetChanged();
-						Toast.makeText(getApplicationContext(), R.string.route_success,
+						Toast.makeText(getActivity().getApplicationContext(), R.string.route_success,
 								Toast.LENGTH_SHORT).show();
 					} else if (jso.getString("status").equals("OK_DELETE")){
-						Toast.makeText(getApplicationContext(), R.string.route_delete,
+						Toast.makeText(getActivity().getApplicationContext(), R.string.route_delete,
 								Toast.LENGTH_SHORT).show();
 					} else if (!Misc.checkErrorCode(
-							jso.getString("status"), this)){
+							jso.getString("status"), getActivity())){
 						return;
 					}
 				}
@@ -796,13 +929,13 @@ implements IWebServiceTaskResult{
 					// Pasamos el resultado a la actividad principal.
 					Intent intent = new Intent();
 					intent.putExtra("load_coordinates", coordinates);
-					setResult(MapMain.SHOW_SAVE_ROUTE, intent);
-					finish();
+					getActivity().setResult(MapMain.SHOW_SAVE_ROUTE, intent);
+					startActivityForResult(intent,1);
 				}
 
 
 				if (jso.has("city_name")){
-					String coordinates = getIntent().getExtras().getString("coordinates");
+					String coordinates = getActivity().getIntent().getExtras().getString("coordinates");
 					String city = jso.getString("city_name");
 					double rating = calculateRating(coordinates);
 
@@ -830,7 +963,7 @@ implements IWebServiceTaskResult{
 						addRouteItem(savedJson);
 						adaptador.notifyDataSetChanged();
 
-						Toast.makeText(getApplicationContext(), R.string.route_success,
+						Toast.makeText(getActivity().getApplicationContext(), R.string.route_success,
 								Toast.LENGTH_SHORT).show();
 
 
@@ -852,7 +985,7 @@ implements IWebServiceTaskResult{
 					}
 
 					SharedPreferences pref = PreferenceManager
-							.getDefaultSharedPreferences(getApplicationContext());
+							.getDefaultSharedPreferences(getActivity().getApplicationContext());
 					Editor edit = pref.edit();
 					edit.putString("recently_map", city);
 					edit.commit();
@@ -918,19 +1051,10 @@ implements IWebServiceTaskResult{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			new ToggleButton(getActivity());
 			return true;
 		}
-		return super.onOptionsItemSelected((android.view.MenuItem) item);
-	}
-
-	/**
-	 * Método que devuelve el contexto de esta actividad
-	 */
-	@Override
-	public Context getContext() {
-		// TODO Auto-generated method stub
-		return this;
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -939,7 +1063,7 @@ implements IWebServiceTaskResult{
 	 * @return true si la conexión a internet está disponible
 	 */
 	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();

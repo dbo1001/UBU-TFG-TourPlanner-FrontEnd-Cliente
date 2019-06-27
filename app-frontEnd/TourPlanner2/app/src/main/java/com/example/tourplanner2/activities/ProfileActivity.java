@@ -5,12 +5,14 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,18 +26,22 @@ import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.FavouriteItem;
 import com.example.tourplanner2.util.JSONParser;
 import com.example.tourplanner2.util.PropertiesParser;
-import com.example.tourplanner2.util.SlidingMenuController;
 
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
+import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.tourplanner2.R;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
+
 /**
  * Clase que se corresponde con la pantalla de perfil.
  * 
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
  */
-public class ProfileActivity extends SlidingActivity implements
+public class ProfileActivity extends androidx.fragment.app.Fragment implements
 		IWebServiceTaskResult {
 	/**
 	 * Array con los puntos favoritos del usuario.
@@ -45,12 +51,51 @@ public class ProfileActivity extends SlidingActivity implements
 	 * Url del servicio de consulta de perfil.
 	 */
 	private static String PROFILE_SERVICE_URL;
+
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.profile, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		setServiceDirections();
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+		TextView txtUser = (TextView) view.findViewById(R.id.textViewUserName);
+		txtUser.setText(pref.getString("username", ""));
+		((Button) view.findViewById(R.id.buttonLogout))
+				.setOnClickListener(v -> {
+					SharedPreferences pref1 = PreferenceManager
+							.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+					Editor edit = pref1.edit();
+					edit.clear();
+					edit.apply();
+					Toast.makeText(
+							view.getContext().getApplicationContext(),
+							getResources()
+									.getString(R.string.sessionClosed),
+							Toast.LENGTH_LONG).show();
+					Intent myIntent = new Intent(view.getContext(),MapMain.class);
+					startActivityForResult(myIntent, 1);
+				});
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this,
+				getResources().getString(R.string.gettingRecommendedPois));
+
+		wst.addNameValuePair("email", pref.getString("email", ""));
+		wst.execute(new String[] { PROFILE_SERVICE_URL });
+	}
+/*
 	/**
 	 * Método que se invoca cuando la actividad es creada.
 	 * 
 	 * @param savedInstanceState
 	 *            Bundle que contiene el estado de ejecuciones pasadas.
 	 */
+/*
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,13 +129,13 @@ public class ProfileActivity extends SlidingActivity implements
 
 		wst.addNameValuePair("email", pref.getString("email", ""));
 		wst.execute(new String[] { PROFILE_SERVICE_URL });
-	}
+	}*/
 	/**
 	 * Método que establece las direcciones del servicio usado.
 	 */
 	private void setServiceDirections(){
 		try {
-		String address=PropertiesParser.getConnectionSettings(this);
+		String address=PropertiesParser.getConnectionSettings(getActivity());
 		PROFILE_SERVICE_URL = "https://"+address+"/osm_server/get/profile";
 		
 		} catch (IOException e) {
@@ -108,19 +153,19 @@ public class ProfileActivity extends SlidingActivity implements
 	public void handleResponse(String response) {
 		JSONObject jso;
 		int visitedPois = 0;
-		rows = JSONParser.getFavourites(response, this);
+		rows = JSONParser.getFavourites(response, getActivity());
 		try {
 			jso = new JSONObject(response);
-			if(jso.has("status") &&!Misc.checkErrorCode(jso.getString("status"), this)){
+			if(jso.has("status") &&!Misc.checkErrorCode(jso.getString("status"), getActivity())){
 				return;
 			}
 			visitedPois= jso.getInt("visited_pois_count");
-			((TextView) findViewById(R.id.textViewVisitedPois)).setText(String
+			((TextView) getActivity().findViewById(R.id.textViewVisitedPois)).setText(String
 					.valueOf(visitedPois));
 			if (rows != null) {
 				FavouritesListAdapter adaptadorItinerary = new FavouritesListAdapter(
-						this, rows);
-				ListView lstItinerary = (ListView) findViewById(R.id.listViewFavourites);
+						getActivity(), rows);
+				ListView lstItinerary = (ListView) getActivity().findViewById(R.id.listViewFavourites);
 				lstItinerary.setAdapter(adaptadorItinerary);
 			}
 		} catch (JSONException e) {
@@ -134,16 +179,9 @@ public class ProfileActivity extends SlidingActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			new ToggleButton(getActivity());
 			return true;
 		}
-		return super.onOptionsItemSelected((android.view.MenuItem) item);
-	}
-	/**
-	 * Método que devuelve el contexto de esta activity.
-	 */
-	@Override
-	public Context getContext() {
-		return this;
+		return super.onOptionsItemSelected(item);
 	}
 }

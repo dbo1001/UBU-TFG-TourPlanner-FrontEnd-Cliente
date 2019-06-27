@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools"  android:layout_height="wrap_content" android:layout_width="match_parent">
 
     <ListView
         android:id="@+id/listView1"
@@ -35,20 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:contentDescription="@string/icon"
-                android:src="@drawable/action_settings" />
-
-            <TextView
-                android:id="@+id/lblText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="text"
-                android:textColor="@android:color/white"
-                android:textIsSelectable="false" />
         </LinearLayout>
     </ListView>
 

@@ -17,7 +17,7 @@
         android:id="@+id/buttonCalculate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/calculateIterary" 
+        android:text="@string/calculateIterary"
         android:layout_alignParentBottom="true"
         android:visibility="invisible"
         android:background="@drawable/action"/>

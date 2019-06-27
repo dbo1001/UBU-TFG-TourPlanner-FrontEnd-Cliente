@@ -28,26 +28,37 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
+//import androidx.appcompat.R;
 
 import com.example.tourplanner2.BuildConfig;
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.adapters.CustomSocialAdapter;
 import com.example.tourplanner2.adapters.ItineraryListAdapter;
 import com.example.tourplanner2.adapters.OptionsAdapter;
+import com.example.tourplanner2.adapters.RecommendedPoiAdapter;
 import com.example.tourplanner2.communication.IServiceTask;
 import com.example.tourplanner2.communication.IWebServiceTaskResult;
 import com.example.tourplanner2.communication.WebServiceTask;
@@ -61,8 +72,7 @@ import com.example.tourplanner2.util.PropertiesParser;
 import com.example.tourplanner2.util.RowItineraryList;
 import com.example.tourplanner2.util.RowListView;
 import com.example.tourplanner2.util.SSLFactory;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
+import com.google.android.material.navigation.NavigationView;
 
 import org.brickred.socialauth.android.DialogListener;
 import org.brickred.socialauth.android.SocialAuthAdapter;
@@ -80,6 +90,7 @@ import org.osmdroid.mapsforge.MapsForgeTileSource;
 
 //import org.mapsforge.map.android.view.MapView;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -89,6 +100,7 @@ import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.Marker;
+
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -105,8 +117,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class MapMain extends SlidingActivity implements
-		IWebServiceTaskResult, IServiceTask, CheckLocationService.ServiceClient {
+public class MapMain extends AppCompatActivity implements
+		IWebServiceTaskResult, IServiceTask, CheckLocationService.ServiceClient, NavigationView.OnNavigationItemSelectedListener {
 
 	/**
 	 * Mapa en el que se muestran las rutas.
@@ -116,6 +128,8 @@ public class MapMain extends SlidingActivity implements
 	private MapController myMapController;
 
 	ArrayList<OverlayItem> points = new ArrayList<>();
+
+	private Menu menu;
 
 	/**
 	 * Código que indica que debe seleccionar el destino en el mapa.
@@ -334,12 +348,43 @@ public class MapMain extends SlidingActivity implements
 	 */
 	private boolean mBound;
 
+	private DrawerLayout drawer;
+
+	public void drawerAndToolbar(){
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		drawer = findViewById(R.id.drawer_layout);
+		NavigationView navigationView = findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
+
+		View vHeader = navigationView.getHeaderView(0);
+		ImageView mImgView= (ImageView) vHeader.findViewById(R.id.mapa);
+
+		LinearLayout header = (LinearLayout) vHeader.findViewById(R.id.header);
+		header.setOnClickListener(v -> {
+			Intent myIntent;
+			myIntent = new Intent(MapMain.this, MapMain.class);
+			startActivityForResult(myIntent, 1);
+			drawer.closeDrawer(GravityCompat.START);
+		});
+
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+				R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.addDrawerListener(toggle);
+		toggle.syncState();
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 		RowListView[] rows = new RowListView[7];
+		setContentView(R.layout.map_main);
+
+		drawerAndToolbar();
 
 		//Primero, comprobamos si tiene conexion a internet, para poder acceder a mapas sin conexion o con ella.
 		if (!isNetworkAvailable()){
@@ -354,14 +399,25 @@ public class MapMain extends SlidingActivity implements
 			} else {
 				mapName = pref.getString("last_map", "");
 			}
+			String[] filepath = {""};
+			filepath[0] = Environment.getExternalStorageDirectory() +
+					"/tourplanner/maps/" + mapName + ".map";
+			File map = new File(filepath[0]);
 
-
+			if (map.exists()){
+				myOpenMapView.setTileSource(new XYTileSource("map",5,10,50,".map",filepath));
+			} else {
+				Toast.makeText(getApplicationContext(),
+						getResources().getString(R.string.no_map),
+						Toast.LENGTH_LONG).show();
+				finish();
+			}
 
 		}else {
 			if (writePermissions()){
 				loadMaps();
 			} else{
-				myOpenMapView = new MapView(this);
+				myOpenMapView = (MapView)findViewById(R.id.openmapview);
 				myMapController = (MapController) myOpenMapView.getController();
 				myOpenMapView.setMultiTouchControls(true);
 			}
@@ -371,7 +427,7 @@ public class MapMain extends SlidingActivity implements
 		myOpenMapView.setClickable(true);
 		myOpenMapView.setBuiltInZoomControls(true);
 
-		setContentView(myOpenMapView);
+		//setContentView(myOpenMapView);
 
 		setServiceDirections();
 		createSSLSocketFactory();
@@ -379,93 +435,34 @@ public class MapMain extends SlidingActivity implements
 		serviceContext = this;
 		targetSelected = true;
 		sourceSelected = true;
-		createSlidingMenu(rows);
+		//onCreateOptionsMenu(menu);
+		//createSlidingMenu(rows);
 		itemizedOverlay = new MyItem(getResources().getDrawable(
 				R.drawable.marker_red));
 
 		myOpenMapView.getOverlays().add(itemizedOverlay);
 
-		OptionsAdapter adaptador = new OptionsAdapter(this, rows);
-		ListView lstOpciones = (ListView) findViewById(R.id.listView);
-		lstOpciones.setAdapter(adaptador);
+		//OptionsAdapter adaptador = new OptionsAdapter(this, rows);
+		//ListView lstOpciones = (ListView) findViewById(R.id.listView);
+		//lstOpciones.setAdapter(adaptador);
 		adapter = new SocialAuthAdapter(new MapMain.ResponseListener());
 		adapter.addProvider(SocialAuthAdapter.Provider.FACEBOOK, R.drawable.facebook);
 		adapter.addProvider(SocialAuthAdapter.Provider.TWITTER, R.drawable.twitter);
 		adapter.addProvider(SocialAuthAdapter.Provider.FLICKR, R.drawable.flickr);
 		adapter.addProvider(SocialAuthAdapter.Provider.INSTAGRAM, R.drawable.instagram);
 
-		Button share = (Button) findViewById(R.id.buttonShare);
-		share.setOnClickListener(new MapMain.SocialListener());
+		//Button share = (Button) findViewById(R.id.buttonShare);
+		//share.setOnClickListener(new MapMain.SocialListener());
 
-		lstOpciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	}
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-			                        long id) {
-				Intent myIntent;
-				switch (position) {
-					case 0:
-						myIntent = new Intent(MapMain.this,
-								PreferencesActivity.class);
-						startActivityForResult(myIntent, 1);
-						break;
-					case 1:
-						myIntent = new Intent(MapMain.this, PlannerActivity.class);
-						startActivityForResult(myIntent, 1);
-						break;
-					case 2:
-						if (getSlidingMenu().isMenuShowing()) {
-							toggle();
-						}
-						locationService.updateLocation();
-						srclat = locationService.getLatitude();
-						srclon = locationService.getLongitude();
-						recommendedPois = false;
-						cleanMap();
-						getExpressItinerary();
-						break;
-					case 3:
-						myIntent = new Intent(MapMain.this,
-								RecomendedPOIsActivity.class);
-						myIntent.putExtra("lat", locationService.getLatitude());
-						myIntent.putExtra("lon", locationService.getLongitude());
-						startActivityForResult(myIntent, 1);
-						break;
-					case 4:
-						myIntent = new Intent(MapMain.this, MyRoutesActivity.class);
-						if (coordinates != null){
-							JSONParser parser = new JSONParser(coordinates, itemizedOverlay, MapMain.this);
-							String hugeString = parser.getWayCoordinates();
-							String[] data = hugeString.split(" ");
-							myIntent.putExtra("longitude", data[0]);
-							myIntent.putExtra("latitude", data[1]);
-						}
-						myIntent.putExtra("coordinates", coordinates);
-						startActivityForResult(myIntent, 1);
-						break;
-					case 5:
-						myIntent = new Intent(MapMain.this,
-								AdvancedOptionsActivity.class);
-						startActivityForResult(myIntent, 1);
-						break;
-					case 6:
-						SharedPreferences pref = PreferenceManager
-								.getDefaultSharedPreferences(getApplicationContext());
-						if (!pref.getBoolean("registered", false)) {
-							DialogProfile dialog = new DialogProfile(
-									(Context) context);
-							dialog.setTitle(getResources().getString(
-									R.string.registerTourPlanner));
-							dialog.show();
-						} else {
-							myIntent = new Intent(MapMain.this,
-									ProfileActivity.class);
-							startActivityForResult(myIntent, 1);
-						}
-						break;
-				}
-			}
-		});
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	private void loadMaps() {
@@ -488,6 +485,98 @@ public class MapMain extends SlidingActivity implements
 		points.clear();
 		myOpenMapView.getOverlays().clear();
 		updatePoints();
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+		Intent myIntent;
+		FragmentManager fManager = getSupportFragmentManager();
+		switch (item.getItemId()) {
+			case R.id.nav_explore:
+				//myIntent = new Intent(MapMain.this, PreferencesActivity.class);
+				findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+				fManager.beginTransaction()
+						.replace(R.id.fragment_container,new PreferencesActivity())
+						.commit();
+				//startActivityForResult(myIntent, 1);
+				break;
+			case R.id.nav_planner:
+				//myIntent = new Intent(MapMain.this, PlannerActivity.class);
+				findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+				fManager.beginTransaction()
+						.replace(R.id.fragment_container,new PlannerActivity())
+						.commit();
+				//startActivityForResult(myIntent, 1);
+				break;
+			case R.id.nav_saved_routes:
+				//myIntent = new Intent(MapMain.this, MyRoutesActivity.class);
+				findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+				fManager.beginTransaction()
+						.replace(R.id.fragment_container,new MyRoutesActivity())
+						.commit();
+				//startActivityForResult(myIntent, 1);
+				break;
+			case R.id.nav_advanced:
+				//myIntent = new Intent(MapMain.this, AdvancedOptionsActivity.class);
+				findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+				fManager.beginTransaction()
+						.replace(R.id.fragment_container,new AdvancedOptionsActivity())
+						.commit();
+				//startActivityForResult(myIntent, 1);
+				break;
+			case R.id.nav_find:
+				Bundle args = new Bundle();
+				locationService.updateLocation();
+				String lat = locationService.getLatitude();
+				String lon = locationService.getLongitude();
+				args.putString("latitud",lat);
+				args.putString("longitud",lon);
+				findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+				RecomendedPOIsActivity pois = new RecomendedPOIsActivity();
+				pois.setArguments(args);
+				fManager.beginTransaction()
+						.replace(R.id.fragment_container,pois)
+						.commit();
+				//myIntent = new Intent(MapMain.this, RecomendedPOIsActivity.class);
+				//myIntent.putExtra("lat", locationService.getLatitude());
+				//myIntent.putExtra("lon", locationService.getLongitude());
+				//startActivityForResult(myIntent, 1);
+				break;
+			case R.id.nav_settings:
+				SharedPreferences pref = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				if (!pref.getBoolean("registered", false)) {
+					DialogProfile dialog = new DialogProfile((Context) context);
+					dialog.setTitle(getResources().getString(
+							R.string.registerTourPlanner));
+					dialog.show();
+				} else {
+					//myIntent = new Intent(MapMain.this, ProfileActivity.class);
+					findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+					fManager.beginTransaction()
+							.replace(R.id.fragment_container,new ProfileActivity())
+							.commit();
+					//startActivityForResult(myIntent, 1);
+				}
+				break;
+			case RESULT_CANCELED:
+				if (menu.hasVisibleItems()) {
+					new ToggleButton(this);
+				}
+				break;
+			case R.id.nav_share:
+				Button share = (Button) findViewById(R.id.buttonShare);
+				new MapMain.SocialListener().onClick(share);
+				break;
+		}
+
+		drawer.closeDrawer(GravityCompat.START);
+		return true;
 	}
 
 	/**
@@ -599,7 +688,7 @@ public class MapMain extends SlidingActivity implements
 	 * @param rows
 	 *            filas del menu
 	 */
-	private void createSlidingMenu(RowListView[] rows) {
+	/*private void createSlidingMenu(RowListView[] rows) {
 		rows[0] = new RowListView(getResources().getString(R.string.ms_cfg),
 				R.drawable.ic_action_place);
 		rows[1] = new RowListView(getResources().getString(R.string.planner),
@@ -623,7 +712,7 @@ public class MapMain extends SlidingActivity implements
 		setSlidingActionBarEnabled(true);
 		getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		Objects.requireNonNull(getActionBar()).setDisplayHomeAsUpEnabled(true);
-	}
+	}*/
 
 	/**
 	 * Método que inicia una actividad en función de un código.
@@ -671,8 +760,8 @@ public class MapMain extends SlidingActivity implements
 				}
 				break;
 			case RESULT_CANCELED:
-				if (getSlidingMenu().isMenuShowing()) {
-					toggle();
+				if (menu.hasVisibleItems()) {
+					new ToggleButton(this);
 				}
 				break;
 			case SHARE_ROUTE:
@@ -704,6 +793,7 @@ public class MapMain extends SlidingActivity implements
 	 */
 	@Override
 	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 		final Dialog dialog = new Dialog(context.getContext());
 		dialog.setContentView(R.layout.rating_dialog);
 		dialog.setTitle(getResources().getString(R.string.sendRating));
@@ -716,7 +806,7 @@ public class MapMain extends SlidingActivity implements
 				this, rowsItinerary, startTime);
 		ListView lstItinerary = (ListView) dialog
 				.findViewById(R.id.listRatingDialog);
-		lstItinerary.setOnItemClickListener(new MapMain.ItineraryListListener(
+		lstItinerary.setOnItemClickListener(new ItineraryListListener(
 				adaptadorItinerary));
 		lstItinerary.setAdapter(adaptadorItinerary);
 
@@ -752,7 +842,7 @@ public class MapMain extends SlidingActivity implements
 					wst.addNameValuePair("count", String.valueOf(cont));
 
 					wst.addNameValuePair("email", pref.getString("email", ""));
-					wst.execute(new String[] { RATING_SERVICE_URL });
+					wst.execute(new String[]{RATING_SERVICE_URL});
 					dialog.dismiss();
 				} else {
 					DialogProfile dialog = new DialogProfile((Context) context);
@@ -853,14 +943,19 @@ public class MapMain extends SlidingActivity implements
 		alert.show();
 	}
 
+	public void onArticleSelected(Intent intent){
+
+	}
+
 	/**
 	 * Método que se llama cuando una actividad, iniciada por esta,
 	 * finaliza,ejerce el rol de mediador.
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (getSlidingMenu().isMenuShowing()) {
-			toggle();
+		super.onActivityResult(requestCode, resultCode, data);
+		if (menu.hasVisibleItems()) {
+			new ToggleButton(this);
 		}
 		recommendedPois = false;
 		poiTarget = "";
@@ -1003,7 +1098,7 @@ public class MapMain extends SlidingActivity implements
 							String.valueOf(row.getScore() * 20));
 					i++;
 				}
-				wst.execute(new String[] { ROUTE_SERVICE_URL });
+				wst.execute(new String[]{ROUTE_SERVICE_URL});
 				recommendedPois = true;
 			} else {
 				if (resultCode == EXPRESS_ROUTE) {
@@ -1020,7 +1115,7 @@ public class MapMain extends SlidingActivity implements
 
 		}
 
-		if (resultCode == SHOW_SAVE_ROUTE){
+		if (resultCode == SHOW_SAVE_ROUTE) {
 			cleanMap();
 			loadCoordinates = data.getExtras().getString("load_coordinates");
 			handleResponse(loadCoordinates);

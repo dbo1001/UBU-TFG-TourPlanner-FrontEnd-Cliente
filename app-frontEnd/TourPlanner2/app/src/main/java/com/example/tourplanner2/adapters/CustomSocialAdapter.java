@@ -98,7 +98,7 @@ public class CustomSocialAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.text = (TextView) convertView.findViewById(R.id.providerText);
 			holder.text.setTextColor(ctx.getResources().getColor(R.color.White));
-			holder.text.setTextAppearance(ctx, R.style.TextAppearance_Sherlock_Widget_PopupMenu_Large);
+			holder.text.setTextAppearance(ctx, R.style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Large);
 			holder.icon = (ImageView) convertView.findViewById(R.id.provider);
 			convertView.setTag(holder);
 		} else {

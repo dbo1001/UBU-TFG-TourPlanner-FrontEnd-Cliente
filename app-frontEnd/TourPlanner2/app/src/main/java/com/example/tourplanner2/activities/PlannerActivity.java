@@ -7,20 +7,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.tourplanner2.communication.FragmentListener;
 import com.example.tourplanner2.communication.IWebServiceTaskResult;
 import com.example.tourplanner2.communication.WebServiceTask;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -35,11 +36,14 @@ import com.example.tourplanner2.R;
 import com.example.tourplanner2.dialog.DialogTextView;
 import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.PropertiesParser;
-import com.example.tourplanner2.util.SlidingMenuController;
 
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
+import android.widget.ToggleButton;
 
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 
 /**
  * Clase que se corresponde con la pantalla de planifica tu viaje.
@@ -47,7 +51,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
  */
-public class PlannerActivity extends SlidingActivity implements
+public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		IWebServiceTaskResult {
 
 	private SeekBar sbCulture;
@@ -93,19 +97,108 @@ public class PlannerActivity extends SlidingActivity implements
 	 */
 	private IWebServiceTaskResult context;
 
+	private FragmentListener mCallback;
+
+	private static final String BUNDLE_KEY_CLICK_LISTENER = "BUNDLE_KEY_CLICK_LISTENER";
+
+	public <T extends AppCompatActivity> void setFragmentListener(FragmentListener<T> listener){
+		this.mCallback = listener;
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.planner, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		setServiceDirections();
+		seekBarInitialization();
+		Calendar now = Calendar.getInstance();
+		double currentHour = now.get(Calendar.HOUR_OF_DAY);
+		double currentMinutes = now.get(Calendar.MINUTE);
+
+		txtTimeOrigin = (TextView) (view.findViewById(R.id.originTime)
+				.findViewById(R.id.txtTime));
+		txtTimeOrigin.setText(Misc.pad((int) currentHour) + ":"
+				+ Misc.pad((int) currentMinutes));
+		txtTimeTarget = (TextView) (view.findViewById(R.id.targetTime)
+				.findViewById(R.id.txtTime));
+		txtTimeTarget.setText(Misc.pad((int) currentHour + 1) + ":"
+				+ Misc.pad((int) currentMinutes));
+		initilizeSeekBars();
+		ImageButton btnChangeTime = (ImageButton) (view.findViewById(R.id.originTime)
+				.findViewById(R.id.btnTime));
+
+		btnChangeTime.setOnClickListener(v -> onCreateDialog(ORIGIN_TIME_DIALOG_ID).show());
+
+		LinearLayout linearLayoutTime = (LinearLayout) (view.findViewById(R.id.originTime));
+
+		linearLayoutTime.setOnClickListener(v -> onCreateDialog(ORIGIN_TIME_DIALOG_ID).show());
+
+		linearLayoutTime = (LinearLayout) (view.findViewById(R.id.targetTime));
+
+		linearLayoutTime.setOnClickListener(v -> {
+
+			(view.findViewById(R.id.autoCompleteHotel))
+					.clearFocus();
+			getActivity().showDialog(TARGET_TIME_DIALOG_ID);
+
+		});
+		final DialogTextView dialog = new DialogTextView(getActivity(), getResources()
+				.getStringArray(R.array.origenOptions),
+				(TextView) view.findViewById(R.id.textViewSelectOrigin));
+		dialog.setTitle(getResources().getString(R.string.selectOption));
+
+		(view.findViewById(R.id.textViewSelectOrigin))
+				.setOnClickListener(v -> dialog.show());
+		final DialogTextView dialog2 = new DialogTextView(getActivity(), getResources()
+				.getStringArray(R.array.targetOptions),
+				(TextView) view.findViewById(R.id.textViewSelectTarget));
+		dialog.setTitle(getResources().getString(R.string.selectOption));
+
+		(view.findViewById(R.id.textViewSelectTarget))
+				.setOnClickListener(v -> dialog2.show());
+
+		AutoCompleteTextView autoCompView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteCity);
+
+		autoCompView.addTextChangedListener(new TextChangeListener(true));
+		autoCompView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteHotel);
+		autoCompView.addTextChangedListener(new TextChangeListener(false));
+
+		Button btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
+		btnEnviar.setOnClickListener(arg0 -> {
+			hotels = false;
+			exist = true;
+			WebServiceTask webService = new WebServiceTask(
+					WebServiceTask.POST_TASK, context);
+			webService
+					.addNameValuePair(
+							"city_name",
+							((AutoCompleteTextView) view.findViewById(R.id.autoCompleteCity))
+									.getText().toString());
+			webService.execute(CITY_EXIST_SERVICE_URL);
+
+		});
+	}
+
 	/**
 	 * Método que se invoca cuando la actividad es creada.
 	 * 
-	 * @param savedInstanceState
+	 *
 	 *            Bundle que contiene el estado de ejecuciones pasadas.
 	 */
+	/*
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = this;
-		setContentView(R.layout.planner);
+		//setContentView(R.layout.planner);
 		setServiceDirections();
-		new SlidingMenuController(this);
+		//new SlidingMenuController(this);
 		seekBarInitialization();
 		Calendar now = Calendar.getInstance();
 		double currentHour = now.get(Calendar.HOUR_OF_DAY);
@@ -218,12 +311,13 @@ public class PlannerActivity extends SlidingActivity implements
 
 		});
 	}
+	*/
 
 	private void seekBarInitialization() {
-		sbCulture = (SeekBar) findViewById(R.id.seekBarCulture);
-		sbLeisure = (SeekBar) findViewById(R.id.seekBarLeisure);
-		sbNature = (SeekBar) findViewById(R.id.seekBarNature);
-		sbGastronomy = (SeekBar) findViewById(R.id.seekBarGastronomy);
+		sbCulture = (SeekBar) getActivity().findViewById(R.id.seekBarCulture);
+		sbLeisure = (SeekBar) getActivity().findViewById(R.id.seekBarLeisure);
+		sbNature = (SeekBar) getActivity().findViewById(R.id.seekBarNature);
+		sbGastronomy = (SeekBar) getActivity().findViewById(R.id.seekBarGastronomy);
 	}
 
 	/**
@@ -231,7 +325,7 @@ public class PlannerActivity extends SlidingActivity implements
 	 */
 	private void initilizeSeekBars() {
 		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
+				.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		sbCulture.setProgress(pref.getInt("cultureProgress", 50));
 		sbLeisure.setProgress(pref.getInt("leisureProgress", 50));
 		sbNature.setProgress(pref.getInt("natureProgress", 50));
@@ -244,7 +338,7 @@ public class PlannerActivity extends SlidingActivity implements
 	 */
 	private void setServiceDirections() {
 		try {
-			String address = PropertiesParser.getConnectionSettings(this);
+			String address = PropertiesParser.getConnectionSettings(getActivity());
 			CITIES_SERVICE_URL = "https://" + address + "/osm_server/get/cities";
 			CITY_EXIST_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/cities/exists";
@@ -289,21 +383,21 @@ public class PlannerActivity extends SlidingActivity implements
 	/**
 	 * Método que se llama cuando el dialog es creado.
 	 */
-	@Override
+	//@Override
 	protected Dialog onCreateDialog(int id) {
 		Calendar now = Calendar.getInstance();
 		switch (id) {
 		case ORIGIN_TIME_DIALOG_ID:
 			originActive = true;
 			// set time picker as current time
-			return new TimePickerDialog(this, timePickerListener,
+			return new TimePickerDialog(getActivity(), timePickerListener,
 					now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),
 					true);
 		case TARGET_TIME_DIALOG_ID:
 			originActive = false;
 			// set time picker as current time
 
-			return new TimePickerDialog(this, timePickerListener,
+			return new TimePickerDialog(getActivity(), timePickerListener,
 					now.get(Calendar.HOUR_OF_DAY) + 1,
 					now.get(Calendar.MINUTE), true);
 
@@ -340,7 +434,7 @@ public class PlannerActivity extends SlidingActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			new ToggleButton(getActivity());
 			return true;
 		}
 		return true;
@@ -359,7 +453,7 @@ public class PlannerActivity extends SlidingActivity implements
 			if (!response.equals("null")) {
 				jso = new JSONObject(response);
 				if (jso.has("status")
-						&& !Misc.checkErrorCode(jso.getString("status"), this)) {
+						&& !Misc.checkErrorCode(jso.getString("status"), getActivity())) {
 					return;
 				}
 				if (jso != null) {
@@ -391,12 +485,12 @@ public class PlannerActivity extends SlidingActivity implements
 			suggestion = suggestHotels;
 			name = "hotelList";
 			adapter = hotelsAutoCompleteAdapter;
-			aut = (AutoCompleteTextView) findViewById(R.id.autoCompleteHotel);
+			aut = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel);
 		} else {
 			suggestion = suggestCities;
 			name = "citiesList";
 			adapter = citiesAutoCompleteAdapter;
-			aut = (AutoCompleteTextView) findViewById(R.id.autoCompleteCity);
+			aut = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteCity);
 		}
 		suggestion.clear();
 		Object obj = jso.get(name);
@@ -414,7 +508,7 @@ public class PlannerActivity extends SlidingActivity implements
 				}
 			}
 
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
+			adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
 					R.layout.autocomplete_item, suggestion);
 			aut.setAdapter(adapter);
 			adapter.notifyDataSetChanged();
@@ -465,7 +559,7 @@ public class PlannerActivity extends SlidingActivity implements
 	private void existCity(JSONObject jso) throws JSONException {
 		if (jso.has("coordinates")) {
 			cityCoordinates = jso.getString("coordinates");
-			if (((TextView) findViewById(R.id.textViewSelectOrigin)).getText()
+			if (((TextView) getActivity().findViewById(R.id.textViewSelectOrigin)).getText()
 					.toString()
 					.equals(getResources().getString(R.string.selectHotel))) {
 				checkIfHotelExist();
@@ -485,7 +579,7 @@ public class PlannerActivity extends SlidingActivity implements
 		String lat, lon;
 		Intent intent = new Intent();
 		if (!checkPreferences()) {
-			Toast.makeText(getApplicationContext(),
+			Toast.makeText(getActivity().getApplicationContext(),
 					getResources().getString(R.string.mustSelectPreferences),
 					Toast.LENGTH_LONG).show();
 			return;
@@ -495,25 +589,25 @@ public class PlannerActivity extends SlidingActivity implements
 		intent.putExtra("leisure", sbLeisure.getProgress());
 		intent.putExtra("nature", sbNature.getProgress());
 		intent.putExtra("gastronomy", sbGastronomy.getProgress());
-		String origin = ((TextView) findViewById(R.id.textViewSelectOrigin))
+		String origin = ((TextView) getActivity().findViewById(R.id.textViewSelectOrigin))
 				.getText().toString();
-		String target = ((TextView) findViewById(R.id.textViewSelectTarget))
+		String target = ((TextView) getActivity().findViewById(R.id.textViewSelectTarget))
 				.getText().toString();
 		if (origin.equals(getResources().getString(R.string.selectMap))
 				&& target.equals(getResources().getString(R.string.selectMap))) {
-			setResult(MapMain.TWO_LOCATIONS, intent);
+			getActivity().setResult(MapMain.TWO_LOCATIONS, intent);
 		} else if (origin.equals(getResources().getString(R.string.selectMap))
 				&& target.equals(getResources().getString(
 						R.string.originEqTarget))) {
-			setResult(MapMain.ONE_LOCATION_TGT_EQ_SRC, intent);
+			getActivity().setResult(MapMain.ONE_LOCATION_TGT_EQ_SRC, intent);
 		} else if (origin.equals(getResources().getString(R.string.selectMap))
 				&& !isTargetPoi().equals("")) {
-			setResult(MapMain.ONE_LOCATION_TGT_POI, intent);
+			getActivity().setResult(MapMain.ONE_LOCATION_TGT_POI, intent);
 			intent.putExtra("tgt_poi", isTargetPoi());
 		} else if (origin
 				.equals(getResources().getString(R.string.selectHotel))
 				&& target.equals(getResources().getString(R.string.selectMap))) {
-			setResult(MapMain.ONE_LOCATION_TGT, intent);
+			getActivity().setResult(MapMain.ONE_LOCATION_TGT, intent);
 			lon = hotelCoordinates.substring(hotelCoordinates.indexOf("(") + 1,
 					hotelCoordinates.indexOf(" "));
 			lat = hotelCoordinates.substring(hotelCoordinates.indexOf(" ") + 1,
@@ -522,13 +616,13 @@ public class PlannerActivity extends SlidingActivity implements
 			intent.putExtra("srclon", lon);
 			intent.putExtra(
 					"hotel_name",
-					(((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
+					(((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
 							.getText().toString()));
 		} else if (origin
 				.equals(getResources().getString(R.string.selectHotel))
 				&& target.equals(getResources().getString(
 						R.string.originEqTarget))) {
-			setResult(MapMain.TGT_EQ_SRC, intent);
+			getActivity().setResult(MapMain.TGT_EQ_SRC, intent);
 			lon = hotelCoordinates.substring(hotelCoordinates.indexOf("(") + 1,
 					hotelCoordinates.indexOf(" "));
 			lat = hotelCoordinates.substring(hotelCoordinates.indexOf(" ") + 1,
@@ -537,10 +631,10 @@ public class PlannerActivity extends SlidingActivity implements
 			intent.putExtra("srclon", lon);
 			intent.putExtra(
 					"hotel_name",
-					(((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
+					(((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
 							.getText().toString()));
 		} else {
-			setResult(MapMain.TGT_POI, intent);
+			getActivity().setResult(MapMain.TGT_POI, intent);
 			intent.putExtra("tgt_poi", isTargetPoi());
 			lon = hotelCoordinates.substring(hotelCoordinates.indexOf("(") + 1,
 					hotelCoordinates.indexOf(" "));
@@ -550,11 +644,11 @@ public class PlannerActivity extends SlidingActivity implements
 			intent.putExtra("srclon", lon);
 			intent.putExtra(
 					"hotel_name",
-					(((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
+					(((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
 							.getText().toString()));
 		}
 		intent.putExtra("city_coordinates", cityCoordinates);
-		finish();
+		startActivityForResult(intent,1);
 	}
 
 	/**
@@ -564,7 +658,7 @@ public class PlannerActivity extends SlidingActivity implements
 	 * @return categoria del POI de destino.
 	 */
 	private String isTargetPoi() {
-		String option = ((TextView) findViewById(R.id.textViewSelectTarget))
+		String option = ((TextView) getActivity().findViewById(R.id.textViewSelectTarget))
 				.getText().toString();
 		if (option.equals(getResources().getString(R.string.culturePoi))) {
 			return "culture";
@@ -596,7 +690,7 @@ public class PlannerActivity extends SlidingActivity implements
 		if (checkIfAnyPreferenceIsSelected()) {
 			return false;
 		} else {
-			TextView text = (TextView) findViewById(R.id.textViewTargetOptions);
+			TextView text = (TextView) getActivity().findViewById(R.id.textViewTargetOptions);
 			String option = text.getText().toString();
 			if (option.equals(getResources().getString(R.string.culturePoi))
 					&& sbCulture.getProgress() == 0) {
@@ -623,7 +717,7 @@ public class PlannerActivity extends SlidingActivity implements
 	 * Método que realiza una consulta al servidor sobre si existe un hotel.
 	 */
 	private void checkIfHotelExist() {
-		if (((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
+		if (((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
 				.getText().toString().equals("")) {
 			showToast(getResources().getString(R.string.incorrectHotel));
 		} else {
@@ -634,12 +728,12 @@ public class PlannerActivity extends SlidingActivity implements
 			webService
 					.addNameValuePair(
 							"hotel_name",
-							((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
+							((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
 									.getText().toString());
 			webService
 					.addNameValuePair(
 							"city_name",
-							((AutoCompleteTextView) findViewById(R.id.autoCompleteCity))
+							((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteCity))
 									.getText().toString());
 			webService.execute(HOTEL_EXIST_SERVICE_URL);
 		}
@@ -652,16 +746,8 @@ public class PlannerActivity extends SlidingActivity implements
 	 *            mensaje a mostrar en el Toast
 	 */
 	private void showToast(String message) {
-		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
+		Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG)
 				.show();
-	}
-
-	/**
-	 * Método que devuelve el contexto de esta activity.
-	 */
-	@Override
-	public Context getContext() {
-		return this;
 	}
 
 	/**
@@ -711,7 +797,7 @@ public class PlannerActivity extends SlidingActivity implements
 					webService
 							.addNameValuePair(
 									"city_name",
-									((AutoCompleteTextView) findViewById(R.id.autoCompleteCity))
+									((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteCity))
 											.getText().toString());
 					webService.execute(HOTELS_SERVICE_URL);
 					changeOriginOption();
@@ -737,9 +823,44 @@ public class PlannerActivity extends SlidingActivity implements
 	 * texto en el textView de los hoteles.
 	 */
 	private void changeOriginOption() {
-		((TextView) findViewById(R.id.textViewSelectOrigin))
+		((TextView) getActivity().findViewById(R.id.textViewSelectOrigin))
 				.setText(getResources().getString(R.string.selectHotel));
 
+	}
+
+	/**
+	 * Builds a {@link PlannerActivity} and put its communication lambda wit the activity
+	 * in the arguments so that they survive rotation.
+	 */
+	static class Builder {
+		private FragmentListener pListener;
+
+		/**
+		 * This method must define a type generic so that it triggers target type inference.
+		 * @param pListener the listener of clicks on an article.
+		 * @param <T> the type of the activity that will hold the method reference listener.
+		 * @return the builder itself for method chaining.
+		 */
+		<T extends AppCompatActivity> Builder setOnClickListener(FragmentListener<T> pListener) {
+			this.pListener = pListener;
+			return this;
+		}
+
+		PlannerActivity build() {
+			PlannerActivity plannerF = new PlannerActivity();
+			plannerF.setArguments(createArgs());
+			return plannerF;
+		}
+
+		private Bundle createArgs() {
+			Bundle bundle = new Bundle();
+			if (pListener != null) {
+				//store the listener in the arguments bundle
+				//it is a state less lambda, guaranteed to be serializable
+				bundle.putSerializable(BUNDLE_KEY_CLICK_LISTENER, pListener);
+			}
+			return bundle;
+		}
 	}
 
 }

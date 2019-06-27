@@ -29,7 +29,7 @@ import com.example.tourplanner2.util.JSONParser;
 import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.PropertiesParser;
 import com.example.tourplanner2.util.RowItineraryList;
-import com.example.tourplanner2.util.SlidingMenuController;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -44,8 +44,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -55,17 +57,21 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.MenuItem;
+import android.widget.ToggleButton;
 
-import com.actionbarsherlock.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.tourplanner2.R;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity;
 /**
  * Clase que se corresponde con la pantalla de a tu gusto.
  * 
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
  */
-public class RecomendedPOIsActivity extends SlidingActivity implements
+public class RecomendedPOIsActivity extends androidx.fragment.app.Fragment implements
 IWebServiceTaskResult, IServiceTask{
 	/**
 	 * Array con las filas que muestra la pantalla.
@@ -123,18 +129,66 @@ IWebServiceTaskResult, IServiceTask{
 	 * Url del servicio.
 	 */
 	private static String RECOMMENDED_POI_SERVICE_URL;
-	
-	
-	/**
-	 * Método que se invoca cuando la actividad es creada.
-	 */
+
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.recommended_pois, container, false);
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		setServiceDirections();
+		serviceContext = this;
+
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this,
+				getResources().getString(R.string.gettingRecommendedPois));
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+		wst.addNameValuePair("transport", pref.getString("transport", "fo_"));
+		wst.addNameValuePair("lat", getArguments().getString("latitud"));
+		wst.addNameValuePair("lon", getArguments().getString("longitud"));
+		wst.execute(new String[] { RECOMMENDED_POI_SERVICE_URL });
+		(view.findViewById(R.id.buttonCalculate))
+				.setOnClickListener(v -> {
+					int contador = 0;
+					Intent intent = new Intent(getActivity(),MapMain.class);
+					ArrayList<RowItineraryList> rows = new ArrayList<RowItineraryList>();
+					for (RowItineraryList row : rowsItinerary) {
+						if (row.isSelected()) {
+							rows.add(row);
+							contador++;
+						}
+					}
+					if (contador > 0) {
+						intent.putExtra("count", contador);
+						intent.putExtra("pois", rows.toArray());
+						getActivity().setResult(MapMain.GET_ROUTE, intent);
+						startActivityForResult(intent,1);
+					} else {
+						Toast.makeText(
+								view.getContext().getApplicationContext(),
+								getResources().getString(
+										R.string.mustSelectPoi),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+		searchView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextViewPoi);
+		searchView.addTextChangedListener(new TextChangeListener());
+	}
+
+	/*
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recommended_pois);
 		setServiceDirections();
 		serviceContext = this;
-		new SlidingMenuController(this);
+
+		//new SlidingMenuController(this);
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this,
 				getResources().getString(R.string.gettingRecommendedPois));
 		SharedPreferences pref = PreferenceManager
@@ -173,13 +227,13 @@ IWebServiceTaskResult, IServiceTask{
 
 		searchView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewPoi);
 		searchView.addTextChangedListener(new TextChangeListener());
-	}
+	}*/
 	/**
 	 * Método que establece las direcciones de los servicios usados.
 	 */
 	private void setServiceDirections() {
 		try {
-			String address = PropertiesParser.getConnectionSettings(this);
+			String address = PropertiesParser.getConnectionSettings(getActivity());
 			RECOMMENDED_POI_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/poi/recommendedlist";
 
@@ -197,7 +251,7 @@ IWebServiceTaskResult, IServiceTask{
 	@Override
 	public void handleResponse(String response) {
 		try {
-			JSONParser parser = new JSONParser(response, null, this);
+			JSONParser parser = new JSONParser(response, null, getActivity());
 			rowsItinerary = parser.getItineraryList();
 
 			JSONObject jso;
@@ -206,13 +260,13 @@ IWebServiceTaskResult, IServiceTask{
 
 			if (jso.has("status")
 					&& !Misc.checkErrorCode(
-							jso.getString("status"), this)) {
+							jso.getString("status"), getActivity())) {
 				return;
 			}
 
 			adaptadorItinerary = new RecommendedPoiAdapter(
-					this, rowsItinerary);
-			ListView lstItinerary = (ListView) findViewById(R.id.listViewRecommendPois);
+					getActivity(), rowsItinerary);
+			ListView lstItinerary = (ListView) getActivity().findViewById(R.id.listViewRecommendPois);
 			lstItinerary.setAdapter(adaptadorItinerary);
 			lstItinerary.setTextFilterEnabled(true);
 			lstItinerary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -221,7 +275,7 @@ IWebServiceTaskResult, IServiceTask{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						final int position, long id) {
-					final Dialog dialog = new Dialog(getContext());
+					final Dialog dialog = new Dialog(getActivity());
 					// dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 					dialog.setContentView(R.layout.point_dialog);
 					dialog.setTitle(getResources().getString(R.string.pointInfo));
@@ -281,9 +335,19 @@ IWebServiceTaskResult, IServiceTask{
 
 						@Override
 						public void onClick(View v) {
-							Intent i = new Intent(RecomendedPOIsActivity.this, GalleryActivity.class);
-							i.putExtra("imageUrls", imageUrls);
-							startActivity(i);
+							FragmentManager fManager = getActivity().getSupportFragmentManager();
+							Bundle args = new Bundle();
+							args.putStringArrayList("imageUrls",imageUrls);
+							GalleryActivity actImg = new GalleryActivity();
+							actImg.setArguments(args);
+							getActivity().findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+
+							fManager.beginTransaction()
+									.replace(R.id.fragment_container,actImg)
+									.commit();
+							//Intent i = new Intent(getActivity(), GalleryActivity.class);
+							//i.putExtra("imageUrls", imageUrls);
+							//startActivity(i);
 
 						}
 
@@ -350,7 +414,7 @@ IWebServiceTaskResult, IServiceTask{
 						public void onClick(View v) {
 							Date startTime = Calendar.getInstance().getTime();
 							ItineraryListAdapter adaptadorItinerary = new ItineraryListAdapter(
-									RecomendedPOIsActivity.this, rowsItinerary, startTime);
+									getActivity(), rowsItinerary, startTime);
 							DialogOpinion dialog = new DialogOpinion((Context) getContext(),
 									rowsItinerary[position], adaptadorItinerary);
 							dialog.show();
@@ -402,7 +466,7 @@ IWebServiceTaskResult, IServiceTask{
 
 			});
 			
-			((Button) findViewById(R.id.buttonCalculate))
+			((Button) getActivity().findViewById(R.id.buttonCalculate))
 			.setVisibility(View.VISIBLE);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -416,17 +480,10 @@ IWebServiceTaskResult, IServiceTask{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			new ToggleButton(getActivity());
 			return true;
 		}
 		return super.onOptionsItemSelected((android.view.MenuItem) item);
-	}
-	/**
-	 * Método que devuelve el contexto de esta activity.
-	 */
-	@Override
-	public Context getContext() {
-		return this;
 	}
 	
 	/**
@@ -435,7 +492,7 @@ IWebServiceTaskResult, IServiceTask{
 	 * @return true si la conexión a internet está disponible
 	 */
 	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();

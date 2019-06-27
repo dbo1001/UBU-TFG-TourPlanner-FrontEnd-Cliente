@@ -20,6 +20,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.PermissionChecker;
+
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 /**
@@ -123,8 +126,8 @@ public class CheckLocationService extends Service {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		// Obtenemos la última posición conocida
-		if (checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-				checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+		if (PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+				PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 			// TODO: Consider calling
 			//    Activity#requestPermissions
 			// here to request the missing permissions, and then overriding
@@ -247,7 +250,11 @@ public class CheckLocationService extends Service {
 		CharSequence textoEstado = "Alerta!";
 		long hora = System.currentTimeMillis();
 
-		Notification notif = new Notification(icono, textoEstado, hora);
+		//Notification notif = new Notification(icono, textoEstado, hora);
+		NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
+				.setSmallIcon(R.drawable.alert)
+				.setContentTitle(textoEstado)
+				.setWhen(hora);
 
 		// Configuramos el Intent
 		Context contexto = getApplicationContext();
@@ -263,19 +270,23 @@ public class CheckLocationService extends Service {
 
 		PendingIntent contIntent = PendingIntent.getActivity(contexto,
 				0, notIntent, 0);
-		notif.setLatestEventInfo(contexto, titulo, descripcion,
-				contIntent);
+		notif.setContentIntent(contIntent);
+		//setLatestEventInfo(contexto, titulo, descripcion,contIntent);
 
 		// AutoCancel: cuando se pulsa la notificai�n ésta desaparece
-		notif.flags |= Notification.FLAG_AUTO_CANCEL;
+		notif.setAutoCancel(true);
+		//flags |= Notification.FLAG_AUTO_CANCEL;
 
 		// Añadir sonido, vibraci�n y luces
-		notif.defaults |= Notification.DEFAULT_SOUND;
-		notif.defaults |= Notification.DEFAULT_VIBRATE;
-		notif.defaults |= Notification.DEFAULT_LIGHTS;
+		notif.setDefaults(Notification.DEFAULT_SOUND);
+		notif.setDefaults(Notification.DEFAULT_VIBRATE);
+		notif.setDefaults(Notification.DEFAULT_LIGHTS);
+		//defaults |= Notification.DEFAULT_SOUND;
+		//notif.defaults |= Notification.DEFAULT_VIBRATE;
+		//notif.defaults |= Notification.DEFAULT_LIGHTS;
 
 		// Enviar notificaci�n
-		notManager.notify(33, notif);
+		notManager.notify(33, notif.build());
 	}
 	/**
 	 * M�todo que comprueba si el GPS esta habilitado.

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_explore"
+            android:icon="@drawable/ic_map"
+            android:title="Explorar el mapa"/>
+        <item
+            android:id="@+id/nav_planner"
+            android:icon="@drawable/itinerary"
+            android:title="Planificar ruta"/>
+        <item
+            android:id="@+id/nav_advanced"
+            android:icon="@drawable/ic_advanced_options"
+            android:title="Opciones avanzadas"/>
+        <item
+            android:id="@+id/nav_find"
+            android:icon="@drawable/ic_search_pois"
+            android:title="Buscar puntos de interés"/>
+        <item
+            android:id="@+id/nav_saved_routes"
+            android:icon="@drawable/ic_save_routes"
+            android:title="Mis rutas"/>
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share"
+            android:title="Compartir"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Ajustes"/>
+    </group>
+</menu>

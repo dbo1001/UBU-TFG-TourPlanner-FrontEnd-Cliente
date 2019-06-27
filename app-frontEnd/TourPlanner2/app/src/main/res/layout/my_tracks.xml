@@ -3,16 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/my_shape"
+    android:backgroundTint="@color/WhiteSmoke"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:background="@drawable/shape"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textViewSaveRoute"
+            android:textColor="@color/GhostWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -49,6 +53,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/action"
+            android:backgroundTint="@color/Orange"
             android:text="@string/save" />
     </LinearLayout>
 
@@ -57,10 +62,12 @@
         android:layout_height="0dp"
         android:layout_weight="10"
         android:background="@drawable/shape"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textViewLoadRoute"
+            android:textColor="@color/GhostWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -86,10 +93,12 @@
         android:layout_height="0dp"
         android:layout_weight="10"
         android:background="@drawable/shape"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textViewMaps"
+            android:textColor="@color/GhostWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
