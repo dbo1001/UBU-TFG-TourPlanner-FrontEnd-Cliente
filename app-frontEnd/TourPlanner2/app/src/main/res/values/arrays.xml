@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="routeOptions">
+        <item>@string/fast</item>
+        <item>@string/exhaustive</item>
+    </string-array>
+    <string-array name="targetOptions">
+        <item>@string/selectMap</item>
+        <item>@string/originEqTarget</item>
+        <item>@string/culturePoi</item>
+        <item>@string/leisurePoi</item>
+        <item>@string/gastronomyPoi</item>
+        <item>@string/naturePoi</item>
+    </string-array>
+    <string-array name="origenOptions">
+        <item>@string/selectMap</item>
+		<item>@string/selectHotel</item>
+    </string-array>
+</resources>

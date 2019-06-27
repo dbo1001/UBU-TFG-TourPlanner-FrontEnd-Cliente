@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_shape"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/transport"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textViewTransportOptions"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_rating"
+                android:clickable="false"
+                android:text="@string/pedestrian"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtRoutingOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/routingOptions"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <TextView
+            android:id="@+id/textViewRoutingOptions"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cancel_rating"
+            android:clickable="false"
+            android:text="@string/fast"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/txtCategoriesFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/categoriesFilter"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ExpandableListView
+                android:id="@+id/expandableListCulture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </ExpandableListView>
+
+            <ExpandableListView
+                android:id="@+id/expandableListLeisure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ExpandableListView>
+
+            <ExpandableListView
+                android:id="@+id/expandableListGastronomy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ExpandableListView>
+
+            <ExpandableListView
+                android:id="@+id/expandableListNature"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </ExpandableListView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

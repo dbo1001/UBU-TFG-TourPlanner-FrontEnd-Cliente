@@ -19,13 +19,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".activities.MapMain"
+            android:label="@string/map_activity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="com.actionbarsherlock.sample.plugins.MAPS" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.PreferencesActivity" />
+        <activity android:name=".activities.PlannerActivity" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.AdvancedOptionsActivity" />
+        <activity android:name=".activities.RecomendedPOIsActivity" />
+        <activity android:name=".activities.MyRoutesActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.GalleryActivity" />
+        <activity android:name=".activities.FullScreenViewActivity" />
+
+        <service android:name=".services.CheckLocationService" />
+
     </application>
 
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+     <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewPoi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:hint="@string/search_poi" >
+
+        <requestFocus />
+    </AutoCompleteTextView>
+    <Button
+        android:id="@+id/buttonCalculate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/calculateIterary" 
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
+        android:background="@drawable/action"/>
+
+    <ListView
+        android:id="@+id/listViewRecommendPois"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/buttonCalculate"
+        android:layout_below="@+id/autoCompleteTextViewPoi"
+        android:divider="@drawable/another_divider"
+        android:dividerHeight="1dp" >
+
+    </ListView>
+
+</RelativeLayout>

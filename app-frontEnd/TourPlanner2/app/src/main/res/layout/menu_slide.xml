@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:layout_width="wrap_content"
+   	android:layout_height="wrap_content"
+   	android:orientation="vertical">
+<ListView 
+    android:id="@+id/listView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:choiceMode="singleChoice"
+    android:divider="@layout/divider"
+    android:dividerHeight="1dp" >
+
+</ListView>
+
+<Button
+    android:id="@+id/buttonShare"
+    android:layout_height="wrap_content"
+    android:background="@drawable/action"
+    android:layout_width="match_parent"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:text="@string/share"
+    android:drawableLeft="@drawable/share" />
+
+</LinearLayout>

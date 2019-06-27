@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/panoramio_photo"
+        android:layout_width="match_parent"
+        android:layout_height="153dp"
+        android:background="@drawable/border"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/no_image" />
+
+    <RelativeLayout 
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/dialogButtonInfo"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="130dp"
+            android:layout_height="31dp"
+            android:layout_above="@+id/btn_rating"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/wikipedia"
+            android:text="@string/info" />
+
+        <Button
+            android:id="@+id/dialogButtonAccept"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="63dp"
+            android:background="@drawable/poi_info"
+            android:text="@string/accept" />
+
+        <Button
+            android:id="@+id/btn_rating"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="151dp"
+            android:layout_height="31dp"
+            android:layout_above="@+id/dialogButtonAccept"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="14dp"
+            android:drawableRight="@drawable/speech_bubble"
+            android:text="@string/rating" />
+
+        <include
+            android:id="@+id/include1"
+            android:layout_width="217dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialogButtonInfo"
+            android:layout_alignParentLeft="true"
+            layout="@layout/list_itinerary_result_element" />
+
+        <TextView
+            android:id="@+id/tv_Promoted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/include1"
+            android:layout_marginLeft="17dp"
+            android:text="@string/promoted" />
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/include1"
+            android:text="@string/distance" />
+
+        <ImageView
+            android:id="@+id/panoramioLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/panoramio" />
+
+        <TextView
+            android:id="@+id/panoramioText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/panoramioLogo"
+            android:text="@string/panoramio_terms"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RelativeLayout>
+
+</LinearLayout>

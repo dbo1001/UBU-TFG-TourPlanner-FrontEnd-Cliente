@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/my_shape"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewSaveRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/save_route"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <EditText
+            android:id="@+id/editTextRouteName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ems="10"
+            android:hint="@string/route_name"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textViewSaveOptions"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cancel_rating"
+            android:clickable="false"
+            android:text="@string/mobile"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/action"
+            android:text="@string/save" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewLoadRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/load_route"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <ListView
+            android:id="@+id/listViewAllRoutes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:divider="@drawable/another_divider"
+            android:dividerHeight="1dp" >
+        </ListView>
+    </LinearLayout>
+    
+   	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:background="@drawable/shape"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/downloaded_maps"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <include
+            layout="@layout/header_separator"
+            android:background="@drawable/shape" />
+
+        <ListView
+            android:id="@+id/listViewMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:choiceMode="singleChoice"
+            android:divider="@drawable/another_divider"
+            android:dividerHeight="1dp" >
+        </ListView>
+	</LinearLayout>
+</LinearLayout>

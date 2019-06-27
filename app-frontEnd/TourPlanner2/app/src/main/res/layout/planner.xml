@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/my_shape"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/selectOrigin"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <include
+                layout="@layout/header_separator"
+                android:background="@drawable/shape" />
+
+            <TextView
+                android:id="@+id/textViewSelectOrigin"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_rating"
+                android:clickable="false"
+                android:text="@string/selectMap"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/insertCity" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteHotel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ems="10"
+                android:hint="@string/insertHotel" >
+            </AutoCompleteTextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/departureTime"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <include
+                layout="@layout/header_separator"
+                android:background="@drawable/shape" />
+
+            <include
+                android:id="@+id/originTime"
+                layout="@layout/hour_selection" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/selectPreferences"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <include
+                layout="@layout/header_separator"
+                android:background="@drawable/shape" />
+
+            <include
+                layout="@layout/spinner_preferences"
+                android:background="@drawable/shape" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewTargetOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/selectTarget"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <include
+                layout="@layout/header_separator"
+                android:background="@drawable/shape" />
+
+            <TextView
+                android:id="@+id/textViewSelectTarget"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_rating"
+                android:clickable="false"
+                android:text="@string/selectMap"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/routeTime"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <include
+                layout="@layout/header_separator"
+                android:background="@drawable/shape" />
+
+            <include
+                android:id="@+id/targetTime"
+                layout="@layout/hour_selection" />
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/action"
+                android:text="@string/plan" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>
