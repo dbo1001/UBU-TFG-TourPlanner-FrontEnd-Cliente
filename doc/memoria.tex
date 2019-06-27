@@ -353,12 +353,14 @@
   }
 \makeatother
 
-\newcommand{\nombre}{Nombre del alumno} %%% cambio de comando
+\newcommand{\nombre}{Jesús Manuel Calvo Ruiz de Temiño} %%% cambio de comando
+\newcommand{\titulo}{Ampliación, actualización y mantenimiento de la aplicación \textsl{TourPlanner}. Parte FrontEnd}
+\newcommand{\mtutor}{Bruno Baruque Zanon}
 
 % Datos de portada
-\title{título del TFG}
+\title{\titulo}
 \author{\nombre}
-\tutor{nombre tutor}
+\tutor{\mtutor}
 \date{\today}
 
 \begin{document}
@@ -375,11 +377,11 @@
 
 \noindent\includegraphics[width=\textwidth]{cabecera}\vspace{1cm}
 
-\noindent D. nombre tutor, profesor del departamento de nombre departamento, área de nombre área.
+\noindent D. \mtutor, profesor del departamento de nombre departamento, área de nombre área.
 
 \noindent Expone:
 
-\noindent Que el alumno D. \nombre, con DNI dni, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado título de TFG. 
+\noindent Que el alumno D. \nombre, con DNI 13173674X, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado \titulo. 
 
 \noindent Y que dicho trabajo ha sido realizado por el alumno bajo la dirección del que suscribe, en virtud de lo cual se autoriza su presentación y defensa.
 
@@ -390,27 +392,27 @@ En Burgos, {\large \today}
 \vfill\vfill\vfill
 
 % Author and supervisor
-\begin{minipage}{0.45\textwidth}
-\begin{flushleft} %\large
-Vº. Bº. del Tutor:\\[2cm]
-D. nombre tutor
-\end{flushleft}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-\begin{flushleft} %\large
-Vº. Bº. del co-tutor:\\[2cm]
-D. nombre co-tutor
-\end{flushleft}
-\end{minipage}
-\hfill
+%\begin{minipage}{0.45\textwidth}
+%\begin{flushleft} %\large
+%Vº. Bº. del Tutor:\\[2cm]
+%D. nombre tutor
+%\end{flushleft}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{0.45\textwidth}
+%\begin{flushleft} %\large
+%Vº. Bº. del co-tutor:\\[2cm]
+%. nombre co-tutor
+%\end{flushleft}
+%\end{minipage}
+%\hfill
 
 \vfill
 
 % para casos con solo un tutor comentar lo anterior
 % y descomentar lo siguiente
-%Vº. Bº. del Tutor:\\[2cm]
-%D. nombre tutor
+Vº. Bº. del Tutor:\\[2cm]
+D. nombre tutor
 
 
 \newpage\null\thispagestyle{empty}\newpage
@@ -423,12 +425,28 @@ D. nombre co-tutor
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-En este primer apartado se hace una \textbf{breve} presentación del tema que se aborda en el proyecto.
+Este proyecto se basa en realizar la ampliación, actualización y mantenimiento de la aplicación TourPlanner, la cual se encarga de la generación de rutas turísticas personalizadas a través de una serie de algoritmos de búsqueda de caminos óptimos y que esta diseñada para ser utilizada en sistemas operativos Android.
+
+Para desarrollar este trabajo hemos cooperado mi compañero, Ignacio Aparicio Blanco y yo, pero cada uno realizando dos partes separadas que finalmente cumplen una función juntas, ya que Ignacio ha realizado la parte del backEnd (algoritmos para la generación de las rutas y manejo de la base de datos) y yo me he encargado de la parte frontEnd (interfaz y funcionamiento interno de la aplicación Android).
+
+A continuación explicaré brevemente las mejoras que he realizado en la parte FrontEnd de la aplicación. Cabe destacar que este trabajo esta centrado en la aplicación de mejoras estructurales y en la actualización y estandarización de las librerías y métodos utilizados, para así conseguir un mantenimiento futuro mucho mas sencillo.
+
+Se ha conseguido actualizar la aplicación para que pueda funcionar en los dispositivos mas modernos, ya que esta desarrollada para la versión de Android 6.0, pero también es compatible hasta la versión Android 9.
+
+También se ha hecho uso de una herramienta estándar para la creación del menú de la aplicación, que se encuentra dentro del paquete de Android. Con esto se consigue que la aplicación tenga una apariencia mucho más parecida a otras aplicaciones muy utilizadas en sistemas Android, como puede ser el propio Google Maps o la aplicación de Gmail, lo cual hace que resulte mas fácil de entender su funcionamiento para el usuario medio.
+
+Otra parte de este proyecto es bastante centrada en la optimización con respecto a los recursos y al uso de ciertos métodos que contiene Android. Se ha cambiado la estructura de "activities" dentro de la aplicación, para pasar a usar una estructura mas óptima.Más adelante se explicará en que consiste.
+
+Por otro lado, como ya he dicho, este trabajo se centra en la estandarización, y por ello se han dejado de utilizar una serie de librerías que, ya sea por no tener continuidad o por no tener compatibilidad con las nuevas versiones de Android, no eran capaces de funcionar en este sistema y por tanto, se ha decidido buscar la opción mas estándar o sostenible para sustituirlas.
+
+
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Palabras separadas por comas que identifiquen el contenido del proyecto Ej: servidor web, buscador de vuelos, android \ldots
+Android, actualización, mantenimiento, optimización, menú, estandarización, frontEnd
+
+\ldots
 \end{abstract}
 
 \clearpage
