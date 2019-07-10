@@ -4,9 +4,60 @@ En este apartado se describirán ciertos conceptos teóricos que resultan necesa
 
 \section{Modelo Cliente-Servidor}
 
+Una parte importante de este proyecto es el concepto del modelo cliente-servidor, ya que cumple con la estructura que estamos utilizando. En este modelo y en el proyecto hay unas caracteristicas principales y unos actores concretos que son los siguientes:
 
+\subsection{Cliente}
+\begin{itemize}
+\item Este se encarga de lanzar solicitudes o peticiones al servidor. Si lo comparamos con el proyecto de TourPlanner, podemos ver que la parte del cliente correspondería a la aplicación de Android.
 
-Algunos conceptos teóricos de \LaTeX \footnote{Créditos a los proyectos de Álvaro López Cantero: Configurador de Presupuestos y Roberto Izquierdo Amo: PLQuiz}.
+\item El cliente es capaz de lanzar peticiones a diferentes servidores, como es nuestro caso en el que lanza peticiones tanto al servidor de OpenStreetMaps para poder visualizar el mapa online, a la base de datos que desarrolla mi compañero(lanza la petición a través de Glassfish) o por ejemplo a un servidor que provee las imágenes de los puntos de interés.
+
+\item Obviamente este cliente contiene la interfaz que utilizará el usuario final, por lo que la interacción es directa.
+\end{itemize}
+
+\subsection{Servidor}
+\begin{itemize}
+\item El servidor es la otra parte indispensable de este modelo, ya que en el momento en que esta iniciado se encarga de escuchar a la espera de peticiones del cliente.
+
+\item Al igual que un cliente puede realizar distintas peticiones a distintos servidores, el servidor puede mantener conexión con un gran numero de clientes y procesar las peticiones. 
+
+\item Para este proyecto, quien cumple la funcion de servidor es GlassFish, que es a su vez un intermediario entre la aplicacion de android y la base de datos.
+\end{itemize}
+
+El proceso básico que también se verá en detalle mas adelante es el siguiente: el usuario interactua directamente con la aplicación (cliente), la cual realiza la petición a GlassFish (servidor), que a su vez realiza la petición a la base de datos y se la devuelve al cliente.
+
+Al estar usando este modelo conseguimos una serie de ventajas:
+\begin{itemize}
+\item Centralización: Al contar con un servidor que recibe todas las peticiones que le lance el cliente, conseguimos un control de todos los accesos que se realizan y los recursos que se utilizan, pudiendo restringir o aumentar donde sea necesario.
+\item Es un sistema muy fácilmente escalable, pudiendo aumentar las capacidades tanto de un lado como del otro independientemente, sin que al otro le afecte, o en todo caso teniendo que hacer modificaciones mínimas para que sea funcional. Esto mismo se traduce igualmente a la facilidad de mantenimiento, por las mismas razones.
+\item Teniendo cierta relación con la primera ventaja, conseguimos seguridad, ya que actualmente contamos con tecnologías que permiten conexiones seguras entre cliente y servidor, y a su vez evitando posibles hackeos, ya que aunque varios clientes estén accediendo al mismo servidor, no pueden conocer las direcciones IP del resto. 
+\end{itemize}
+
+\section{Estándar}
+
+Cuando se habla de estándar podemos considerar varias opciones, pero a la que nos referimos en este caso es el hecho de desarrollar software de un tipo especifico siguiendo ciertas reglas establecidas para así conseguir tener una cantidad indeterminada de programas y aplicaciones que contengan una estructura y una programación parecida, ya sea por el uso de los mismos métodos de una misma librería, o por seguir ciertos patrones con los que estructuras los programas de una manera concreta.
+
+En el caso de Android, podemos considerar como estándar la librería en si que ofrece Android para programar, ya que todas las aplicaciones que están desarrolladas por Google para este tipo de dispositivos mantienen una estructura bastante parecida en el desarrollo de ciertas técnicas.
+
+Una forma visual de demostrar esto se encuentra en el menú que utilizan la mayoría de aplicaciones, como el de Google Maps, Gmail o la aplicación para visualizar las fotos. Todos estos ejemplos utilizan una estructura prácticamente idéntica, y con esto se consigue lo que se llama estandarización, lo cual será explicado en el apartado de técnicas y herramientas.
+
+\section{Code Smell}
+
+Cuando se habla de Code Smell se esta hablando de problemas que puede contener el codigo de un programa, que no causa un error a la hora de ejecutar o compilar el programa, pero es un problema de caracter mas profundo, que acarrea otra serie de fallos, como puede ser la lentitud en un programa.
+
+Estos problemas también dificultan el mantenimiento del código a futuro, ya que puede ser un error que en la actualidad no cause fallos, pero en el momento que se realicen modificaciones un programa que contenga estos Code Smells será mas propenso a fallos críticos, que, dependiendo del tipo de Code Smell que lo haya provocado, puede ser mucho mas difícil detectarlo en ese momento que cuando se cometió.
+
+Gracias a la identificación de los Code Smells, se puede saber cuándo es necesario refactorizar código, que es una técnica que se explicará mas adelante. Con respecto a la identificación también es importante mencionar que tiene un carácter muy subjetivo, dependiendo del programador o incluso del lenguaje de programación, aunque existen herramientas que son capaces de detectar bastantes tipos de defecto, ya que algunos son mas subjetivos que otros (en el caso de código duplicado, aunque también pueden existir falsos negativos).
+
+\section{API}
+
+Una API, como su propio nombre indica, provee de una interfaz de programacion de aplicaciones, en concreto, de una aplicación que será la que provee de esa API a otro software para que pueda hacer uso de rutinas, métodos y procedimientos con los cuales incluya la funcionalidad del software proveedor de la API.
+
+Visto de otra forma, se basa en el uso de bibliotecas, y con esto se consigue que el programador no tenga que desarrollar todo el código que se encuentra en ellas, ya que con hacer uso de sus métodos y llamadas ya consigue esas funcionalidades.
+
+Por otro lado, al hacer esto también se consigue estandarización, debido a que todos los programas que usen esas librerías para implementar sus funcionalidades estarán haciendo los procesos de llamadas y usando los mismos métodos, así que se benefician de todas las ventajas con las que cuenta la estandarización, así como alguna de las limitaciones.
+
+Llevándolo a nuestro caso, tendríamos por un lado la API que nos permite visualizar imágenes de los puntos de interés, o por ejemplo la API con la que estamos viendo los mapas (OpenStreeMaps).
 
 \section{Secciones}
 
