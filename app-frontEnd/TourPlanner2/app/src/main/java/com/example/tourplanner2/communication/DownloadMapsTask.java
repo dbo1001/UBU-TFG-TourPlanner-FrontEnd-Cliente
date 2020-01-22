@@ -2,25 +2,22 @@ package com.example.tourplanner2.communication;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +29,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.util.Pair;
 
 /**
  * Clase que lanza las peticiones del servidor para la descarga de mapas.
@@ -49,6 +48,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 * Tiempo de conexi�n m�ximo en milisegundos
 	 */
 	private static final int CONN_TIMEOUT = 300000;
+	public static final String REQUEST_METHOD = "GET";
+	public static final int READ_TIMEOUT = 15000;
 	/**
 	 * Tiempo de espera de datos m�ximo en milisegundos
 	 */
@@ -68,7 +69,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	/**
 	 * Lista de parametros a enviar en la petici�n.
 	 */
-	private ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	//private ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	private List<Pair<String, String>> params = new ArrayList<>();
 	/**
 	 * Notifaci�n de la descarga del mapa.
 	 */
@@ -77,10 +79,6 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 * Referencia a la clase que va a procesar la petici�n.
 	 * */
 	private IWebServiceTaskResult dwtContext = null;
-	/**
-	 * Cliente HTTP.
-	 * */
-	private DefaultHttpClient httpclient;
 
 
 	/**
@@ -103,7 +101,9 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 */
 	public void addNameValuePair(String name, String value) {
 
-		params.add(new BasicNameValuePair(name, value));
+		params.add(new Pair<>("username", name));
+		params.add(new Pair<>("password", value));
+		//params.add(new BasicNameValuePair(name, value));
 	}
 
 	@Override
@@ -125,6 +125,61 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 */
 	@Override
 	protected String doInBackground(String... urls) {
+
+		String stringUrl = urls[0];
+		String result = null;
+		String inputLine;
+
+		try {
+			//Create a URL object holding our url
+			URL myUrl = new URL(stringUrl);
+
+			//Create a connection
+			HttpURLConnection connection =(HttpURLConnection)
+					myUrl.openConnection();
+
+			//Set methods and timeouts
+			connection.setRequestMethod(REQUEST_METHOD);
+			connection.setReadTimeout(READ_TIMEOUT);
+			connection.setConnectTimeout(CONN_TIMEOUT);
+
+			//Connect to our url
+			connection.connect();
+
+			//Create a new InputStreamReader
+			InputStreamReader streamReader = new
+					InputStreamReader(connection.getInputStream());
+
+			File filePath = new File(Environment.getExternalStorageDirectory() + "/tourplanner/maps/");
+
+			if (!filePath.exists())
+				filePath.mkdirs();
+
+			//Create a new buffered reader and String Builder
+			BufferedReader reader = new BufferedReader(streamReader);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			//Check if the line we are reading is not null
+			while((inputLine = reader.readLine()) != null){
+				stringBuilder.append(inputLine);
+
+			}
+			//Close our InputStream and Buffered reader
+			reader.close();
+			streamReader.close();
+
+			//Set our result equal to our stringBuilder
+			result = stringBuilder.toString();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = null;
+		}
+		return result;
+
+		/*
 		String url = urls[0];
 
 		HttpResponse response = doResponse(url);
@@ -193,12 +248,15 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 			e.printStackTrace();
 		}
 		return jso.toString();
+
+		 */
 	}
 
 	/**
 	 * M�todo que establece los tiempos de espera.
 	 * @return par�metros http
 	 */
+	/*
 	private HttpParams getHttpParams() {
 
 		HttpParams htpp = new BasicHttpParams();
@@ -208,6 +266,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 
 		return htpp;
 	}
+
+	 */
 
 	/**
 	 * M�todo que se ejecuta cuando responde el servidor.

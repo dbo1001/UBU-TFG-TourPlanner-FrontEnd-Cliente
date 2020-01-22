@@ -4,19 +4,15 @@ import java.util.ArrayList;
 
 import com.example.tourplanner2.adapters.GalleryAdapter;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.tourplanner2.R;
@@ -75,7 +71,7 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.build();
 
-		GridView gridView = (GridView) view.findViewById(R.id.gridview);
+		GridView gridView = view.findViewById(R.id.gridview);
 		gridView.setAdapter(new GalleryAdapter(imageUrls, options, view.getContext(), imageLoader));
 		gridView.setOnItemClickListener((parent, view1, position, id) -> {
 			FragmentManager fManager = getActivity().getSupportFragmentManager();

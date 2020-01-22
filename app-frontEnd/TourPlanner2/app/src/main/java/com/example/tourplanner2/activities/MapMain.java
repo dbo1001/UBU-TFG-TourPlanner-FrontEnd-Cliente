@@ -221,8 +221,7 @@ public class MapMain extends AppCompatActivity implements
 	 * Urls de los diferentes servicios utilizados.
 	 */
 	private static String ITINERARY_SERVICE_URL, EXPRESS_ITINERARY_SERVICE_URL,
-			ROUTE_SERVICE_URL, RATING_SERVICE_URL, WIKILOCATION_SERVICE_URL,
-			TRIPADVISOR_SEARCH_URL, GET_CITY_SERVICE, PANORAMIO_SERVICE_URL;
+			ROUTE_SERVICE_URL, RATING_SERVICE_URL, GET_CITY_SERVICE;
 	/**
 	 * Coordenadas de inicio y fin de la ruta.
 	 */
@@ -466,18 +465,18 @@ public class MapMain extends AppCompatActivity implements
 	}
 
 	private void loadMaps() {
-		GeoPoint madrid = new GeoPoint(40.416775, -3.70379);
+		GeoPoint burgos = new GeoPoint(42.3499677, -3.6822051);
 
 		myOpenMapView = (MapView) findViewById(R.id.openmapview);
 		myOpenMapView.setBuiltInZoomControls(true);
 		myMapController = (MapController) myOpenMapView.getController();
-		myMapController.setCenter(madrid);
-		myMapController.setZoom(6);
+		myMapController.setCenter(burgos);
+		myMapController.setZoom(10);
 
 		myOpenMapView.setMultiTouchControls(true);
 
 		// Añadir un punto en el mapa
-		points.add(new OverlayItem("Madrid", "Ciudad de Madrid", madrid));
+		points.add(new OverlayItem("Madrid", "Ciudad de Madrid", burgos));
 		updatePoints();
 	}
 
@@ -724,23 +723,23 @@ public class MapMain extends AppCompatActivity implements
 		Intent myIntent;
 		switch (request) {
 			case OPEN_PREFERENCES:
-				myIntent = new Intent(MapMain.this, PreferencesActivity.class);
+				myIntent = new Intent(getApplicationContext(), PreferencesActivity.class);
 				startActivityForResult(myIntent, 1);
 				break;
 			case OPEN_PLANNER:
-				myIntent = new Intent(MapMain.this, PlannerActivity.class);
+				myIntent = new Intent(getApplicationContext(), PlannerActivity.class);
 				startActivityForResult(myIntent, 1);
 				break;
 			case OPEN_TRACKS:
-				myIntent = new Intent(MapMain.this, MyRoutesActivity.class);
+				myIntent = new Intent(getApplicationContext(), MyRoutesActivity.class);
 				startActivityForResult(myIntent, 1);
 				break;
 			case OPEN_ADVANCED_OPTIONS:
-				myIntent = new Intent(MapMain.this, AdvancedOptionsActivity.class);
+				myIntent = new Intent(getApplicationContext(), AdvancedOptionsActivity.class);
 				startActivityForResult(myIntent, 1);
 				break;
 			case OPEN_RECOMENDED_PLACES:
-				myIntent = new Intent(MapMain.this, RecomendedPOIsActivity.class);
+				myIntent = new Intent(getApplicationContext(), RecomendedPOIsActivity.class);
 				locationService.updateLocation();
 				myIntent.putExtra("lat", locationService.getLatitude());
 				myIntent.putExtra("lon", locationService.getLongitude());

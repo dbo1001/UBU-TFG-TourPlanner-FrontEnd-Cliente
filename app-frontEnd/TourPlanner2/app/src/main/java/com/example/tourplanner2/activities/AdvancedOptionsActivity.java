@@ -12,19 +12,15 @@ import com.example.tourplanner2.dialog.DialogTextView;
 import com.example.tourplanner2.util.Misc;
 import com.example.tourplanner2.util.RowExpandableItem;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
+//import android.app.Activity;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,11 +29,8 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+
+//import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.tourplanner2.R;
 
@@ -52,9 +45,9 @@ import com.example.tourplanner2.R;
  */
 public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 
-	private DrawerLayout drawer;
+	//private DrawerLayout drawer;
 
-	private Activity pActivity = getActivity();
+	//private Activity pActivity = getActivity();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +65,7 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 		loadTags(R.raw.tags_t, groups, tags, children);
 		ExpandableAdapter exAdapter = new ExpandableAdapter(getActivity(), groups, tags,
 				children, view.getContext().getApplicationContext());
-		ExpandableListView expCulture = (ExpandableListView) view.findViewById(R.id.expandableListCulture);
+		ExpandableListView expCulture = view.findViewById(R.id.expandableListCulture);
 		expCulture.setAdapter(exAdapter);
 
 		final String[] data = new String[] {
@@ -80,7 +73,7 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 				getResources().getString(R.string.exhaustive) };
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
-		TextView textView = ((TextView) view.findViewById(R.id.textViewRoutingOptions));
+		TextView textView = (view.findViewById(R.id.textViewRoutingOptions));
 		final DialogTextView dialog = new DialogTextView(getActivity(), data, textView);
 		dialog.setTitle(getResources().getString(R.string.selectMode));
 		if (pref.getString("route_mode", "fast").equals("fast")) {
@@ -112,7 +105,7 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 				getResources().getString(R.string.pedestrian),
 				getResources().getString(R.string.car) };
 
-		textView = ((TextView) view.findViewById(R.id.textViewTransportOptions));
+		textView = (view.findViewById(R.id.textViewTransportOptions));
 		final DialogTextView dialogTransport = new DialogTextView(getActivity(),
 				dataTransport, textView);
 		dialogTransport.setTitle(getResources().getString(
@@ -273,7 +266,7 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 	 *            list view adapter
 	 * 
 	 */
-	public void loadTags(int resourceId, List<String> groups,
+	private void loadTags(int resourceId, List<String> groups,
 			List<String> tags, List<List<RowExpandableItem>> children) {
 		// The InputStream opens the resourceId and sends it to the buffer
 		InputStream is = this.getResources().openRawResource(resourceId);

@@ -26,7 +26,7 @@ import android.widget.TextView;
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
  */
-public class RecommendedPoiAdapter extends ArrayAdapter<RowItineraryList> 
+public class RecommendedPoiAdapter extends ArrayAdapter<RowItineraryList>
 implements Filterable{
 	/**
 	 * Contexto de la activity.
@@ -106,30 +106,26 @@ implements Filterable{
 		final ViewHolder holder;
 		holder = new ViewHolder();
 		holder.position = position;
-		holder.textName = (TextView) item
+		holder.textName = item
 				.findViewById(R.id.textViewItineraryName);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.textTag = (TextView) item
+		holder.textTag = item
 				.findViewById(R.id.textViewItineraryDistance);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.selected = (CheckBox) item
+		holder.selected = item
 				.findViewById(R.id.checkBoxRecommendedPoi);
-		holder.rating = (RatingBar) item.findViewById(R.id.ratingBar);
+		holder.rating = item.findViewById(R.id.ratingBar);
 		holder.rating.setIsIndicator(true);
-		holder.image = (ImageView) item
+		holder.image = item
 				.findViewById(R.id.imageViewItineraryList);
-		holder.imageTag = (ImageView) item
+		holder.imageTag = item
 				.findViewById(R.id.imageViewItineraryListTag);
 		holder.selected.setChecked(false);
-		holder.selected.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				ViewHolder holder = (ViewHolder) ((View) v.getParent()
-						.getParent().getParent()).getTag();
-				rows[holder.position].setSelected(!rows[holder.position]
-						.isSelected());
-			}
+		holder.selected.setOnClickListener(v -> {
+			ViewHolder holder1 = (ViewHolder) ((View) v.getParent()
+					.getParent().getParent()).getTag();
+			rows[holder1.position].setSelected(!rows[holder1.position]
+					.isSelected());
 		});
 		return holder;
 	}
@@ -168,12 +164,12 @@ implements Filterable{
 				results.count = rows.length;
 			} else {
 				// We perform filtering operation
-				ArrayList<RowItineraryList> poiList = new ArrayList<RowItineraryList>();
+				ArrayList<RowItineraryList> poiList = new ArrayList<>();
 
-				for (int i = 0; i < rows.length; i++) {
-					if (rows[i].getTextName() != null && 
-							rows[i].getTextName().toLowerCase().contains(constraint.toString().toLowerCase())){
-						poiList.add(rows[i]);
+				for (RowItineraryList row : rows) {
+					if (row.getTextName() != null &&
+							row.getTextName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+						poiList.add(row);
 					}
 				}
 

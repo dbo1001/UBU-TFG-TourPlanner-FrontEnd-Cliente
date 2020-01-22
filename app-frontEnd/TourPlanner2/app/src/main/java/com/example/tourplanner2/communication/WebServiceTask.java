@@ -4,22 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+
+import java.net.HttpURLConnection;
+import java.util.List;
 
 import android.app.ProgressDialog;
+import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import androidx.core.util.Pair;
 
 /**
  * Clase que lanza las peticiones del servidor, extiende de AsynTask por lo que
@@ -51,6 +49,9 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	 * Tiempo de espera de datos m�ximo en milisegundos
 	 */
 	private static final int SOCKET_TIMEOUT = 500000;
+	public static final String REQUEST_METHOD = "GET";
+	public static final int READ_TIMEOUT = 15000;
+
 	/**
 	 * Tipo de petici�n.
 	 */
@@ -66,15 +67,19 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	/**
 	 * Lista de parametros a enviar en la petici�n.
 	 */
-	private ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	//private ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	private List<Pair<String, String>> params = new ArrayList<>();
+
 	/**
 	 * Dialogo con barra de progreso.
 	 */
 	private ProgressDialog pDlg = null;
+
+	private URL urlConnect;
 	
 	/**
 	 * Constructor de la clase.
-	 * 
+	 *
 	 * @param taskType
 	 *            tipo de petici�n
 	 * @param mContext
@@ -109,7 +114,9 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	 */
 	public void addNameValuePair(String name, String value) {
 
-		params.add(new BasicNameValuePair(name, value));
+		params.add(new Pair<>("username", name));
+		params.add(new Pair<>("password", value));
+		//params.add(new BasicNameValuePair(name, value));
 	}
 	/**
 	 * M�todo que muestra el dialogo de progreso.
@@ -131,6 +138,55 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	 */
 	protected String doInBackground(String... urls) {
 
+		String stringUrl = urls[0];
+		String result = null;
+		String inputLine;
+		
+		try {
+			//Create a URL object holding our url
+			URL myUrl = new URL(stringUrl);
+
+			//Create a connection
+			HttpURLConnection connection =(HttpURLConnection)
+					myUrl.openConnection();
+
+			//Set methods and timeouts
+			connection.setRequestMethod(REQUEST_METHOD);
+			connection.setReadTimeout(READ_TIMEOUT);
+			connection.setConnectTimeout(CONN_TIMEOUT);
+
+			//Connect to our url
+			connection.connect();
+
+			//Create a new InputStreamReader
+			InputStreamReader streamReader = new
+					InputStreamReader(connection.getInputStream());
+
+			//Create a new buffered reader and String Builder
+			BufferedReader reader = new BufferedReader(streamReader);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			//Check if the line we are reading is not null
+			while((inputLine = reader.readLine()) != null){
+				stringBuilder.append(inputLine);
+
+			}
+			//Close our InputStream and Buffered reader
+			reader.close();
+			streamReader.close();
+
+			//Set our result equal to our stringBuilder
+			result = stringBuilder.toString();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			result = null;
+		}
+		return result;
+
+		/*
 		String url = urls[0];
 		String result = "";
 
@@ -153,7 +209,7 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 
 		}
 
-		return result;
+		return result;*/
 	}
 	
 	@Override
@@ -176,27 +232,63 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	 * M�todo que establece los tiempos de espera.
 	 * @return par�metros http
 	 */
-	private HttpParams getHttpParams() {
+	/*
+	private HttpURLConnection getHttpParams() throws IOException {
 
-		HttpParams htpp = new BasicHttpParams();
+		HttpURLConnection http = (HttpURLConnection)this.urlConnect.openConnection();
+		http.setConnectTimeout(CONN_TIMEOUT);
 
-		HttpConnectionParams.setConnectionTimeout(htpp, CONN_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(htpp, SOCKET_TIMEOUT);
+		//HttpConnectionParams.setConnectionTimeout(htpp, CONN_TIMEOUT);
+		//HttpConnectionParams.setSoTimeout(htpp, SOCKET_TIMEOUT);
 
-		return htpp;
-	}
+		return http;
+	}*/
 	/**
 	 * M�todo que se ejecuta cuando responde el servidor.
 	 * @param url de respuesta del servidor
 	 * @return respuesta del servidor
 	 */
-	private HttpResponse doResponse(String url) {
+
+	private HttpResponseCache doResponse(String url) throws MalformedURLException {
 
 		// Use our connection and data timeouts as parameters for our
 		// DefaultHttpClient
-		DefaultHttpClient httpclient = new HttpsClient(getHttpParams());
+		//DefaultHttpClient httpclient = new HttpsClient(getHttpParams());
+		HttpResponseCache response = null;
+		try {
+			//Create a URL object holding our url
+			URL myUrl = new URL(url);
 
-		HttpResponse response = null;
+			//Create a connection
+			HttpURLConnection connection = (HttpURLConnection)
+					myUrl.openConnection();
+
+			//Set methods and timeouts
+			connection.setRequestMethod(REQUEST_METHOD);
+			connection.setReadTimeout(READ_TIMEOUT);
+			connection.setConnectTimeout(CONN_TIMEOUT);
+
+			//Connect to our url
+			connection.connect();
+
+			switch (connection.getResponseCode()){
+				case POST_TASK:
+					HttpPost httppost = new HttpPost(url);
+					// Add parameters
+					httppost.setEntity(new UrlEncodedFormEntity(params));
+					response = httpclient.execute(httppost);
+					break;
+				case GET_TASK:
+					HttpGet httpget = new HttpGet(url);
+					response = httpclient.execute(httpget);
+					break;
+			}
+
+			response = null;
+		}catch (IOException e) {
+				e.printStackTrace();
+				response = null;
+			}
 
 		try {
 			switch (taskType) {
@@ -220,15 +312,16 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 
 		return response;
 	}
-	
+
 	/**
 	 * M�todo que convierte un InputSream a String
 	 * @param is inputStream a convertir
 	 * @return cadena del inputStream
 	 */
+	/*
 	private String inputStreamToString(InputStream is) {
 
-		String line = "";
+		String line;
 		StringBuilder total = new StringBuilder();
 
 		// Wrap a BufferedReader around the InputStream
@@ -246,6 +339,8 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 		// Return full string
 		return total.toString();
 	}
+
+	 */
 	
 
 }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -176,7 +177,7 @@ IWebServiceTaskResult, IServiceTask{
 					}
 				});
 
-		searchView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextViewPoi);
+		searchView = view.findViewById(R.id.autoCompleteTextViewPoi);
 		searchView.addTextChangedListener(new TextChangeListener());
 	}
 

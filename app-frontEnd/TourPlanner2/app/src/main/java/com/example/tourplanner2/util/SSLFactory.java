@@ -4,11 +4,12 @@ package com.example.tourplanner2.util;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.*;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.conn.ssl.SSLSocketFactory;
+//import org.apache.http.conn.ssl.SSLSocketFactory;
 
 public class SSLFactory {
 	
@@ -36,7 +37,7 @@ public class SSLFactory {
 			SSLContext ctx = SSLContext.getInstance("TLS");
 			ctx.init(null, new TrustManager[] { tm }, null);
 			sf = new MySSLSocketFactory(ctx);
-			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			sf.createSocket();
 			
         } catch (Exception ex){
         	ex.printStackTrace();
