@@ -14,8 +14,8 @@ public class HttpsClient extends DefaultHttpClient{
 	
 	public HttpsClient(HttpParams params){
 		super(null, params);
-	}
-
+}
+/*
 	@Override
 	protected ClientConnectionManager createClientConnectionManager(){
 		SchemeRegistry registry = new SchemeRegistry();
@@ -25,6 +25,8 @@ public class HttpsClient extends DefaultHttpClient{
         return new SingleClientConnManager(getParams(), registry);
 		
 	}
+
+ */
 
 
 

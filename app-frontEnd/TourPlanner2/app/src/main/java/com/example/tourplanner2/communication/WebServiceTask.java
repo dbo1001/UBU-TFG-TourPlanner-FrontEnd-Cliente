@@ -225,7 +225,7 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 		if (processMessage != null) {
 			pDlg.dismiss();
 		}
-		mContext.handleResponse(response);
+		//mContext.handleResponse(response);
 	}
 
 	/**
@@ -249,12 +249,13 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	 * @return respuesta del servidor
 	 */
 
-	private HttpResponseCache doResponse(String url) throws MalformedURLException {
+	private String doResponse(String url) throws MalformedURLException {
 
 		// Use our connection and data timeouts as parameters for our
 		// DefaultHttpClient
 		//DefaultHttpClient httpclient = new HttpsClient(getHttpParams());
-		HttpResponseCache response = null;
+		String response = null;
+		String inputLine;
 		try {
 			//Create a URL object holding our url
 			URL myUrl = new URL(url);
@@ -273,23 +274,47 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 
 			switch (connection.getResponseCode()){
 				case POST_TASK:
+					connection.setRequestMethod("POST");
+					/*
 					HttpPost httppost = new HttpPost(url);
 					// Add parameters
 					httppost.setEntity(new UrlEncodedFormEntity(params));
 					response = httpclient.execute(httppost);
+					 */
 					break;
 				case GET_TASK:
+					connection.setRequestMethod(REQUEST_METHOD);
+					/*
 					HttpGet httpget = new HttpGet(url);
 					response = httpclient.execute(httpget);
+
+					 */
 					break;
 			}
+			//Create a new InputStreamReader
+			InputStreamReader streamReader = new
+					InputStreamReader(connection.getInputStream());
 
-			response = null;
+			//Create a new buffered reader and String Builder
+			BufferedReader reader = new BufferedReader(streamReader);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			//Check if the line we are reading is not null
+			while((inputLine = reader.readLine()) != null){
+				stringBuilder.append(inputLine);
+
+			}
+			//Close our InputStream and Buffered reader
+			reader.close();
+			streamReader.close();
+
+			//Set our result equal to our stringBuilder
+			response = connection.getResponseMessage();
 		}catch (IOException e) {
 				e.printStackTrace();
 				response = null;
 			}
-
+/*
 		try {
 			switch (taskType) {
 
@@ -309,6 +334,8 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 			Log.e(TAG, e.getLocalizedMessage(), e);
 
 		}
+
+ */
 
 		return response;
 	}

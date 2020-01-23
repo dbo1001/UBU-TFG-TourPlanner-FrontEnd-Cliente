@@ -274,14 +274,72 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 * @param url de respuesta del servidor
 	 * @return respuesta del servidor
 	 */
-	private HttpResponse doResponse(String url) {
+	private String doResponse(String url) throws MalformedURLException {
 
 		// Use our connection and data timeouts as parameters for our
 		// DefaultHttpClient
-		httpclient = new HttpsClient(getHttpParams());
+		//DefaultHttpClient httpclient = new HttpsClient(getHttpParams());
+		String response = null;
+		String inputLine;
+		try {
+			//Create a URL object holding our url
+			URL myUrl = new URL(url);
 
-		HttpResponse response = null;
-		
+			//Create a connection
+			HttpURLConnection connection = (HttpURLConnection)
+					myUrl.openConnection();
+
+			//Set methods and timeouts
+			connection.setRequestMethod(REQUEST_METHOD);
+			connection.setReadTimeout(READ_TIMEOUT);
+			connection.setConnectTimeout(CONN_TIMEOUT);
+
+			//Connect to our url
+			connection.connect();
+
+			switch (connection.getResponseCode()){
+				case POST_TASK:
+					connection.setRequestMethod("POST");
+					/*
+					HttpPost httppost = new HttpPost(url);
+					// Add parameters
+					httppost.setEntity(new UrlEncodedFormEntity(params));
+					response = httpclient.execute(httppost);
+					 */
+					break;
+				case GET_TASK:
+					connection.setRequestMethod(REQUEST_METHOD);
+					/*
+					HttpGet httpget = new HttpGet(url);
+					response = httpclient.execute(httpget);
+
+					 */
+					break;
+			}
+			//Create a new InputStreamReader
+			InputStreamReader streamReader = new
+					InputStreamReader(connection.getInputStream());
+
+			//Create a new buffered reader and String Builder
+			BufferedReader reader = new BufferedReader(streamReader);
+			StringBuilder stringBuilder = new StringBuilder();
+
+			//Check if the line we are reading is not null
+			while((inputLine = reader.readLine()) != null){
+				stringBuilder.append(inputLine);
+
+			}
+			//Close our InputStream and Buffered reader
+			reader.close();
+			streamReader.close();
+
+			//Set our result equal to our stringBuilder
+			response = connection.getResponseMessage();
+		}catch (IOException e) {
+			e.printStackTrace();
+			response = null;
+		}
+/*
 		try {
 			switch (taskType) {
 
@@ -301,6 +359,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 			Log.e(TAG, e.getLocalizedMessage(), e);
 
 		}
+
+ */
 
 		return response;
 	}
