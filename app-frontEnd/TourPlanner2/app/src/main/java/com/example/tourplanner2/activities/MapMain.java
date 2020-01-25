@@ -15,8 +15,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,7 +27,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,17 +45,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.Navigation;
-//import androidx.appcompat.R;
 
 import com.example.tourplanner2.BuildConfig;
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.adapters.CustomSocialAdapter;
 import com.example.tourplanner2.adapters.ItineraryListAdapter;
-import com.example.tourplanner2.adapters.OptionsAdapter;
-import com.example.tourplanner2.adapters.RecommendedPoiAdapter;
 import com.example.tourplanner2.communication.IServiceTask;
 import com.example.tourplanner2.communication.IWebServiceTaskResult;
 import com.example.tourplanner2.communication.WebServiceTask;
@@ -80,27 +72,19 @@ import org.brickred.socialauth.android.SocialAuthError;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.api.IMapView;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.mapsforge.MapsForgeTileProvider;
-import org.osmdroid.mapsforge.MapsForgeTileSource;
 
-//import org.mapsforge.map.android.view.MapView;
-import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.Marker;
-
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -115,7 +99,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class MapMain extends AppCompatActivity implements
 		IWebServiceTaskResult, IServiceTask, CheckLocationService.ServiceClient, NavigationView.OnNavigationItemSelectedListener {
@@ -666,14 +649,14 @@ public class MapMain extends AppCompatActivity implements
 		try {
 			String address = PropertiesParser.getConnectionSettings(this);
 
-			ITINERARY_SERVICE_URL = "https://" + address
+			ITINERARY_SERVICE_URL = "http://" + address
 					+ "/osm_server/get/itinerary";
-			EXPRESS_ITINERARY_SERVICE_URL = "https://" + address
+			EXPRESS_ITINERARY_SERVICE_URL = "http://" + address
 					+ "/osm_server/get/itinerary/express";
-			ROUTE_SERVICE_URL = "https://" + address
+			ROUTE_SERVICE_URL = "http://" + address
 					+ "/osm_server/get/itinerary/customroute";
-			RATING_SERVICE_URL = "https://" + address + "/osm_server/get/rating";
-			GET_CITY_SERVICE = "https://" + address + "/osm_server/get/map/exists";
+			RATING_SERVICE_URL = "http://" + address + "/osm_server/get/rating";
+			GET_CITY_SERVICE = "http://" + address + "/osm_server/get/map/exists";
 
 		} catch (IOException e){
 			e.printStackTrace();

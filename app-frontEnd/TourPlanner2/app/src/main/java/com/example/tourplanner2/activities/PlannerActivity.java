@@ -339,12 +339,12 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	private void setServiceDirections() {
 		try {
 			String address = PropertiesParser.getConnectionSettings(getActivity());
-			CITIES_SERVICE_URL = "https://" + address + "/osm_server/get/cities";
-			CITY_EXIST_SERVICE_URL = "https://" + address
+			CITIES_SERVICE_URL = "http://" + address + "/osm_server/get/cities";
+			CITY_EXIST_SERVICE_URL = "http://" + address
 					+ "/osm_server/get/cities/exists";
-			HOTEL_EXIST_SERVICE_URL = "https://" + address
+			HOTEL_EXIST_SERVICE_URL = "http://" + address
 					+ "/osm_server/get/hotels/exists";
-			HOTELS_SERVICE_URL = "https://" + address + "/osm_server/get/hotels";
+			HOTELS_SERVICE_URL = "http://" + address + "/osm_server/get/hotels";
 
 		} catch (IOException e) {
 			e.printStackTrace();
