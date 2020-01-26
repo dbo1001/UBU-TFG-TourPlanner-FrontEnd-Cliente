@@ -649,14 +649,14 @@ public class MapMain extends AppCompatActivity implements
 		try {
 			String address = PropertiesParser.getConnectionSettings(this);
 
-			ITINERARY_SERVICE_URL = "http://" + address
+			ITINERARY_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/itinerary";
-			EXPRESS_ITINERARY_SERVICE_URL = "http://" + address
+			EXPRESS_ITINERARY_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/itinerary/express";
-			ROUTE_SERVICE_URL = "http://" + address
+			ROUTE_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/itinerary/customroute";
-			RATING_SERVICE_URL = "http://" + address + "/osm_server/get/rating";
-			GET_CITY_SERVICE = "http://" + address + "/osm_server/get/map/exists";
+			RATING_SERVICE_URL = "https://" + address + "/osm_server/get/rating";
+			GET_CITY_SERVICE = "https://" + address + "/osm_server/get/map/exists";
 
 		} catch (IOException e){
 			e.printStackTrace();

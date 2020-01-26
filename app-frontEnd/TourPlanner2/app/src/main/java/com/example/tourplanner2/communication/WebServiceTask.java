@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
 
@@ -18,6 +20,16 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.core.util.Pair;
+
+import com.example.tourplanner2.util.NullHostNameVerifier;
+
+import org.apache.commons.lang3.ObjectUtils;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Clase que lanza las peticiones del servidor, extiende de AsynTask por lo que
@@ -139,16 +151,35 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	protected String doInBackground(String... urls) {
 
 		String stringUrl = urls[0];
+		//Conexion por HTTPS
+		HttpsURLConnection urlHttpsConnection = null;
 		String result = null;
 		String inputLine;
+
+		HttpURLConnection connection = null;
 		
 		try {
 			//Create a URL object holding our url
 			URL myUrl = new URL(stringUrl);
 
-			//Create a connection
-			HttpURLConnection connection =(HttpURLConnection)
-					myUrl.openConnection();
+			//Si necesito usar HTTPS
+			if (myUrl.getProtocol().toLowerCase().equals("https")) {
+
+				trustAllHosts();
+
+				//Creo la Conexion
+				urlHttpsConnection = (HttpsURLConnection) myUrl.openConnection();
+
+				//Seteo la verificacion para que NO verifique nada!!
+				urlHttpsConnection.setHostnameVerifier(new NullHostNameVerifier());
+
+				//Asigno a la otra variable para usar simpre la mism
+				connection = urlHttpsConnection;
+
+			} else {
+
+				connection = (HttpURLConnection) myUrl.openConnection();
+			}
 
 			//Set methods and timeouts
 			connection.setRequestMethod(REQUEST_METHOD);
@@ -210,6 +241,44 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 		}
 
 		return result;*/
+	}
+
+	private static void trustAllHosts() {
+
+		X509TrustManager easyTrustManager = new X509TrustManager() {
+
+			public void checkClientTrusted(
+					X509Certificate[] chain,
+					String authType) throws CertificateException {
+				// Oh, I am easy!
+			}
+
+			public void checkServerTrusted(
+					X509Certificate[] chain,
+					String authType) throws CertificateException {
+				// Oh, I am easy!
+			}
+
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+		};
+
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[] {easyTrustManager};
+
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("TLS");
+
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

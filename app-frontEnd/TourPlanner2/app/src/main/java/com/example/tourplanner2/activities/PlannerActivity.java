@@ -3,6 +3,8 @@ package com.example.tourplanner2.activities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -163,13 +165,13 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		(view.findViewById(R.id.textViewSelectTarget))
 				.setOnClickListener(v -> dialog2.show());
 
-		AutoCompleteTextView autoCompView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteCity);
+		AutoCompleteTextView autoCompView = view.findViewById(R.id.autoCompleteCity);
 
 		autoCompView.addTextChangedListener(new TextChangeListener(true));
-		autoCompView = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteHotel);
+		autoCompView = view.findViewById(R.id.autoCompleteHotel);
 		autoCompView.addTextChangedListener(new TextChangeListener(false));
 
-		Button btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
+		Button btnEnviar = view.findViewById(R.id.btnEnviar);
 		btnEnviar.setOnClickListener(arg0 -> {
 			hotels = false;
 			exist = true;
@@ -314,10 +316,10 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	*/
 
 	private void seekBarInitialization() {
-		sbCulture = (SeekBar) getActivity().findViewById(R.id.seekBarCulture);
-		sbLeisure = (SeekBar) getActivity().findViewById(R.id.seekBarLeisure);
-		sbNature = (SeekBar) getActivity().findViewById(R.id.seekBarNature);
-		sbGastronomy = (SeekBar) getActivity().findViewById(R.id.seekBarGastronomy);
+		sbCulture = Objects.requireNonNull(getActivity()).findViewById(R.id.seekBarCulture);
+		sbLeisure = getActivity().findViewById(R.id.seekBarLeisure);
+		sbNature = getActivity().findViewById(R.id.seekBarNature);
+		sbGastronomy = getActivity().findViewById(R.id.seekBarGastronomy);
 	}
 
 	/**
@@ -325,7 +327,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 */
 	private void initilizeSeekBars() {
 		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getActivity().getApplicationContext());
+				.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
 		sbCulture.setProgress(pref.getInt("cultureProgress", 50));
 		sbLeisure.setProgress(pref.getInt("leisureProgress", 50));
 		sbNature.setProgress(pref.getInt("natureProgress", 50));
@@ -338,13 +340,13 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 */
 	private void setServiceDirections() {
 		try {
-			String address = PropertiesParser.getConnectionSettings(getActivity());
-			CITIES_SERVICE_URL = "http://" + address + "/osm_server/get/cities";
-			CITY_EXIST_SERVICE_URL = "http://" + address
+			String address = PropertiesParser.getConnectionSettings(Objects.requireNonNull(getActivity()));
+			CITIES_SERVICE_URL = "https://" + address + "/osm_server/get/cities";
+			CITY_EXIST_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/cities/exists";
-			HOTEL_EXIST_SERVICE_URL = "http://" + address
+			HOTEL_EXIST_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/hotels/exists";
-			HOTELS_SERVICE_URL = "http://" + address + "/osm_server/get/hotels";
+			HOTELS_SERVICE_URL = "https://" + address + "/osm_server/get/hotels";
 
 		} catch (IOException e) {
 			e.printStackTrace();
