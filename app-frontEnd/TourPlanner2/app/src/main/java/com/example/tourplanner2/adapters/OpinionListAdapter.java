@@ -65,11 +65,11 @@ public class OpinionListAdapter extends ArrayAdapter<OpinionItem> {
 	private ViewHolder getNewViewHolder(final int position, View item) {
 		ViewHolder holder;
 		holder = new ViewHolder();
-		holder.textName = (TextView) item.findViewById(R.id.textViewName);
+		holder.textName = item.findViewById(R.id.textViewName);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.rating = (RatingBar) item.findViewById(R.id.ratingBar);
+		holder.rating = item.findViewById(R.id.ratingBar);
 		holder.rating.setIsIndicator(true);
-		holder.textOpinion = (TextView) item
+		holder.textOpinion = item
 				.findViewById(R.id.textViewOpinion);
 		return holder;
 	}

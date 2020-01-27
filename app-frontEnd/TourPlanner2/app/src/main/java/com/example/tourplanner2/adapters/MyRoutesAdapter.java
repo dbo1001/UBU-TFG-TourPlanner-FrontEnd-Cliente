@@ -64,7 +64,7 @@ public class MyRoutesAdapter extends ArrayAdapter<MyRoutesItem> {
 		holder.textName.setText(rows.get(position).getName());
 		holder.rating.setRating((float) rows.get(position).getRating());
 		holder.textCity.setText(rows.get(position).getCity());
-		holder.date.setText(rows.get(position).getDate().toString());
+		holder.date.setText(rows.get(position).getDate());
 		return item;
 	}
 	/**
@@ -76,13 +76,13 @@ public class MyRoutesAdapter extends ArrayAdapter<MyRoutesItem> {
 	private ViewHolder getNewViewHolder(final int position, View item) {
 		ViewHolder holder;
 		holder = new ViewHolder();
-		holder.image = (ImageView) item.findViewById(R.id.imageViewMyRoutesList);
-		holder.textName = (TextView) item.findViewById(R.id.textViewMyRoutesName);
+		holder.image = item.findViewById(R.id.imageViewMyRoutesList);
+		holder.textName = item.findViewById(R.id.textViewMyRoutesName);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.rating = (RatingBar) item.findViewById(R.id.myRoutesRatingBar);
+		holder.rating = item.findViewById(R.id.myRoutesRatingBar);
 		holder.rating.setIsIndicator(true);
-		holder.date = (TextView) item.findViewById(R.id.tvDate);
-		holder.textCity = (TextView) item
+		holder.date = item.findViewById(R.id.tvDate);
+		holder.textCity = item
 				.findViewById(R.id.tvMyRoutesCity);
 		return holder;
 	}

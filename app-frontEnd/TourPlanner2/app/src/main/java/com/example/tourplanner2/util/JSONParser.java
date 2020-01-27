@@ -1,21 +1,15 @@
 package com.example.tourplanner2.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlay;
-import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.util.GeoPoint;
 
 import com.example.tourplanner2.R;
-import com.example.tourplanner2.activities.MapMain;
 
 import android.content.Context;
 
@@ -162,7 +156,7 @@ public class JSONParser {
 	 * M�todo que devuelve los elementos del overlay.
 	 * @return lista con los elementos del overlay
 	 */
-	public List<OverlayItem> getOverlayItems() {
+	public List getOverlayItems() {
 
 		return items.getDisplayedItems();
 	}

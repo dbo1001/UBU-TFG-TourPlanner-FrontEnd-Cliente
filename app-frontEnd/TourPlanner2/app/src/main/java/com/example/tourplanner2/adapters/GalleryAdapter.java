@@ -84,10 +84,10 @@ public class GalleryAdapter extends BaseAdapter {
 		if (convertView == null) {
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater(); 
 			gridView =  inflater.inflate(R.layout.item_grid_image, parent, false);
-			viewHolder.image = (ImageView) gridView
+			viewHolder.image = gridView
 					.findViewById(R.id.image_item_sub_category);
 		} else {
-			gridView = (View) convertView;
+			gridView = convertView;
 		}
 		
 		imageLoader.displayImage(imageUrls.get(position), viewHolder.image, options);

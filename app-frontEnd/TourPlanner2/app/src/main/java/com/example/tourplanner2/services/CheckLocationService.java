@@ -126,8 +126,8 @@ public class CheckLocationService extends Service {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		// Obtenemos la última posición conocida
-		if (PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-				PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+		if (PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PermissionChecker.PERMISSION_GRANTED &&
+				PermissionChecker.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PermissionChecker.PERMISSION_GRANTED) {
 			// TODO: Consider calling
 			//    Activity#requestPermissions
 			// here to request the missing permissions, and then overriding
@@ -212,8 +212,7 @@ public class CheckLocationService extends Service {
 		Location loc2 = new Location("location1");
 		loc2.setLatitude(Double.valueOf(lat));
 		loc2.setLongitude(Double.valueOf(lon));
-		int distance = (int) ((int) (loc1.distanceTo(loc2)));
-		return distance;
+		return (int) (loc1.distanceTo(loc2));
 	}
 	/**
 	 * M�todo que comprueba si se esta visitando un punto.

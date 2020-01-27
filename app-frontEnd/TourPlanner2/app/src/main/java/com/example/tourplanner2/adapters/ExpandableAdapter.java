@@ -20,8 +20,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.tourplanner2.activities.AdvancedOptionsActivity;
-import com.example.tourplanner2.util.RowExpandableItem;
+//import com.example.tourplanner2.activities.AdvancedOptionsActivity;
+//import com.example.tourplanner2.util.RowExpandableItem;
 
 /**
  * Clase implementa el adaptador del ExpandableListView de la pantalla de opciones.
@@ -77,7 +77,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	 */
 	private static class ViewHolder {
 		protected TextView text;
-		protected CheckBox checkbox;
+		CheckBox checkbox;
 		protected ImageView image;
 	}
 	/**
@@ -113,7 +113,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		View view = null;
+		View view;
 		if (convertView == null) {
 			view = getNewChildView(groupPosition, childPosition);
 		} else {
@@ -143,9 +143,9 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		LayoutInflater inflator = context.getLayoutInflater();
 		view = inflator.inflate(R.layout.expandable_list_element, null);
 		final ViewHolder viewHolder = new ViewHolder();
-		viewHolder.text = (TextView) view.findViewById(R.id.label);
-		viewHolder.checkbox = (CheckBox) view.findViewById(R.id.check);
-		viewHolder.image=(ImageView)view.findViewById(R.id.image);
+		viewHolder.text = view.findViewById(R.id.label);
+		viewHolder.checkbox = view.findViewById(R.id.check);
+		viewHolder.image= view.findViewById(R.id.image);
 
 		view.setTag(viewHolder);
 		viewHolder.checkbox.setTag(children.get(groupPosition).get(
@@ -195,7 +195,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		View view = null;
+		View view;
 		if (convertView == null) {
 			view = getNewGroupView();
 		} else {
@@ -215,8 +215,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		LayoutInflater inflator = context.getLayoutInflater();
 		view = inflator.inflate(R.layout.expandable_list_group, null);
 		final GroupViewHolder viewHolder = new GroupViewHolder();
-		viewHolder.text = (TextView) view.findViewById(R.id.lblText);
-		viewHolder.image = (ImageView) view.findViewById(R.id.image);
+		viewHolder.text = view.findViewById(R.id.lblText);
+		viewHolder.image = view.findViewById(R.id.image);
 		view.setTag(viewHolder);
 		return view;
 	}
@@ -224,7 +224,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 	 * Método que devuelve el id de una imagen asociada a un tag.
 	 * @return id de la imagen
 	 */
-	public int getImageIdTag(String tag) {
+	private int getImageIdTag(String tag) {
 		if (tag.equals("leisure")) {
 			return R.drawable.leisure;
 		} else {
@@ -268,7 +268,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 		 */
 		int childPos;
 
-		public void setPosition(int groupPos, int childPos) {
+		void setPosition(int groupPos, int childPos) {
 			this.groupPos = groupPos;
 			this.childPos = childPos;
 		}
@@ -286,7 +286,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 			String key = children.get(groupPos).get(childPos).getTag();
 			boolean value = children.get(groupPos).get(childPos).isSelected();
 			editor.putBoolean(key, value);
-			editor.commit();
+			editor.apply();
 		}
 	}
 

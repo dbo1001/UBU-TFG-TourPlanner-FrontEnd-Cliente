@@ -13,6 +13,7 @@ import com.example.tourplanner2.communication.FragmentListener;
 import com.example.tourplanner2.communication.IWebServiceTaskResult;
 import com.example.tourplanner2.communication.WebServiceTask;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -113,6 +114,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		return inflater.inflate(R.layout.planner, container, false);
 	}
 
+	@SuppressLint({"CutPasteId", "SetTextI18n"})
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -123,43 +125,44 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		double currentHour = now.get(Calendar.HOUR_OF_DAY);
 		double currentMinutes = now.get(Calendar.MINUTE);
 
-		txtTimeOrigin = (TextView) (view.findViewById(R.id.originTime)
-				.findViewById(R.id.txtTime));
+		txtTimeOrigin = view.findViewById(R.id.originTime)
+				.findViewById(R.id.txtTime);
 		txtTimeOrigin.setText(Misc.pad((int) currentHour) + ":"
 				+ Misc.pad((int) currentMinutes));
-		txtTimeTarget = (TextView) (view.findViewById(R.id.targetTime)
-				.findViewById(R.id.txtTime));
+		txtTimeTarget = view.findViewById(R.id.targetTime)
+				.findViewById(R.id.txtTime);
 		txtTimeTarget.setText(Misc.pad((int) currentHour + 1) + ":"
 				+ Misc.pad((int) currentMinutes));
 		initilizeSeekBars();
-		ImageButton btnChangeTime = (ImageButton) (view.findViewById(R.id.originTime)
-				.findViewById(R.id.btnTime));
+		ImageButton btnChangeTime = view.findViewById(R.id.originTime)
+				.findViewById(R.id.btnTime);
 
-		btnChangeTime.setOnClickListener(v -> onCreateDialog(ORIGIN_TIME_DIALOG_ID).show());
+		View.OnClickListener onClickListener = v -> Objects.requireNonNull(onCreateDialog(ORIGIN_TIME_DIALOG_ID)).show();
+		btnChangeTime.setOnClickListener(onClickListener);
 
-		LinearLayout linearLayoutTime = (LinearLayout) (view.findViewById(R.id.originTime));
+		LinearLayout linearLayoutTime = view.findViewById(R.id.originTime);
 
-		linearLayoutTime.setOnClickListener(v -> onCreateDialog(ORIGIN_TIME_DIALOG_ID).show());
+		linearLayoutTime.setOnClickListener(onClickListener);
 
-		linearLayoutTime = (LinearLayout) (view.findViewById(R.id.targetTime));
+		linearLayoutTime = view.findViewById(R.id.targetTime);
 
 		linearLayoutTime.setOnClickListener(v -> {
 
 			(view.findViewById(R.id.autoCompleteHotel))
 					.clearFocus();
-			getActivity().showDialog(TARGET_TIME_DIALOG_ID);
+			Objects.requireNonNull(getActivity()).showDialog(TARGET_TIME_DIALOG_ID);
 
 		});
 		final DialogTextView dialog = new DialogTextView(getActivity(), getResources()
 				.getStringArray(R.array.origenOptions),
-				(TextView) view.findViewById(R.id.textViewSelectOrigin));
+				view.findViewById(R.id.textViewSelectOrigin));
 		dialog.setTitle(getResources().getString(R.string.selectOption));
 
 		(view.findViewById(R.id.textViewSelectOrigin))
 				.setOnClickListener(v -> dialog.show());
 		final DialogTextView dialog2 = new DialogTextView(getActivity(), getResources()
 				.getStringArray(R.array.targetOptions),
-				(TextView) view.findViewById(R.id.textViewSelectTarget));
+				view.findViewById(R.id.textViewSelectTarget));
 		dialog.setTitle(getResources().getString(R.string.selectOption));
 
 		(view.findViewById(R.id.textViewSelectTarget))
@@ -378,15 +381,14 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		double milis = then.getTimeInMillis() - now.getTimeInMillis();
 		double secs = milis / 1000;
 		double mins = secs / 60;
-		double hours = mins / 60;
-		return hours;
+		return mins / 60;
 	}
 
 	/**
 	 * Método que se llama cuando el dialog es creado.
 	 */
 	//@Override
-	protected Dialog onCreateDialog(int id) {
+	private Dialog onCreateDialog(int id) {
 		Calendar now = Calendar.getInstance();
 		switch (id) {
 		case ORIGIN_TIME_DIALOG_ID:
@@ -413,17 +415,15 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 		public void onTimeSet(TimePicker view, int selectedHour,
 				int selectedMinute) {
-			int hour = selectedHour;
-			int minute = selectedMinute;
 			if (originActive) {
 				// set current time into textview
 				txtTimeOrigin.setText(new StringBuilder()
-						.append(Misc.pad(hour)).append(":")
-						.append(Misc.pad(minute)));
+						.append(Misc.pad(selectedHour)).append(":")
+						.append(Misc.pad(selectedMinute)));
 			} else {
 				txtTimeTarget.setText(new StringBuilder()
-						.append(Misc.pad(hour)).append(":")
-						.append(Misc.pad(minute)));
+						.append(Misc.pad(selectedHour)).append(":")
+						.append(Misc.pad(selectedMinute)));
 			}
 
 		}
@@ -434,8 +434,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 * superior.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
@@ -450,7 +449,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 */
 	@Override
 	public void handleResponse(String response) {
-		JSONObject jso = null;
+		JSONObject jso;
 		try {
 			if (!response.equals("null")) {
 				jso = new JSONObject(response);
@@ -458,12 +457,10 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 						&& !Misc.checkErrorCode(jso.getString("status"), getActivity())) {
 					return;
 				}
-				if (jso != null) {
-					if (exist) {
-						existResponse(jso);
-					} else {
-						doAutoComplete(jso);
-					}
+				if (exist) {
+					existResponse(jso);
+				} else {
+					doAutoComplete(jso);
 				}
 			}
 		} catch (Exception e) {
@@ -486,13 +483,11 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		if (hotels) {
 			suggestion = suggestHotels;
 			name = "hotelList";
-			adapter = hotelsAutoCompleteAdapter;
-			aut = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel);
+			aut = Objects.requireNonNull(getActivity()).findViewById(R.id.autoCompleteHotel);
 		} else {
 			suggestion = suggestCities;
 			name = "citiesList";
-			adapter = citiesAutoCompleteAdapter;
-			aut = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteCity);
+			aut = Objects.requireNonNull(getActivity()).findViewById(R.id.autoCompleteCity);
 		}
 		suggestion.clear();
 		Object obj = jso.get(name);
@@ -561,7 +556,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	private void existCity(JSONObject jso) throws JSONException {
 		if (jso.has("coordinates")) {
 			cityCoordinates = jso.getString("coordinates");
-			if (((TextView) getActivity().findViewById(R.id.textViewSelectOrigin)).getText()
+			if (((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.textViewSelectOrigin)).getText()
 					.toString()
 					.equals(getResources().getString(R.string.selectHotel))) {
 				checkIfHotelExist();
@@ -581,7 +576,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		String lat, lon;
 		Intent intent = new Intent();
 		if (!checkPreferences()) {
-			Toast.makeText(getActivity().getApplicationContext(),
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
 					getResources().getString(R.string.mustSelectPreferences),
 					Toast.LENGTH_LONG).show();
 			return;
@@ -591,7 +586,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		intent.putExtra("leisure", sbLeisure.getProgress());
 		intent.putExtra("nature", sbNature.getProgress());
 		intent.putExtra("gastronomy", sbGastronomy.getProgress());
-		String origin = ((TextView) getActivity().findViewById(R.id.textViewSelectOrigin))
+		String origin = ((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.textViewSelectOrigin))
 				.getText().toString();
 		String target = ((TextView) getActivity().findViewById(R.id.textViewSelectTarget))
 				.getText().toString();
@@ -660,7 +655,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 * @return categoria del POI de destino.
 	 */
 	private String isTargetPoi() {
-		String option = ((TextView) getActivity().findViewById(R.id.textViewSelectTarget))
+		String option = ((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.textViewSelectTarget))
 				.getText().toString();
 		if (option.equals(getResources().getString(R.string.culturePoi))) {
 			return "culture";
@@ -692,7 +687,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		if (checkIfAnyPreferenceIsSelected()) {
 			return false;
 		} else {
-			TextView text = (TextView) getActivity().findViewById(R.id.textViewTargetOptions);
+			TextView text = Objects.requireNonNull(getActivity()).findViewById(R.id.textViewTargetOptions);
 			String option = text.getText().toString();
 			if (option.equals(getResources().getString(R.string.culturePoi))
 					&& sbCulture.getProgress() == 0) {
@@ -706,20 +701,17 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 					&& sbGastronomy.getProgress() == 0) {
 				return false;
 			} else {
-				if (option.equals(getResources().getString(R.string.naturePoi))
-						&& sbNature.getProgress() == 0) {
-					return false;
-				}
+				return !option.equals(getResources().getString(R.string.naturePoi))
+						|| sbNature.getProgress() != 0;
 			}
 		}
-		return true;
 	}
 
 	/**
 	 * Método que realiza una consulta al servidor sobre si existe un hotel.
 	 */
 	private void checkIfHotelExist() {
-		if (((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteHotel))
+		if (((AutoCompleteTextView) Objects.requireNonNull(getActivity()).findViewById(R.id.autoCompleteHotel))
 				.getText().toString().equals("")) {
 			showToast(getResources().getString(R.string.incorrectHotel));
 		} else {
@@ -748,7 +740,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 *            mensaje a mostrar en el Toast
 	 */
 	private void showToast(String message) {
-		Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG)
+		Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), message, Toast.LENGTH_LONG)
 				.show();
 	}
 
@@ -772,7 +764,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		 *            Indica si se va a utilizar sobre el TextView de ciudades o
 		 *            hoteles
 		 */
-		public TextChangeListener(boolean cities) {
+		TextChangeListener(boolean cities) {
 			super();
 			this.cities = cities;
 		}
@@ -799,7 +791,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 					webService
 							.addNameValuePair(
 									"city_name",
-									((AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteCity))
+									((AutoCompleteTextView) Objects.requireNonNull(getActivity()).findViewById(R.id.autoCompleteCity))
 											.getText().toString());
 					webService.execute(HOTELS_SERVICE_URL);
 					changeOriginOption();
@@ -825,7 +817,7 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 	 * texto en el textView de los hoteles.
 	 */
 	private void changeOriginOption() {
-		((TextView) getActivity().findViewById(R.id.textViewSelectOrigin))
+		((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.textViewSelectOrigin))
 				.setText(getResources().getString(R.string.selectHotel));
 
 	}

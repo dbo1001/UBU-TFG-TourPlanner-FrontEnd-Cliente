@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.example.tourplanner2.adapters.ExpandableAdapter;
 import com.example.tourplanner2.dialog.DialogTextView;
@@ -58,11 +59,11 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		List<List<RowExpandableItem>> children = new ArrayList<List<RowExpandableItem>>();
-		List<String> groups = new ArrayList<String>();
-		List<String> tags = new ArrayList<String>();
+		List<List<RowExpandableItem>> children = new ArrayList<>();
+		List<String> groups = new ArrayList<>();
+		List<String> tags = new ArrayList<>();
 
-		loadTags(R.raw.tags_t, groups, tags, children);
+		loadTags(groups, tags, children);
 		ExpandableAdapter exAdapter = new ExpandableAdapter(getActivity(), groups, tags,
 				children, view.getContext().getApplicationContext());
 		ExpandableListView expCulture = view.findViewById(R.id.expandableListCulture);
@@ -254,24 +255,20 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 	/**
 	 * Carga del fichero tags_t todos los tags, así como la categoria a la que
 	 * pertenecen.
-	 * 
-	 * @param resourceId
-	 *            id del recurso tags_t
-	 * @param groups
+	 *  @param groups
 	 *            lista que contendrá las diferentes categorias
 	 * @param tags
 	 *            lista que contendra los diferentes tags
 	 * @param children
-	 *            matriz de elementos preparados para pasarselo a un expandable
-	 *            list view adapter
+ *            matriz de elementos preparados para pasarselo a un expandable
 	 * 
 	 */
-	private void loadTags(int resourceId, List<String> groups,
-			List<String> tags, List<List<RowExpandableItem>> children) {
+	private void loadTags(List<String> groups,
+						  List<String> tags, List<List<RowExpandableItem>> children) {
 		// The InputStream opens the resourceId and sends it to the buffer
-		InputStream is = this.getResources().openRawResource(resourceId);
+		InputStream is = this.getResources().openRawResource(R.raw.tags_t);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String readLine = null, group, tag, category;
+		String readLine, group, tag, category;
 		int index;
 		try {
 			// While the BufferedReader readLine is not null
@@ -281,9 +278,9 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 						Misc.getResId(
 								"string/"
 										+ readLine.substring(0,
-												readLine.indexOf("\t")), getActivity()));
-				category = readLine.substring(readLine.indexOf("\t") + 1,
-						readLine.length());
+												readLine.indexOf("\t")), Objects.requireNonNull(getActivity())));
+				category = readLine.substring(readLine.indexOf("\t") + 1
+				);
 				RowExpandableItem row = new RowExpandableItem(getResources()
 						.getString(Misc.getResId("string/" + category, getActivity()),
 								getActivity()));
@@ -296,7 +293,7 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 				if (!groups.contains(group)) {
 					groups.add(group);
 					tags.add(tag);
-					ArrayList<RowExpandableItem> array = new ArrayList<RowExpandableItem>();
+					ArrayList<RowExpandableItem> array = new ArrayList<>();
 					array.add(row);
 					children.add(array);
 				} else {
@@ -317,11 +314,10 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
-		return super.onOptionsItemSelected((android.view.MenuItem) item);
+		return super.onOptionsItemSelected(item);
 	}
 }

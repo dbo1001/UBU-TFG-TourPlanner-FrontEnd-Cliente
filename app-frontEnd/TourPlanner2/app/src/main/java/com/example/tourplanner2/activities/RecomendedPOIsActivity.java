@@ -6,12 +6,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+//import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,14 +150,15 @@ IWebServiceTaskResult, IServiceTask{
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
 		wst.addNameValuePair("transport", pref.getString("transport", "fo_"));
+		assert getArguments() != null;
 		wst.addNameValuePair("lat", getArguments().getString("latitud"));
 		wst.addNameValuePair("lon", getArguments().getString("longitud"));
-		wst.execute(new String[] { RECOMMENDED_POI_SERVICE_URL });
+		wst.execute(RECOMMENDED_POI_SERVICE_URL);
 		(view.findViewById(R.id.buttonCalculate))
 				.setOnClickListener(v -> {
 					int contador = 0;
 					Intent intent = new Intent(getActivity(),MapMain.class);
-					ArrayList<RowItineraryList> rows = new ArrayList<RowItineraryList>();
+					ArrayList<RowItineraryList> rows = new ArrayList<>();
 					for (RowItineraryList row : rowsItinerary) {
 						if (row.isSelected()) {
 							rows.add(row);
@@ -166,7 +168,7 @@ IWebServiceTaskResult, IServiceTask{
 					if (contador > 0) {
 						intent.putExtra("count", contador);
 						intent.putExtra("pois", rows.toArray());
-						getActivity().setResult(MapMain.GET_ROUTE, intent);
+						Objects.requireNonNull(getActivity()).setResult(MapMain.GET_ROUTE, intent);
 						startActivityForResult(intent,1);
 					} else {
 						Toast.makeText(
@@ -234,7 +236,7 @@ IWebServiceTaskResult, IServiceTask{
 	 */
 	private void setServiceDirections() {
 		try {
-			String address = PropertiesParser.getConnectionSettings(getActivity());
+			String address = PropertiesParser.getConnectionSettings(Objects.requireNonNull(getActivity()));
 			RECOMMENDED_POI_SERVICE_URL = "https://" + address
 					+ "/osm_server/get/poi/recommendedlist";
 
@@ -267,207 +269,181 @@ IWebServiceTaskResult, IServiceTask{
 
 			adaptadorItinerary = new RecommendedPoiAdapter(
 					getActivity(), rowsItinerary);
-			ListView lstItinerary = (ListView) getActivity().findViewById(R.id.listViewRecommendPois);
+			ListView lstItinerary = Objects.requireNonNull(getActivity()).findViewById(R.id.listViewRecommendPois);
 			lstItinerary.setAdapter(adaptadorItinerary);
 			lstItinerary.setTextFilterEnabled(true);
-			lstItinerary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			lstItinerary.setOnItemClickListener((parent, view, position, id) -> {
+				final Dialog dialog = new Dialog(getActivity());
+				// dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				dialog.setContentView(R.layout.point_dialog);
+				dialog.setTitle(getResources().getString(R.string.pointInfo));
 
-				@SuppressWarnings("deprecation")
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						final int position, long id) {
-					final Dialog dialog = new Dialog(getActivity());
-					// dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-					dialog.setContentView(R.layout.point_dialog);
-					dialog.setTitle(getResources().getString(R.string.pointInfo));
-					
-					lon1 = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
-							rowsItinerary[position].getCoordinates().indexOf("(") + 1,
-							rowsItinerary[position].getCoordinates().indexOf(" ")));
-					
-					lat1 = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
-							rowsItinerary[position].getCoordinates().indexOf(" ") + 1));
+				lon1 = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
+						rowsItinerary[position].getCoordinates().indexOf("(") + 1,
+						rowsItinerary[position].getCoordinates().indexOf(" ")));
 
-					// set the custom dialog components - text, image and button
-					TextView textName = (TextView) dialog
-							.findViewById(R.id.textViewItineraryName);
-					TextView textTag = (TextView) dialog
-							.findViewById(R.id.textViewTag);
-					textName.setText(rowsItinerary[position].getTextName());
-					textTag.setText(rowsItinerary[position].getTag());
-					ImageView image = (ImageView) dialog
-							.findViewById(R.id.imageViewItineraryList);
-					image.setImageResource(rowsItinerary[position].getImageResId());
-					image = (ImageView) dialog
-							.findViewById(R.id.imageViewItineraryListTag);
-					image.setImageResource(rowsItinerary[position]
-							.getImageTagResId());
-					((RatingBar) dialog.findViewById(R.id.ratingBar))
-					.setRating((float) rowsItinerary[position].getScore());
-					((RatingBar) dialog.findViewById(R.id.ratingBar))
-					.setIsIndicator(true);
-					TextView textPromoted = (TextView) dialog
-							.findViewById(R.id.tv_Promoted);
-					String strPromotedFormat = getResources().getString(R.string.promoted);
-					if (rowsItinerary[position].isPromoted()){
-						textPromoted.setText(String.format(strPromotedFormat, 
-								getResources().getString(R.string.yes)));
-					} else {
-						textPromoted.setText(String.format(strPromotedFormat, 
-								getResources().getString(R.string.no)));
-					}
-					
-					panoramioText = (TextView) dialog
-							.findViewById(R.id.panoramioText);
-					panoramioText.setText(R.string.panoramio_terms);
-			
-					panoramioLogo = (ImageView) dialog.findViewById(R.id.panoramioLogo);
-					panoramioLogo.setVisibility(View.VISIBLE);
-					
-					textDistance = (TextView) dialog
-							.findViewById(R.id.tv_distance);
-					textDistance.setVisibility(TextView.VISIBLE);
-					textDistance.setText("");
+				lat1 = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
+						rowsItinerary[position].getCoordinates().indexOf(" ") + 1));
 
-					panoramioImage = (ImageView) dialog.findViewById(R.id.panoramio_photo);
-					panoramioImage.setEnabled(true);
-					
-					panoramioImage.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							FragmentManager fManager = getActivity().getSupportFragmentManager();
-							Bundle args = new Bundle();
-							args.putStringArrayList("imageUrls",imageUrls);
-							GalleryActivity actImg = new GalleryActivity();
-							actImg.setArguments(args);
-							getActivity().findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
-
-							fManager.beginTransaction()
-									.replace(R.id.fragment_container,actImg)
-									.commit();
-							//Intent i = new Intent(getActivity(), GalleryActivity.class);
-							//i.putExtra("imageUrls", imageUrls);
-							//startActivity(i);
-
-						}
-
-					});
-
-					// A�adimos bot�n de informaci�n adicional.
-					infoButton = (Button) dialog.findViewById(R.id.dialogButtonInfo);
-
-					// Cambiamos el icono para la informaci�n si el POI es de gastronom�a u ocio.
-					if (rowsItinerary[position]
-							.getImageResId() == R.drawable.leisure || rowsItinerary[position]
-									.getImageResId() == R.drawable.gastronomy){
-						infoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_google, 0);
-					}
-
-					infoButton.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-
-							switch (rowsItinerary[position]
-									.getImageResId()){
-
-							// Si el POI es de cultura o naturaleza, mostramos informaci�n sobre la Wikipedia.
-									case R.drawable.culture:
-									case R.drawable.nature:
-										// Obtenemos logitud y latitud del POI en el que estamos, y el idioma en el que est� la app.
-										Double longitude = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
-												rowsItinerary[position].getCoordinates().indexOf("(") + 1,
-												rowsItinerary[position].getCoordinates().indexOf(" ")));
-
-										Double latitude = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
-												rowsItinerary[position].getCoordinates().indexOf(" ") + 1));
-
-										String lang = Locale.getDefault().getLanguage();
-
-										// Realizamos una llamada al servicio REST de Wikilocation.
-										String WIKILOCATION_SERVICE_URL = "http://api.wikilocation.org/articles?lat="
-												+latitude+"&lng="+longitude+"&limit=1&locale="+lang+"";
-
-										WikilocationTask wlt = new WikilocationTask(serviceContext);
-										wlt.execute(new String[]{ WIKILOCATION_SERVICE_URL });
-										break;
-
-										// Si el POI es de ocio o gastronom�a, mostramos informaci�n sobre TripAdvisor.		
-									case R.drawable.leisure:
-									case R.drawable.gastronomy:	 
-										String namePoi = rowsItinerary[position].getTextName();
-										String TRIPADVISOR_SEARCH_URL = "https://www.google.com/#q=site:tripadvisor.com+"+namePoi+"";
-										Intent i = new Intent("android.intent.action.VIEW", Uri.parse(TRIPADVISOR_SEARCH_URL));
-										startActivity(i);
-										break;
-
-							}
-
-						}
-
-					});
-
-					Button rating = (Button) dialog.findViewById(R.id.btn_rating);
-					rating.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							Date startTime = Calendar.getInstance().getTime();
-							ItineraryListAdapter adaptadorItinerary = new ItineraryListAdapter(
-									getActivity(), rowsItinerary, startTime);
-							DialogOpinion dialog = new DialogOpinion((Context) getContext(),
-									rowsItinerary[position], adaptadorItinerary);
-							dialog.show();
-
-						}
-					});
-
-					Button dialogButton = (Button) dialog
-							.findViewById(R.id.dialogButtonAccept);
-					// if button is clicked, close the custom dialog
-					dialogButton.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-
-
-					// Panoramio API.
-					if (isNetworkAvailable()){
-						String PANORAMIO_SERVICE_URL = "http://www.panoramio.com/map/get_panoramas.php?set=public&" +
-								"from=0&" +
-								"to=5&" +
-								"minx=" + lon1 + "&" + 
-								"miny=" + (lat1 - 0.001) + "&" +
-								"maxx=" + (lon1 + 0.001) + "&" +
-								"maxy=" + lat1 + "&" +
-								"size=medium&" +
-								"mapfilter=true";
-
-						PanoramioTask fkt = new PanoramioTask(serviceContext);
-						fkt.execute(new String[]{ PANORAMIO_SERVICE_URL });
-					} else {
-						infoButton.setEnabled(false);
-						panoramioImage.setImageResource(R.drawable.no_photo);
-						panoramioImage.setEnabled(false);
-						textDistance.setVisibility(TextView.INVISIBLE);
-						panoramioText.setText(R.string.no_photo);
-						rating.setEnabled(false);
-					}
-					
-					WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-					lp.copyFrom(dialog.getWindow().getAttributes());
-					lp.width = WindowManager.LayoutParams.FILL_PARENT;
-					lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-					dialog.show();
-					dialog.getWindow().setAttributes(lp);
+				// set the custom dialog components - text, image and button
+				TextView textName = dialog
+						.findViewById(R.id.textViewItineraryName);
+				TextView textTag = dialog
+						.findViewById(R.id.textViewTag);
+				textName.setText(rowsItinerary[position].getTextName());
+				textTag.setText(rowsItinerary[position].getTag());
+				ImageView image = dialog
+						.findViewById(R.id.imageViewItineraryList);
+				image.setImageResource(rowsItinerary[position].getImageResId());
+				image = dialog
+						.findViewById(R.id.imageViewItineraryListTag);
+				image.setImageResource(rowsItinerary[position]
+						.getImageTagResId());
+				((RatingBar) dialog.findViewById(R.id.ratingBar))
+				.setRating((float) rowsItinerary[position].getScore());
+				((RatingBar) dialog.findViewById(R.id.ratingBar))
+				.setIsIndicator(true);
+				TextView textPromoted = dialog
+						.findViewById(R.id.tv_Promoted);
+				String strPromotedFormat = getResources().getString(R.string.promoted);
+				if (rowsItinerary[position].isPromoted()){
+					textPromoted.setText(String.format(strPromotedFormat,
+							getResources().getString(R.string.yes)));
+				} else {
+					textPromoted.setText(String.format(strPromotedFormat,
+							getResources().getString(R.string.no)));
 				}
 
+				panoramioText = dialog
+						.findViewById(R.id.panoramioText);
+				panoramioText.setText(R.string.panoramio_terms);
+
+				panoramioLogo = dialog.findViewById(R.id.panoramioLogo);
+				panoramioLogo.setVisibility(View.VISIBLE);
+
+				textDistance = dialog
+						.findViewById(R.id.tv_distance);
+				textDistance.setVisibility(TextView.VISIBLE);
+				textDistance.setText("");
+
+				panoramioImage = dialog.findViewById(R.id.panoramio_photo);
+				panoramioImage.setEnabled(true);
+
+				panoramioImage.setOnClickListener(v -> {
+					FragmentManager fManager = getActivity().getSupportFragmentManager();
+					Bundle args = new Bundle();
+					args.putStringArrayList("imageUrls",imageUrls);
+					GalleryActivity actImg = new GalleryActivity();
+					actImg.setArguments(args);
+					getActivity().findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+
+					fManager.beginTransaction()
+							.replace(R.id.fragment_container,actImg)
+							.commit();
+					//Intent i = new Intent(getActivity(), GalleryActivity.class);
+					//i.putExtra("imageUrls", imageUrls);
+					//startActivity(i);
+
+				});
+
+				// A�adimos bot�n de informaci�n adicional.
+				infoButton = dialog.findViewById(R.id.dialogButtonInfo);
+
+				// Cambiamos el icono para la informaci�n si el POI es de gastronom�a u ocio.
+				if (rowsItinerary[position]
+						.getImageResId() == R.drawable.leisure || rowsItinerary[position]
+								.getImageResId() == R.drawable.gastronomy){
+					infoButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_google, 0);
+				}
+
+				infoButton.setOnClickListener(v -> {
+
+					switch (rowsItinerary[position]
+							.getImageResId()){
+
+					// Si el POI es de cultura o naturaleza, mostramos informaci�n sobre la Wikipedia.
+							case R.drawable.culture:
+							case R.drawable.nature:
+								// Obtenemos logitud y latitud del POI en el que estamos, y el idioma en el que est� la app.
+								double longitude = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
+										rowsItinerary[position].getCoordinates().indexOf("(") + 1,
+										rowsItinerary[position].getCoordinates().indexOf(" ")));
+
+								double latitude = Double.parseDouble(rowsItinerary[position].getCoordinates().substring(
+										rowsItinerary[position].getCoordinates().indexOf(" ") + 1));
+
+								String lang = Locale.getDefault().getLanguage();
+
+								// Realizamos una llamada al servicio REST de Wikilocation.
+								String WIKILOCATION_SERVICE_URL = "http://api.wikilocation.org/articles?lat="
+										+latitude+"&lng="+longitude+"&limit=1&locale="+lang+"";
+
+								WikilocationTask wlt = new WikilocationTask(serviceContext);
+								wlt.execute(WIKILOCATION_SERVICE_URL);
+								break;
+
+								// Si el POI es de ocio o gastronom�a, mostramos informaci�n sobre TripAdvisor.
+							case R.drawable.leisure:
+							case R.drawable.gastronomy:
+								String namePoi = rowsItinerary[position].getTextName();
+								String TRIPADVISOR_SEARCH_URL = "https://www.google.com/#q=site:tripadvisor.com+"+namePoi+"";
+								Intent i = new Intent("android.intent.action.VIEW", Uri.parse(TRIPADVISOR_SEARCH_URL));
+								startActivity(i);
+								break;
+
+					}
+
+				});
+
+				Button rating = dialog.findViewById(R.id.btn_rating);
+				rating.setOnClickListener(v -> {
+					Date startTime = Calendar.getInstance().getTime();
+					ItineraryListAdapter adaptadorItinerary = new ItineraryListAdapter(
+							getActivity(), rowsItinerary, startTime);
+					DialogOpinion dialog1 = new DialogOpinion(getContext(),
+							rowsItinerary[position], adaptadorItinerary);
+					dialog1.show();
+
+				});
+
+				Button dialogButton = dialog
+						.findViewById(R.id.dialogButtonAccept);
+				// if button is clicked, close the custom dialog
+				dialogButton.setOnClickListener(v -> dialog.dismiss());
+
+
+				// Panoramio API.
+				if (isNetworkAvailable()){
+					String PANORAMIO_SERVICE_URL = "http://www.panoramio.com/map/get_panoramas.php?set=public&" +
+							"from=0&" +
+							"to=5&" +
+							"minx=" + lon1 + "&" +
+							"miny=" + (lat1 - 0.001) + "&" +
+							"maxx=" + (lon1 + 0.001) + "&" +
+							"maxy=" + lat1 + "&" +
+							"size=medium&" +
+							"mapfilter=true";
+
+					PanoramioTask fkt = new PanoramioTask(serviceContext);
+					fkt.execute(PANORAMIO_SERVICE_URL);
+				} else {
+					infoButton.setEnabled(false);
+					panoramioImage.setImageResource(R.drawable.no_photo);
+					panoramioImage.setEnabled(false);
+					textDistance.setVisibility(TextView.INVISIBLE);
+					panoramioText.setText(R.string.no_photo);
+					rating.setEnabled(false);
+				}
+
+				WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+				lp.copyFrom(Objects.requireNonNull(dialog.getWindow()).getAttributes());
+				lp.width = WindowManager.LayoutParams.FILL_PARENT;
+				lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+				dialog.show();
+				dialog.getWindow().setAttributes(lp);
 			});
 			
-			((Button) getActivity().findViewById(R.id.buttonCalculate))
+			Objects.requireNonNull(getActivity()).findViewById(R.id.buttonCalculate)
 			.setVisibility(View.VISIBLE);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -479,12 +455,11 @@ IWebServiceTaskResult, IServiceTask{
 	 */
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
-		return super.onOptionsItemSelected((android.view.MenuItem) item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	/**
@@ -493,7 +468,8 @@ IWebServiceTaskResult, IServiceTask{
 	 * @return true si la conexión a internet está disponible
 	 */
 	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+		assert connectivityManager != null;
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
@@ -509,7 +485,7 @@ IWebServiceTaskResult, IServiceTask{
 	 * */
 	private JSONObject getPhotoMinimumDistance(JSONArray photos){
 		JSONObject photo = null, photoAux;
-		double distance = 0, minimumDistance = 2000;
+		double distance, minimumDistance = 2000;
 		Double latitude, longitude;
 
 		for (int i = 0; i < photos.length(); i++){
@@ -556,12 +532,12 @@ IWebServiceTaskResult, IServiceTask{
 				+ Math.sin(lat1) * Math.sin(lat2));	
 
 		// Formateamos la distancia para mostrarla s�lo cuando tengamos la m�nima.	
-		if (ok == true){
+		if (ok){
 			DecimalFormat df = new DecimalFormat("0.00");
 			df.format(poiDistance);
 
-			String measure = "km";
-			String distance = "";
+			String measure;
+			String distance;
 			if (poiDistance < 1){
 				measure = "m";
 				poiDistance *= 1000;
@@ -608,7 +584,7 @@ IWebServiceTaskResult, IServiceTask{
 		/**
 		 * Constructor de la clase
 		 */
-		public TextChangeListener() {
+		TextChangeListener() {
 			super();
 		}
 
@@ -700,12 +676,10 @@ IWebServiceTaskResult, IServiceTask{
 					textDistance.setVisibility(TextView.INVISIBLE);
 				}
 					
-			} catch (JSONException e) {
-				e.printStackTrace();
-			} catch (NullPointerException e) {
+			} catch (JSONException | NullPointerException e) {
 				e.printStackTrace();
 			}
-			
+
 			break;
 
 		}
@@ -732,14 +706,11 @@ IWebServiceTaskResult, IServiceTask{
 				urlConnection.connect();
 				InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 				image = BitmapFactory.decodeStream(in);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return image;
 		}
 

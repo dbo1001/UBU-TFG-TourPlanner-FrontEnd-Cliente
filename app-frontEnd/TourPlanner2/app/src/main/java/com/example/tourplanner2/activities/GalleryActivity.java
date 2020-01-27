@@ -1,6 +1,7 @@
 package com.example.tourplanner2.activities;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import com.example.tourplanner2.adapters.GalleryAdapter;
 
@@ -52,6 +53,7 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		assert getArguments() != null;
 		imageUrls = getArguments().getStringArrayList("imageUrls");
 		authors = getArguments().getStringArrayList("authors");
 		authorsUrl = getArguments().getStringArrayList("authorsUrl");
@@ -74,7 +76,7 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 		GridView gridView = view.findViewById(R.id.gridview);
 		gridView.setAdapter(new GalleryAdapter(imageUrls, options, view.getContext(), imageLoader));
 		gridView.setOnItemClickListener((parent, view1, position, id) -> {
-			FragmentManager fManager = getActivity().getSupportFragmentManager();
+			FragmentManager fManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
 			Bundle args = new Bundle();
 			args.putInt("position", position);
 			args.putStringArrayList("imageUrls", imageUrls);

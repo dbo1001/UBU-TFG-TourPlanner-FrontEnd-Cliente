@@ -72,7 +72,7 @@ public class Misc {
 		if (c >= 10)
 			return String.valueOf(c);
 		else
-			return "0" + String.valueOf(c);
+			return "0" + c;
 	}
 	
 }

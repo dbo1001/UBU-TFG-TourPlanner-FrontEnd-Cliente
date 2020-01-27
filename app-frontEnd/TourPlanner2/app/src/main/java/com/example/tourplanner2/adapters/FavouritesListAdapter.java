@@ -72,11 +72,11 @@ public class FavouritesListAdapter extends ArrayAdapter<FavouriteItem> {
 	private ViewHolder getNewViewHolder(final int position, View item) {
 		ViewHolder holder;
 		holder = new ViewHolder();
-		holder.textName = (TextView) item.findViewById(R.id.textViewName);
+		holder.textName = item.findViewById(R.id.textViewName);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.rating = (RatingBar) item.findViewById(R.id.ratingBar);
+		holder.rating = item.findViewById(R.id.ratingBar);
 		holder.rating.setIsIndicator(true);
-		holder.image = (ImageView) item
+		holder.image = item
 				.findViewById(R.id.imageViewFovourite);
 		return holder;
 	}

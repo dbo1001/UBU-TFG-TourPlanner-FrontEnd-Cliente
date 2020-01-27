@@ -37,9 +37,8 @@ public class FullScreenImageAdapter extends PagerAdapter{
     private ArrayList<String> authorUrls;
   
 	private ImageLoader imageLoader;
-    private LayoutInflater inflater;
-	
-    /**
+
+	/**
 	 * Constructor de la clase.
 	 * 
 	 * @param activity Contexto de la actividad.
@@ -69,7 +68,7 @@ public class FullScreenImageAdapter extends PagerAdapter{
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
 		// TODO Auto-generated method stub
-		return view == ((RelativeLayout) object);
+		return view == object;
 	}
 	
 	
@@ -77,38 +76,32 @@ public class FullScreenImageAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, final int position) {
         ImageView imgFullScreen;
         TextView authorName;
-        
-        inflater = (LayoutInflater) activity
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		LayoutInflater inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.fullscreen_gallery, container,
                 false);
   
-        imgFullScreen = (ImageView) viewLayout.findViewById(R.id.imgFullScreen);
-        authorName = (TextView) viewLayout.findViewById(R.id.authorName);
+        imgFullScreen = viewLayout.findViewById(R.id.imgFullScreen);
+        authorName = viewLayout.findViewById(R.id.authorName);
          
         imageLoader.displayImage(imageUrls.get(position), imgFullScreen, options);
         String strAuthorFormat = activity.getResources().getString(R.string.author);
         authorName.setText(String.format(strAuthorFormat, authors.get(position)));
         
-        authorName.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent("android.intent.action.VIEW", Uri.parse(authorUrls.get(position)));
-				activity.startActivity(i);
-			}
-        	
-        	
-        });
+        authorName.setOnClickListener(v -> {
+			Intent i = new Intent("android.intent.action.VIEW", Uri.parse(authorUrls.get(position)));
+			activity.startActivity(i);
+		});
         
-        ((ViewPager) container).addView(viewLayout, 0);
+        container.addView(viewLayout, 0);
   
         return viewLayout;
     }
      
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        ((ViewPager) container).removeView((RelativeLayout) object);
+        container.removeView((RelativeLayout) object);
   
     }
    

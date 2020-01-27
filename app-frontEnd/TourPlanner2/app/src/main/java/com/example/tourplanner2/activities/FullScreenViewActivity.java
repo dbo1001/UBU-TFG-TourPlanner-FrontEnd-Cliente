@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.example.tourplanner2.adapters.FullScreenImageAdapter;
 import com.example.tourplanner2.R;
-import android.app.Activity;
+//import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,12 +40,13 @@ public class FullScreenViewActivity extends androidx.fragment.app.Fragment{
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		/**
+		/*
 		 * ViewPager correspondiente a la actividad.
-		 * */
-		ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+		 */
+		ViewPager viewPager = view.findViewById(R.id.pager);
 
 		//Bundle bundle = getIntent().getExtras();
+		assert getArguments() != null;
 		ArrayList<String> imageUrls = getArguments().getStringArrayList("imageUrls");
 		int position = getArguments().getInt("position");
 		ArrayList<String> authors = getArguments().getStringArrayList("authors");

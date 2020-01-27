@@ -27,12 +27,11 @@ public class CustomSocialAdapter extends BaseAdapter {
 	 */
 	private final LayoutInflater mInflater;
 	private final Context ctx;
-	private Bitmap mIcon;
 
 	/**
 	 * Componentes SocialAuth
 	 */
-	SocialAuthAdapter adapter;
+	private SocialAuthAdapter adapter;
 	private final Provider[] providers = new Provider[] { Provider.FACEBOOK, Provider.TWITTER };
 	private final int[] images = new int[] { R.drawable.facebook, R.drawable.twitter };
 	/**
@@ -96,10 +95,10 @@ public class CustomSocialAdapter extends BaseAdapter {
 			// views
 			// we want to bind data to.
 			holder = new ViewHolder();
-			holder.text = (TextView) convertView.findViewById(R.id.providerText);
+			holder.text = convertView.findViewById(R.id.providerText);
 			holder.text.setTextColor(ctx.getResources().getColor(R.color.White));
 			holder.text.setTextAppearance(ctx, R.style.TextAppearance_AppCompat_Light_Widget_PopupMenu_Large);
-			holder.icon = (ImageView) convertView.findViewById(R.id.provider);
+			holder.icon = convertView.findViewById(R.id.provider);
 			convertView.setTag(holder);
 		} else {
 			// Get the ViewHolder back to get fast access to the TextView
@@ -107,37 +106,33 @@ public class CustomSocialAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		mIcon = BitmapFactory.decodeResource(ctx.getResources(), images[position]);
+		Bitmap mIcon = BitmapFactory.decodeResource(ctx.getResources(), images[position]);
 
 		// Bind the data efficiently with the holder.
 
 		String textCase = providers[position].toString();
-		textCase = String.valueOf(textCase.charAt(0)).toUpperCase() + textCase.substring(1, textCase.length());
+		textCase = String.valueOf(textCase.charAt(0)).toUpperCase() + textCase.substring(1);
 
 		holder.text.setText(textCase);
 		holder.icon.setImageBitmap(mIcon);
 
-		holder.text.setOnClickListener(new OnClickListener() {
+		holder.text.setOnClickListener(v -> {
 
-			@Override
-			public void onClick(View v) {
+			if (providers[position].equals(Provider.GOOGLE))
+				adapter.addCallBack(Provider.GOOGLE, "http://socialauth.in/socialauthdemo");
+			else if (providers[position].equals(Provider.FOURSQUARE))
+				adapter.addCallBack(Provider.FOURSQUARE,
+						"http://socialauth.in/socialauthdemo/socialAuthSuccessAction.do");
+			else if (providers[position].equals(Provider.SALESFORCE))
+				adapter.addCallBack(Provider.SALESFORCE,
+						"https://socialauth.in:8443/socialauthdemo/socialAuthSuccessAction.do");
+			else if (providers[position].equals(Provider.YAMMER))
+				adapter.addCallBack(Provider.YAMMER,
+						"http://socialauth.in/socialauthdemo/socialAuthSuccessAction.do");
 
-				if (providers[position].equals(Provider.GOOGLE))
-					adapter.addCallBack(Provider.GOOGLE, "http://socialauth.in/socialauthdemo");
-				else if (providers[position].equals(Provider.FOURSQUARE))
-					adapter.addCallBack(Provider.FOURSQUARE,
-							"http://socialauth.in/socialauthdemo/socialAuthSuccessAction.do");
-				else if (providers[position].equals(Provider.SALESFORCE))
-					adapter.addCallBack(Provider.SALESFORCE,
-							"https://socialauth.in:8443/socialauthdemo/socialAuthSuccessAction.do");
-				else if (providers[position].equals(Provider.YAMMER))
-					adapter.addCallBack(Provider.YAMMER,
-							"http://socialauth.in/socialauthdemo/socialAuthSuccessAction.do");
+			// This method will enable the selected provider
+			adapter.authorize(ctx, providers[position]);
 
-				// This method will enable the selected provider
-				adapter.authorize(ctx, providers[position]);
-
-			}
 		});
 		return convertView;
 	}

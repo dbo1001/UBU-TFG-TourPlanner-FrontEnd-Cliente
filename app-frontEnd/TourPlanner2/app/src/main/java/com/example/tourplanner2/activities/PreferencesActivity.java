@@ -1,11 +1,13 @@
 package com.example.tourplanner2.activities;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.dialog.DialogTextView;
 import com.example.tourplanner2.util.Misc;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 
@@ -54,6 +56,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 		return inflater.inflate(R.layout.preferences, container, false);
 	}
 
+	@SuppressLint("SetTextI18n")
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -61,7 +64,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 		Calendar now = Calendar.getInstance();
 		double currentHour = now.get(Calendar.HOUR_OF_DAY);
 		double currentMinutes = now.get(Calendar.MINUTE);
-		txtTime = (TextView) view.findViewById(R.id.txtTime);
+		txtTime = view.findViewById(R.id.txtTime);
 		txtTime.setText(Misc.pad((int) currentHour + 1) + ":"
 				+ Misc.pad((int) currentMinutes));
 		initilizeSeekBars();
@@ -74,13 +77,13 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 				getResources().getString(R.string.gastronomyPoi),
 				getResources().getString(R.string.naturePoi) };
 		final DialogTextView dialog = new DialogTextView(view.getContext(), data,
-				(TextView) view.findViewById(R.id.textViewTargetOptions));
+				view.findViewById(R.id.textViewTargetOptions));
 		dialog.setTitle(getResources().getString(R.string.selectOption));
 
-		((TextView) view.findViewById(R.id.textViewTargetOptions))
+		view.findViewById(R.id.textViewTargetOptions)
 				.setOnClickListener(v -> dialog.show());
 
-		LinearLayout linearLayoutTime = (LinearLayout) view.findViewById(R.id.timePickerLayout);
+		LinearLayout linearLayoutTime = view.findViewById(R.id.timePickerLayout);
 
 		linearLayoutTime.setOnClickListener(v -> onCreateDialog(TIME_DIALOG_ID).show());
 
@@ -92,12 +95,12 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Le indicamos al spinner el adaptador a usar
 
-		Button btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
+		Button btnEnviar = view.findViewById(R.id.btnEnviar);
 		btnEnviar.setOnClickListener(arg0 -> {
-			SeekBar sbCulture = (SeekBar) view.findViewById(R.id.seekBarCulture);
-			SeekBar sbLeisure = (SeekBar) view.findViewById(R.id.seekBarLeisure);
-			SeekBar sbNature = (SeekBar) view.findViewById(R.id.seekBarNature);
-			SeekBar sbGastronomy = (SeekBar) view.findViewById(R.id.seekBarGastronomy);
+			SeekBar sbCulture = view.findViewById(R.id.seekBarCulture);
+			SeekBar sbLeisure = view.findViewById(R.id.seekBarLeisure);
+			SeekBar sbNature = view.findViewById(R.id.seekBarNature);
+			SeekBar sbGastronomy = view.findViewById(R.id.seekBarGastronomy);
 			int cultureValue = sbCulture.getProgress();
 			int leisureValue = sbLeisure.getProgress();
 			int natureValue = sbNature.getProgress();
@@ -128,24 +131,24 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 			TextView text = (TextView) view.findViewById(R.id.textViewTargetOptions);
 			String option = text.getText().toString();
 			if (option.equals(getResources().getString(R.string.selectMap))) {
-				getActivity().setResult(MapMain.ONE_LOCATION_TGT, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.ONE_LOCATION_TGT, intent);
 			} else if (option.equals(getResources().getString(
 					R.string.originEqTarget))) {
-				getActivity().setResult(MapMain.TGT_EQ_SRC, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.TGT_EQ_SRC, intent);
 			} else if (option.equals(getResources().getString(
 					R.string.culturePoi))) {
-				getActivity().setResult(MapMain.TGT_POI, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.TGT_POI, intent);
 				intent.putExtra("tgt_poi", "culture");
 			} else if (option.equals(getResources().getString(
 					R.string.leisurePoi))) {
-				getActivity().setResult(MapMain.TGT_POI, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.TGT_POI, intent);
 				intent.putExtra("tgt_poi", "leisure");
 			} else if (option.equals(getResources().getString(
 					R.string.gastronomyPoi))) {
-				getActivity().setResult(MapMain.TGT_POI, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.TGT_POI, intent);
 				intent.putExtra("tgt_poi", "gastronomy");
 			} else {
-				getActivity().setResult(MapMain.TGT_POI, intent);
+				Objects.requireNonNull(getActivity()).setResult(MapMain.TGT_POI, intent);
 				intent.putExtra("tgt_poi", "nature");
 			}
 			startActivityForResult(intent,1);
@@ -285,10 +288,10 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 	 * @return true si las preferencias son validas, false en caso contrario
 	 */
 	private boolean checkPreferences() {
-		SeekBar sbCulture = (SeekBar) getActivity().findViewById(R.id.seekBarCulture);
-		SeekBar sbLeisure = (SeekBar) getActivity().findViewById(R.id.seekBarLeisure);
-		SeekBar sbNature = (SeekBar) getActivity().findViewById(R.id.seekBarNature);
-		SeekBar sbGastronomy = (SeekBar) getActivity().findViewById(R.id.seekBarGastronomy);
+		SeekBar sbCulture = Objects.requireNonNull(getActivity()).findViewById(R.id.seekBarCulture);
+		SeekBar sbLeisure = getActivity().findViewById(R.id.seekBarLeisure);
+		SeekBar sbNature = getActivity().findViewById(R.id.seekBarNature);
+		SeekBar sbGastronomy = getActivity().findViewById(R.id.seekBarGastronomy);
 		int cultureValue = sbCulture.getProgress();
 		int leisureValue = sbLeisure.getProgress();
 		int natureValue = sbNature.getProgress();
@@ -297,7 +300,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 				&& gastronomyValue == 0) {
 			return false;
 		} else {
-			TextView text = (TextView) getActivity().findViewById(R.id.textViewTargetOptions);
+			TextView text = getActivity().findViewById(R.id.textViewTargetOptions);
 			String option = text.getText().toString();
 			if (option.equals(getResources().getString(R.string.culturePoi))
 					&& cultureValue == 0) {
@@ -311,27 +314,21 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 					&& gastronomyValue == 0) {
 				return false;
 			} else {
-				if (option.equals(getResources().getString(R.string.naturePoi))
-						&& natureValue == 0) {
-					return false;
-				}
+				return !option.equals(getResources().getString(R.string.naturePoi))
+						|| natureValue != 0;
 			}
 		}
-		return true;
 	}
 
 	/**
 	 * Método que se llama cuando el dialog es creado.
 	 */
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case TIME_DIALOG_ID:
-			// set time picker as current time
+	private Dialog onCreateDialog(int id) {
+		if (id == TIME_DIALOG_ID) {// set time picker as current time
 			Calendar now = Calendar.getInstance();
 			return new TimePickerDialog(getActivity(), timePickerListener,
 					now.get(Calendar.HOUR_OF_DAY) + 1,
 					now.get(Calendar.MINUTE), true);
-
 		}
 		return null;
 	}
@@ -339,10 +336,10 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 	 * Método que inicializa las seekbars.
 	 */
 	private void initilizeSeekBars() {
-		SeekBar sbCulture = (SeekBar) getActivity().findViewById(R.id.seekBarCulture);
-		SeekBar sbLeisure = (SeekBar) getActivity().findViewById(R.id.seekBarLeisure);
-		SeekBar sbNature = (SeekBar) getActivity().findViewById(R.id.seekBarNature);
-		SeekBar sbGastronomy = (SeekBar) getActivity().findViewById(R.id.seekBarGastronomy);
+		SeekBar sbCulture = Objects.requireNonNull(getActivity()).findViewById(R.id.seekBarCulture);
+		SeekBar sbLeisure = getActivity().findViewById(R.id.seekBarLeisure);
+		SeekBar sbNature = getActivity().findViewById(R.id.seekBarNature);
+		SeekBar sbGastronomy = getActivity().findViewById(R.id.seekBarGastronomy);
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		sbCulture.setProgress(pref.getInt("cultureProgress", 50));
@@ -357,12 +354,10 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 	private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 		public void onTimeSet(TimePicker view, int selectedHour,
 				int selectedMinute) {
-			int hour = selectedHour;
-			int minute = selectedMinute;
 
 			// set current time into textview
-			txtTime.setText(new StringBuilder().append(Misc.pad(hour)).append(":")
-					.append(Misc.pad(minute)));
+			txtTime.setText(new StringBuilder().append(Misc.pad(selectedHour)).append(":")
+					.append(Misc.pad(selectedMinute)));
 
 		}
 	};
@@ -372,8 +367,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 	 */
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
@@ -385,7 +379,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 	 * @return tiempo que dura el itinerario
 	 */
 	private double getItineraryTime() {
-		TextView txtTime = (TextView) getActivity().findViewById(R.id.txtTime);
+		TextView txtTime = Objects.requireNonNull(getActivity()).findViewById(R.id.txtTime);
 		String hour = txtTime.getText().toString();
 
 		double tpHour = Double.valueOf(hour.split(":")[0]);
@@ -400,8 +394,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 		double milis = then.getTimeInMillis() - now.getTimeInMillis();
 		double secs = milis / 1000;
 		double mins = secs / 60;
-		double hours = mins / 60;
-		return hours;
+		return mins / 60;
 	}
 	
 }

@@ -54,10 +54,10 @@ public class OptionsAdapter extends ArrayAdapter<RowListView> {
 			item = inflater.inflate(R.layout.list_element, null);
 
 			holder = new ViewHolder();
-			holder.text = (TextView) item.findViewById(R.id.lblText);
+			holder.text = item.findViewById(R.id.lblText);
 			holder.text.setTextColor(Color.WHITE);
 
-			holder.image = (ImageView) item.findViewById(R.id.image);
+			holder.image = item.findViewById(R.id.image);
 			holder.image.setImageResource(rows[position].getImageResId());
 
 			item.setTag(holder);

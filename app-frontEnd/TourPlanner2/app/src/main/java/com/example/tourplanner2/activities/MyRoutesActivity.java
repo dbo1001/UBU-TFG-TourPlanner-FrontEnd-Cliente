@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,11 +82,11 @@ implements IWebServiceTaskResult{
 	/**
 	 * Listado de rutas guardadas.
 	 * */
-	private List<MyRoutesItem> rows = new ArrayList<MyRoutesItem>();
+	private List<MyRoutesItem> rows = new ArrayList<>();
 	/**
 	 * Listado de mapas descargados.
 	 * */
-	private ArrayList<String> maps = new ArrayList<String>();
+	private ArrayList<String> maps = new ArrayList<>();
 	/**
 	 * Boolean que indica si est� o no registrado el usuario en la aplicaci�n
 	 * */
@@ -121,8 +122,8 @@ implements IWebServiceTaskResult{
 		registered = pref.getBoolean("registered", false);
 
 		// Opci�n "Guardar ruta".
-		final EditText etRouteName = (EditText) view.findViewById(R.id.editTextRouteName);
-		TextView tvSaveMode = (TextView) view.findViewById(R.id.textViewSaveOptions);
+		final EditText etRouteName = view.findViewById(R.id.editTextRouteName);
+		TextView tvSaveMode = view.findViewById(R.id.textViewSaveOptions);
 
 		final String[] saveMode = new String[] {
 				getResources().getString(R.string.mobile),
@@ -172,11 +173,12 @@ implements IWebServiceTaskResult{
 					dialogSaveMode.dismiss();
 				});
 
-		Button saveButton = (Button) view.findViewById(R.id.btnSave);
+		Button saveButton = view.findViewById(R.id.btnSave);
 		saveButton.setOnClickListener(v -> {
 			// Obtenemos las coordenadas del Intent pasado por la clase MapMain.
-			Bundle extras = getActivity().getIntent().getExtras();
+			Bundle extras = Objects.requireNonNull(getActivity()).getIntent().getExtras();
 			String email = pref.getString("email", "");
+			assert extras != null;
 			String coordinates = extras.getString("coordinates");
 			routeName = etRouteName.getText().toString();
 
@@ -220,7 +222,7 @@ implements IWebServiceTaskResult{
 		});
 
 		// Opci�n "Cargar Ruta".
-		ListView allRoutes = (ListView) view.findViewById(R.id.listViewAllRoutes);
+		ListView allRoutes = view.findViewById(R.id.listViewAllRoutes);
 		adaptador = new MyRoutesAdapter(getActivity(), rows);
 		allRoutes.setAdapter(adaptador);
 
@@ -234,7 +236,7 @@ implements IWebServiceTaskResult{
 		allRoutes.setOnItemClickListener((arg0, arg1, arg2, arg3) -> showRoute(arg2));
 
 		// Opci�n "Mapas descargados"
-		ListView allMaps = (ListView) view.findViewById(R.id.listViewMaps);
+		ListView allMaps = view.findViewById(R.id.listViewMaps);
 		adapterMaps = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1,
 				maps);
 		allMaps.setAdapter(adapterMaps);
@@ -462,7 +464,7 @@ implements IWebServiceTaskResult{
 	private void setServiceDirections(){
 		try {
 
-			String address = PropertiesParser.getConnectionSettings(getActivity());
+			String address = PropertiesParser.getConnectionSettings(Objects.requireNonNull(getActivity()));
 			SAVE_ROUTE_SERVICE = "https://" + address + "/osm_server/get/route/save";
 			DELETE_ROUTE_SERVICE = "https://" + address + "/osm_server/get/route/delete";
 			ALL_ROUTES_SERVICE = "https://" + address + "/osm_server/get/route/all";
@@ -485,18 +487,18 @@ implements IWebServiceTaskResult{
 	 * */
 	private void loadListRoutesMobile(List<MyRoutesItem> rows){
 		File filePath = new File(Environment.getExternalStorageDirectory() + "/tourplanner/routes");
-		String line = "";
+		String line;
 		rows.clear();
 		if (filePath.exists()){
 			File[] loadRoutes = filePath.listFiles();
 
 			if (loadRoutes != null){
-				for (int i = 0; i < loadRoutes.length; i++){
+				for (File loadRoute : loadRoutes) {
 					StringBuilder routeCoordinates = new StringBuilder();
 					InputStream is;
 					BufferedReader br;
 					try {
-						is = new FileInputStream(loadRoutes[i].getAbsolutePath());
+						is = new FileInputStream(loadRoute.getAbsolutePath());
 
 						br = new BufferedReader(new InputStreamReader(is));
 						while ((line = br.readLine()) != null) {
@@ -509,11 +511,7 @@ implements IWebServiceTaskResult{
 						JSONObject jso = new JSONObject(routeCoordinates.toString());
 						addRouteItem(jso);
 
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
+					} catch (JSONException | IOException e) {
 						e.printStackTrace();
 					}
 				}
@@ -536,13 +534,13 @@ implements IWebServiceTaskResult{
 						getResources().getString(R.string.load_routes_server));
 				wst.addNameValuePair("email", email);
 
-				wst.execute(new String[] { ALL_ROUTES_SERVICE });
+				wst.execute(ALL_ROUTES_SERVICE);
 			} else {
-				Toast.makeText(getActivity().getApplicationContext(), R.string.register_route_show,
+				Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.register_route_show,
 						Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledLoadRoute,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.networkNotEnabledLoadRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -558,9 +556,9 @@ implements IWebServiceTaskResult{
 			File[] loadMaps = filePath.listFiles();
 			maps.clear();
 			if (loadMaps != null){
-				for (int i = 0; i < loadMaps.length; i++){
-					maps.add(loadMaps[i].getName().
-							substring(0, loadMaps[i].getName().indexOf(".")));
+				for (File loadMap : loadMaps) {
+					maps.add(loadMap.getName().
+							substring(0, loadMap.getName().indexOf(".")));
 				}
 
 				adapterMaps.notifyDataSetChanged();
@@ -572,7 +570,7 @@ implements IWebServiceTaskResult{
 	 * M�todo que guarda una ruta en el m�vil.
 	 * */
 	private void saveRouteMobile(){
-		getCity(getActivity().getIntent().getExtras());
+		getCity(Objects.requireNonNull(getActivity()).getIntent().getExtras());
 	}
 
 	/**
@@ -603,10 +601,10 @@ implements IWebServiceTaskResult{
 			wst.addNameValuePair("rating", rating);
 			wst.addNameValuePair("date", format.format(Calendar.getInstance().getTime()));
 
-			wst.execute(new String[] { SAVE_ROUTE_SERVICE });
+			wst.execute(SAVE_ROUTE_SERVICE);
 
 		} else {
-			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledSaveRoute,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.networkNotEnabledSaveRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -620,26 +618,23 @@ implements IWebServiceTaskResult{
 	 * */
 	private void buildAlertMessageDeleteRoute(final int index){
 		final SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getActivity().getApplicationContext());
+				.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
 		final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getResources().getString(R.string.route_delete_dialog))
 		.setCancelable(false)
 		.setPositiveButton((getResources().getString(R.string.yes)),
-				new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog,
-					final int id) {
-				// Eliminamos la ruta en d�nde est� alojada.
-				if (pref.getString("save_mode", "mobile").equals("mobile")){
-					deleteRouteMobile(index);
-				} else if (pref.getString("save_mode", "mobile").equals("server")){
-					deleteRouteServer(index);
-				} else {
-					deleteRouteMobile(index);
-					deleteRouteServer(index);
-				}
+				(dialog, id) -> {
+					// Eliminamos la ruta en d�nde est� alojada.
+					if (pref.getString("save_mode", "mobile").equals("mobile")){
+						deleteRouteMobile(index);
+					} else if (pref.getString("save_mode", "mobile").equals("server")){
+						deleteRouteServer(index);
+					} else {
+						deleteRouteMobile(index);
+						deleteRouteServer(index);
+					}
 
-			}
-		})
+				})
 		.setNegativeButton((getResources().getString(R.string.no)),
 				(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
@@ -657,7 +652,7 @@ implements IWebServiceTaskResult{
 				+ "/tourplanner/routes/" + rows.get(index).getName() + ".json");
 
 		if(route.delete()){
-			Toast.makeText(getActivity().getApplicationContext(), R.string.route_delete,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.route_delete,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -686,10 +681,10 @@ implements IWebServiceTaskResult{
 			adaptador.notifyDataSetChanged();
 
 
-			wst.execute(new String[] { DELETE_ROUTE_SERVICE });
+			wst.execute(DELETE_ROUTE_SERVICE);
 
 		} else {
-			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledDeleteRoute,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.networkNotEnabledDeleteRoute,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -706,7 +701,7 @@ implements IWebServiceTaskResult{
 				+ "/tourplanner/maps/" + maps.get(index) + ".map");
 
 		if(map.delete()){
-			Toast.makeText(getActivity().getApplicationContext(), R.string.map_delete,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.map_delete,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -723,13 +718,13 @@ implements IWebServiceTaskResult{
 	 * */
 	private void showRoute(int index){
 		final SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getActivity().getApplicationContext());
+				.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
 		StringBuilder coordinates = new StringBuilder();
 
 		// Obtenemos las coordenadas de la ruta seleccionada desde el m�vil.
 		if (pref.getString("save_mode", "mobile").equals("mobile") 
 				|| pref.getString("save_mode", "mobile").equals("all")){
-			String line = null;
+			String line;
 
 			InputStream input;
 			File loadRoute = new File(Environment.getExternalStorageDirectory() 
@@ -746,8 +741,6 @@ implements IWebServiceTaskResult{
 				input.close();
 				br.close();
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -767,7 +760,7 @@ implements IWebServiceTaskResult{
 				wst.addNameValuePair("route_name", rows.get(index).getName());
 				wst.addNameValuePair("email", pref.getString("email", ""));
 
-				wst.execute(new String[] { GET_ROUTE_SERVICE });
+				wst.execute(GET_ROUTE_SERVICE);
 			} else {
 				Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabledShowRoute,
 						Toast.LENGTH_SHORT).show();
@@ -786,7 +779,7 @@ implements IWebServiceTaskResult{
 		// Pasamos el resultado a la actividad principal.
 		Intent intent = new Intent();
 		intent.putExtra("map_name", maps.get(index));
-		getActivity().setResult(MapMain.SHOW_MAP, intent);
+		Objects.requireNonNull(getActivity()).setResult(MapMain.SHOW_MAP, intent);
 		startActivityForResult(intent,1);
 
 	}
@@ -804,7 +797,7 @@ implements IWebServiceTaskResult{
 			wst.addNameValuePair("longitude", extras.getString("longitude"));
 
 
-			wst.execute(new String[] { GET_CITY_SERVICE });
+			wst.execute(GET_CITY_SERVICE);
 
 		}
 	}
@@ -859,10 +852,10 @@ implements IWebServiceTaskResult{
 			DownloadMapsTask dmt = new DownloadMapsTask(DownloadMapsTask.POST_TASK, this, mapName);
 			dmt.addNameValuePair("map_name", mapName);
 
-			dmt.execute(new String[] { GET_MAP_SERVICE });
+			dmt.execute(GET_MAP_SERVICE);
 
 		} else {
-			Toast.makeText(getActivity().getApplicationContext(), R.string.networkNotEnabled,
+			Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.networkNotEnabled,
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -878,7 +871,7 @@ implements IWebServiceTaskResult{
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void handleResponse(String response) {
-		JSONObject jso = null;
+		JSONObject jso;
 		if (!response.equals("null")){
 			try {
 				jso = new JSONObject(response);
@@ -887,10 +880,10 @@ implements IWebServiceTaskResult{
 						JSONObject routeJSON = jso.getJSONObject("route");
 						addRouteItem(routeJSON);
 						adaptador.notifyDataSetChanged();
-						Toast.makeText(getActivity().getApplicationContext(), R.string.route_success,
+						Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.route_success,
 								Toast.LENGTH_SHORT).show();
 					} else if (jso.getString("status").equals("OK_DELETE")){
-						Toast.makeText(getActivity().getApplicationContext(), R.string.route_delete,
+						Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.route_delete,
 								Toast.LENGTH_SHORT).show();
 					} else if (!Misc.checkErrorCode(
 							jso.getString("status"), getActivity())){
@@ -907,7 +900,7 @@ implements IWebServiceTaskResult{
 				// Mostramos las rutas del servidor.
 				if (jso.has("routesList")){
 					Object obj = jso.get("routesList");
-					if (obj != null && obj instanceof JSONArray){
+					if (obj instanceof JSONArray){
 						JSONArray routesList = jso.getJSONArray("routesList");
 						for (int i = 0; i < routesList.length(); i++) {
 							JSONObject routeJSON = routesList.getJSONObject(i);
@@ -929,18 +922,19 @@ implements IWebServiceTaskResult{
 					// Pasamos el resultado a la actividad principal.
 					Intent intent = new Intent();
 					intent.putExtra("load_coordinates", coordinates);
-					getActivity().setResult(MapMain.SHOW_SAVE_ROUTE, intent);
+					Objects.requireNonNull(getActivity()).setResult(MapMain.SHOW_SAVE_ROUTE, intent);
 					startActivityForResult(intent,1);
 				}
 
 
 				if (jso.has("city_name")){
-					String coordinates = getActivity().getIntent().getExtras().getString("coordinates");
+					String coordinates = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getIntent().getExtras()).getString("coordinates");
 					String city = jso.getString("city_name");
 					double rating = calculateRating(coordinates);
 
 					// A�adimos los par�metros a almacenar para mostrar en el ListView de rutas.
 					try {
+						assert coordinates != null;
 						JSONObject savedJson = new JSONObject(coordinates);
 						savedJson.put("name", routeName);
 						savedJson.put("city", city);
@@ -967,12 +961,8 @@ implements IWebServiceTaskResult{
 								Toast.LENGTH_SHORT).show();
 
 
-					} catch (FileNotFoundException e) {
+					} catch (IOException | JSONException e) {
 						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (JSONException e1) {
-						e1.printStackTrace();
 					}
 
 
@@ -988,7 +978,7 @@ implements IWebServiceTaskResult{
 							.getDefaultSharedPreferences(getActivity().getApplicationContext());
 					Editor edit = pref.edit();
 					edit.putString("recently_map", city);
-					edit.commit();
+					edit.apply();
 
 				}
 
@@ -1008,11 +998,8 @@ implements IWebServiceTaskResult{
 		MyRoutesItem routeItem = new MyRoutesItem();
 		try {
 			routeItem.setName(jso.getString("name"));
-			if (jso.getString("city") != null){
-				routeItem.setCity(jso.getString("city"));
-			} else {
-				routeItem.setCity("");
-			}
+			jso.getString("city");
+			routeItem.setCity(jso.getString("city"));
 			routeItem.setRating(jso.getDouble("rating"));
 			routeItem.setDate(jso.getString("date"));
 		} catch (JSONException e) {
@@ -1049,8 +1036,7 @@ implements IWebServiceTaskResult{
 	 * Método que se llama cuando se pincha sobre un icono de la barra superior.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
@@ -1063,7 +1049,8 @@ implements IWebServiceTaskResult{
 	 * @return true si la conexión a internet está disponible
 	 */
 	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+		assert connectivityManager != null;
 		NetworkInfo activeNetworkInfo = connectivityManager
 				.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();

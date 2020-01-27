@@ -17,7 +17,7 @@ import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.util.Misc;
@@ -75,7 +75,7 @@ public class ItineraryListAdapter extends ArrayAdapter<RowItineraryList> {
 			holder = (ViewHolder) item.getTag();
 		}
 		if(position==0 || position==rows.length-1){
-			((LinearLayout) item).setClickable(false);
+			item.setClickable(false);
 		}else{
 			((LinearLayout) item
 					.findViewById(R.id.linearItineraryResultElement))
@@ -130,30 +130,25 @@ public class ItineraryListAdapter extends ArrayAdapter<RowItineraryList> {
 		ViewHolder holder;
 		holder = new ViewHolder();
 		holder.position = position;
-		holder.textName = (TextView) item
+		holder.textName = item
 				.findViewById(R.id.textViewItineraryName);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.textDistance = (TextView) item.findViewById(R.id.textViewTime);
-		holder.textTag = (TextView) item.findViewById(R.id.textViewTag);
+		holder.textDistance = item.findViewById(R.id.textViewTime);
+		holder.textTag = item.findViewById(R.id.textViewTag);
 		holder.textName.setTextColor(Color.WHITE);
-		holder.rating = (RatingBar) item.findViewById(R.id.ratingBar);
+		holder.rating = item.findViewById(R.id.ratingBar);
 		holder.rating
-				.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
-
-					@Override
-					public void onRatingChanged(RatingBar ratingBar,
-							float rating, boolean fromUser) {
-						if (fromUser) {
-							ViewHolder holder = (ViewHolder) ((View) ratingBar
-									.getParent().getParent().getParent()).getTag();
-							rows[holder.position].setRating(rating);
-						}
+				.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+					if (fromUser) {
+						ViewHolder holder1 = (ViewHolder) ((View) ratingBar
+								.getParent().getParent().getParent()).getTag();
+						rows[holder1.position].setRating(rating);
 					}
 				});
 		holder.rating.setIsIndicator(false);
-		holder.image = (ImageView) item
+		holder.image = item
 				.findViewById(R.id.imageViewItineraryList);
-		holder.imageTag = (ImageView) item
+		holder.imageTag = item
 				.findViewById(R.id.imageViewItineraryListTag);
 		return holder;
 	}

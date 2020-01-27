@@ -1,6 +1,7 @@
 package com.example.tourplanner2.activities;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,10 +45,6 @@ import com.example.tourplanner2.R;
 public class ProfileActivity extends androidx.fragment.app.Fragment implements
 		IWebServiceTaskResult {
 	/**
-	 * Array con los puntos favoritos del usuario.
-	 */
-	private FavouriteItem[] rows ;
-	/**
 	 * Url del servicio de consulta de perfil.
 	 */
 	private static String PROFILE_SERVICE_URL;
@@ -65,9 +62,9 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 		setServiceDirections();
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
-		TextView txtUser = (TextView) view.findViewById(R.id.textViewUserName);
+		TextView txtUser = view.findViewById(R.id.textViewUserName);
 		txtUser.setText(pref.getString("username", ""));
-		((Button) view.findViewById(R.id.buttonLogout))
+		view.findViewById(R.id.buttonLogout)
 				.setOnClickListener(v -> {
 					SharedPreferences pref1 = PreferenceManager
 							.getDefaultSharedPreferences(view.getContext().getApplicationContext());
@@ -86,7 +83,7 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 				getResources().getString(R.string.gettingRecommendedPois));
 
 		wst.addNameValuePair("email", pref.getString("email", ""));
-		wst.execute(new String[] { PROFILE_SERVICE_URL });
+		wst.execute(PROFILE_SERVICE_URL);
 	}
 /*
 	/**
@@ -135,7 +132,7 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 	 */
 	private void setServiceDirections(){
 		try {
-		String address=PropertiesParser.getConnectionSettings(getActivity());
+		String address=PropertiesParser.getConnectionSettings(Objects.requireNonNull(getActivity()));
 		PROFILE_SERVICE_URL = "https://"+address+"/osm_server/get/profile";
 		
 		} catch (IOException e) {
@@ -153,19 +150,22 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 	public void handleResponse(String response) {
 		JSONObject jso;
 		int visitedPois = 0;
-		rows = JSONParser.getFavourites(response, getActivity());
+		/**
+		 * Array con los puntos favoritos del usuario.
+		 */
+		FavouriteItem[] rows = JSONParser.getFavourites(response, getActivity());
 		try {
 			jso = new JSONObject(response);
 			if(jso.has("status") &&!Misc.checkErrorCode(jso.getString("status"), getActivity())){
 				return;
 			}
 			visitedPois= jso.getInt("visited_pois_count");
-			((TextView) getActivity().findViewById(R.id.textViewVisitedPois)).setText(String
+			((TextView) Objects.requireNonNull(getActivity()).findViewById(R.id.textViewVisitedPois)).setText(String
 					.valueOf(visitedPois));
 			if (rows != null) {
 				FavouritesListAdapter adaptadorItinerary = new FavouritesListAdapter(
 						getActivity(), rows);
-				ListView lstItinerary = (ListView) getActivity().findViewById(R.id.listViewFavourites);
+				ListView lstItinerary = getActivity().findViewById(R.id.listViewFavourites);
 				lstItinerary.setAdapter(adaptadorItinerary);
 			}
 		} catch (JSONException e) {
@@ -177,8 +177,7 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 	 * Método que se llama cuando se pincha sobre un icono de la barra superior.
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			new ToggleButton(getActivity());
 			return true;
 		}
