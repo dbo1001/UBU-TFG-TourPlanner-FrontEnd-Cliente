@@ -19,27 +19,19 @@ public class DialogProfile extends Dialog {
 	public DialogProfile(final Context context) {
 		super(context);
 		setContentView(R.layout.profile_dialog);
-		((Button)findViewById(R.id.buttonEnter)).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				DialogEnter dialog=new DialogEnter(context);
-				dialog.setTitle(context.getResources().getString(R.string.enterTourPlanner));
-				dialog.show();
-				dismiss();
-				
-			}
+		findViewById(R.id.buttonEnter).setOnClickListener(v -> {
+			DialogEnter dialog=new DialogEnter(context);
+			dialog.setTitle(context.getResources().getString(R.string.enterTourPlanner));
+			dialog.show();
+			dismiss();
+
 		});
-		((Button)findViewById(R.id.buttonCreateAccount)).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				DialogRegister dialog=new DialogRegister(context);
-				dialog.setTitle(context.getResources().getString(R.string.registerTourPlanner));
-				dialog.show();
-				dismiss();
-				
-			}
+		findViewById(R.id.buttonCreateAccount).setOnClickListener(v -> {
+			DialogRegister dialog=new DialogRegister(context);
+			dialog.setTitle(context.getResources().getString(R.string.registerTourPlanner));
+			dialog.show();
+			dismiss();
+
 		});
 
 	}

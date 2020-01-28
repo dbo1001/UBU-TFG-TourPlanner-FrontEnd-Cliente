@@ -1,6 +1,7 @@
 package com.example.tourplanner2.services;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.example.tourplanner2.activities.MapMain;
 import com.example.tourplanner2.R;
@@ -285,6 +286,7 @@ public class CheckLocationService extends Service {
 		//notif.defaults |= Notification.DEFAULT_LIGHTS;
 
 		// Enviar notificaci�n
+		assert notManager != null;
 		notManager.notify(33, notif.build());
 	}
 	/**
@@ -292,11 +294,7 @@ public class CheckLocationService extends Service {
 	 * @return true si esta habilitado, false en caso contario
 	 */
 	public boolean checkGpsEnabled(){
-		 if ( !((LocationManager) getSystemService(Context.LOCATION_SERVICE)).isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-		        return false;
-		 }else{
-			 return true;
-		 }
+		return ((LocationManager) Objects.requireNonNull(getSystemService(Context.LOCATION_SERVICE))).isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
 	/**
 	 * M�todo que indica que debe de dearse de comprobar si esta llegando al destino. 

@@ -72,37 +72,28 @@ public class DialogOpinion extends Dialog implements IWebServiceTaskResult {
 		((RatingBar) findViewById(R.id.ratingBar)).setRating(poi.getRating());
 		((EditText) findViewById(R.id.editTextOpinion)).setText(poi
 				.getOpinion());
-		((TextView) findViewById(R.id.textViewSeeExperiences))
-				.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.textViewSeeExperiences)
+				.setOnClickListener(v -> {
+					WebServiceTask wst = new WebServiceTask(
+							WebServiceTask.POST_TASK, dialog);
 
-					@Override
-					public void onClick(View v) {
-						WebServiceTask wst = new WebServiceTask(
-								WebServiceTask.POST_TASK, dialog);
-
-						wst.addNameValuePair("poi_id",
-								String.valueOf(poi.getPoiId()));
-						wst.execute(new String[] { OPINION_SERVICE_URL });
-					}
+					wst.addNameValuePair("poi_id",
+							String.valueOf(poi.getPoiId()));
+					wst.execute(OPINION_SERVICE_URL);
 				});
 		OpinionListAdapter adapter = new OpinionListAdapter(context,
 				new OpinionItem[0]);
-		ListView list = (ListView) findViewById(R.id.listViewOpinions);
+		ListView list = findViewById(R.id.listViewOpinions);
 		list.setAdapter(adapter);
-		((Button) findViewById(R.id.buttonAccept))
-				.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.buttonAccept)
+				.setOnClickListener(v -> {
 
-					@Override
-					public void onClick(View v) {
-
-						poi.setOpinion(((TextView) findViewById(R.id.editTextOpinion))
-								.getText().toString());
-						poi.setRating(((RatingBar) findViewById(R.id.ratingBar))
-								.getRating());
-						adaptador.notifyDataSetChanged();
-						dialog.dismiss();
-					}
-
+					poi.setOpinion(((TextView) findViewById(R.id.editTextOpinion))
+							.getText().toString());
+					poi.setRating(((RatingBar) findViewById(R.id.ratingBar))
+							.getRating());
+					adaptador.notifyDataSetChanged();
+					dialog.dismiss();
 				});
 
 	}
@@ -139,9 +130,9 @@ public class DialogOpinion extends Dialog implements IWebServiceTaskResult {
 				OpinionItem[] opinions = JSONParser.getOpinions(response);
 				OpinionListAdapter adapter = new OpinionListAdapter(
 						context, opinions);
-				((TextView) findViewById(R.id.textViewSeeExperiences))
+				findViewById(R.id.textViewSeeExperiences)
 						.setVisibility(View.GONE);
-				ListView list = (ListView) findViewById(R.id.listViewOpinions);
+				ListView list = findViewById(R.id.listViewOpinions);
 				list.setAdapter(adapter);
 				list.setVisibility(View.VISIBLE);
 			} else {

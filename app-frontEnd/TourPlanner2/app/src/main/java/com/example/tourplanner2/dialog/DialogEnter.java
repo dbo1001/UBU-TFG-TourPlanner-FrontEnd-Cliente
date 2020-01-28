@@ -1,6 +1,7 @@
 package com.example.tourplanner2.dialog;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,40 +51,36 @@ public class DialogEnter extends Dialog implements IWebServiceTaskResult {
 		this.context = context;
 		setServiceDirections();
 		setContentView(R.layout.enter_dialog);
-		((Button) findViewById(R.id.btnEnviar))
-				.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						String email = ((EditText) findViewById(R.id.editTextEmail))
-								.getText().toString();
-						String password = ((EditText) findViewById(R.id.editTextPassword))
-								.getText().toString();
-						if (email.length() > 0) {
-							if (password.length() > 4) {
-								WebServiceTask wst = new WebServiceTask(
-										WebServiceTask.POST_TASK,
-										(IWebServiceTaskResult) dialog, context
-												.getResources().getString(
-														R.string.logging));
-								wst.addNameValuePair("email", email);
-								wst.addNameValuePair("password", password);
-								wst.execute(new String[] { REGISTER_SERVICE_URL });
-							}
-							else{
-								Toast.makeText(
-										context.getApplicationContext(),
-										context.getResources().getString(
-												R.string.passwordToShort), Toast.LENGTH_LONG)
-										.show();
-							}
-						}else{
+		findViewById(R.id.btnEnviar)
+				.setOnClickListener(v -> {
+					String email = ((EditText) findViewById(R.id.editTextEmail))
+							.getText().toString();
+					String password = ((EditText) findViewById(R.id.editTextPassword))
+							.getText().toString();
+					if (email.length() > 0) {
+						if (password.length() > 4) {
+							WebServiceTask wst = new WebServiceTask(
+									WebServiceTask.POST_TASK,
+									(IWebServiceTaskResult) dialog, context
+											.getResources().getString(
+													R.string.logging));
+							wst.addNameValuePair("email", email);
+							wst.addNameValuePair("password", password);
+							wst.execute(REGISTER_SERVICE_URL);
+						}
+						else{
 							Toast.makeText(
 									context.getApplicationContext(),
 									context.getResources().getString(
-											R.string.emailToShort), Toast.LENGTH_LONG)
+											R.string.passwordToShort), Toast.LENGTH_LONG)
 									.show();
 						}
+					}else{
+						Toast.makeText(
+								context.getApplicationContext(),
+								context.getResources().getString(
+										R.string.emailToShort), Toast.LENGTH_LONG)
+								.show();
 					}
 				});
 	}
@@ -97,7 +94,7 @@ public class DialogEnter extends Dialog implements IWebServiceTaskResult {
 					+ "/osm_server/get/authentication";
 
 		} catch (IOException e) {
-			Log.e("DialogEnter", e.getMessage());
+			Log.e("DialogEnter", Objects.requireNonNull(e.getMessage()));
 			e.printStackTrace();
 		}
 
@@ -122,7 +119,7 @@ public class DialogEnter extends Dialog implements IWebServiceTaskResult {
 				edit.putString("email",
 						((EditText) findViewById(R.id.editTextEmail)).getText()
 								.toString());
-				edit.commit();
+				edit.apply();
 				dismiss();
 				((MapMain) context).openActivity(MapMain.OPEN_PROFILE);
 			} else if (jso.getString("status").equals("Wrong Password")) {
@@ -138,13 +135,14 @@ public class DialogEnter extends Dialog implements IWebServiceTaskResult {
 						context.getApplicationContext(),
 						context.getResources().getString(R.string.noRegistered),
 						Toast.LENGTH_LONG).show();
-			} else if (jso.has("status")
-					&& !Misc.checkErrorCode(
-							jso.getString("status"), context)) {
-				return;
+			} else {
+				if (jso.has("status")) {
+					Misc.checkErrorCode(
+							jso.getString("status"), context);
+				}
 			}
 		} catch (JSONException e) {
-			Log.e("DialogEnter", e.getMessage());
+			Log.e("DialogEnter", Objects.requireNonNull(e.getMessage()));
 			e.printStackTrace();
 		}
 

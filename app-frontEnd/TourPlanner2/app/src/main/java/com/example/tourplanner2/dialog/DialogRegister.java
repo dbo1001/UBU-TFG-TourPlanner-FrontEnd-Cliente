@@ -15,8 +15,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.view.View;
-import android.widget.Button;
+//import android.view.View;
+//import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 /**
@@ -48,35 +48,31 @@ public class DialogRegister extends Dialog implements IWebServiceTaskResult{
 		this.context=context;
 		setServiceDirections();
 		setContentView(R.layout.register_dialog);
-		((Button)findViewById(R.id.btnEnviar)).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String name=((EditText)findViewById(R.id.editTextName)).getText().toString();
-				String email=((EditText)findViewById(R.id.editTextEmail)).getText().toString();
-				String password=((EditText)findViewById(R.id.editTextPassword)).getText().toString();
-				if(email.length()>0 && name.length()>0){
-					if(password.length()>4){
-						WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK,(IWebServiceTaskResult)dialog );
-						wst.addNameValuePair("email", email);
-						wst.addNameValuePair("password", password);
-						wst.addNameValuePair("name",name);
-						wst.execute(new String[] { REGISTER_SERVICE_URL });
-					}else{
-						((EditText) findViewById(R.id.editTextPassword)).setText("");
-						Toast.makeText(
-								context.getApplicationContext(),
-								context.getResources().getString(R.string.passwordToShort),
-								Toast.LENGTH_LONG).show();
-					}
+		findViewById(R.id.btnEnviar).setOnClickListener(v -> {
+			String name=((EditText)findViewById(R.id.editTextName)).getText().toString();
+			String email=((EditText)findViewById(R.id.editTextEmail)).getText().toString();
+			String password=((EditText)findViewById(R.id.editTextPassword)).getText().toString();
+			if(email.length()>0 && name.length()>0){
+				if(password.length()>4){
+					WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK,(IWebServiceTaskResult)dialog );
+					wst.addNameValuePair("email", email);
+					wst.addNameValuePair("password", password);
+					wst.addNameValuePair("name",name);
+					wst.execute(REGISTER_SERVICE_URL);
 				}else{
 					((EditText) findViewById(R.id.editTextPassword)).setText("");
 					Toast.makeText(
 							context.getApplicationContext(),
-							context.getResources().getString(
-									R.string.mustFillIn), Toast.LENGTH_LONG)
-							.show();
+							context.getResources().getString(R.string.passwordToShort),
+							Toast.LENGTH_LONG).show();
 				}
+			}else{
+				((EditText) findViewById(R.id.editTextPassword)).setText("");
+				Toast.makeText(
+						context.getApplicationContext(),
+						context.getResources().getString(
+								R.string.mustFillIn), Toast.LENGTH_LONG)
+						.show();
 			}
 		});
 	}
@@ -108,7 +104,7 @@ public class DialogRegister extends Dialog implements IWebServiceTaskResult{
 				edit.putBoolean("registered", true);
 				edit.putString("username", ((EditText)findViewById(R.id.editTextName)).getText().toString());
 				edit.putString("email", ((EditText)findViewById(R.id.editTextEmail)).getText().toString());
-				edit.commit();
+				edit.apply();
 				dismiss();
 			}else{
 				if (jso.has("status") &&!Misc.checkErrorCode(jso.getString("status"),
