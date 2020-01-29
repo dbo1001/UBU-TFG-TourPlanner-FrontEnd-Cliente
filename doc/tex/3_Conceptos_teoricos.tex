@@ -51,13 +51,29 @@ Gracias a la identificación de los Code Smells, se puede saber cuándo es neces
 
 \section{API}
 
-Una API, como su propio nombre indica, provee de una interfaz de programacion de aplicaciones, en concreto, de una aplicación que será la que provee de esa API a otro software para que pueda hacer uso de rutinas, métodos y procedimientos con los cuales incluya la funcionalidad del software proveedor de la API.
+Una API, como su propio nombre indica, provee de una interfaz de programación de aplicaciones, en concreto, de una aplicación que será la que provee de esa API a otro software para que pueda hacer uso de rutinas, métodos y procedimientos con los cuales incluya la funcionalidad del software proveedor de la API.
 
 Visto de otra forma, se basa en el uso de bibliotecas, y con esto se consigue que el programador no tenga que desarrollar todo el código que se encuentra en ellas, ya que con hacer uso de sus métodos y llamadas ya consigue esas funcionalidades.
 
-Por otro lado, al hacer esto también se consigue estandarización, debido a que todos los programas que usen esas librerías para implementar sus funcionalidades estarán haciendo los procesos de llamadas y usando los mismos métodos, así que se benefician de todas las ventajas con las que cuenta la estandarización, así como alguna de las limitaciones.
+Por otro lado, al hacer esto también se consigue estandarización, debido a que todos los programas que usen esas librerías para implementar sus funcionalidades estarán haciendo los mismos procesos de llamadas y usando los mismos métodos, así que se benefician de todas las ventajas con las que cuenta la estandarización, pero a su vez también corremos el riesgo de que esa estandarización se rompa, bien porque la API deje de dar soporte a la biblioteca que estamos utilizando, o porque en las nuevas versiones de una aplicación ya no sea compatible nuestra API implementada. 
 
-Llevándolo a nuestro caso, tendríamos por un lado la API que nos permite visualizar imágenes de los puntos de interés, o por ejemplo la API con la que estamos viendo los mapas (OpenStreeMaps).
+Llevándolo a nuestro caso, tendríamos por un lado la API que nos permite visualizar imágenes de los puntos de interés, o por ejemplo la API con la que estamos viendo los mapas (OpenStreeMaps). Aquí se cumplen los dos casos referentes a la estandarización, con OpenStreetMaps conseguimos una API y un código válido y más sencillo, que se parecerá estructuralmente al de otros programadores y si necesitáramos soporte lo obtendríamos fácilmente, pero por el otro lado, tenemos la API de Panoramio que ya no es válida, dado que el servicio de esta página web dejó de estar disponible y por tanto nos veríamos obligados a buscar otra API que nos provea de las funcionalidades buscadas.
+
+\section{Mantenimiento}
+
+El concepto de mantenimiento en informática posee mucho valor, ya que el desarrollo de cualquier aplicación requiere mantenimiento posterior, y lo podemos dividir en dos aspectos:
+
+\subsection{Soporte}
+
+El soporte es una parte del mantenimiento, ya que después de cualquier desarrollo siempre habrá errores, bugs o fallos, y éstos pueden ser problemas que no afecten al funcionamiento normal de un aplicación o por el contrario que causen su parada total, quedando inutilizable. 
+
+El soporte es un servicio a través del cual un especialista informático brinda asistencia, de forma física o remota a un individuo o una organización que hacen uso de la herramienta. En el caso de nuestra aplicación, el soporte del que hablamos sería remoto, a traves de una aplicación web o un foro, donde además de personas especializadas en esta aplicación, también hay otros usuarios que aportan su experiencia sobre ciertos problemas y en muchos casos estos problemas pueden ser resueltos sin necesidad de modificar el código, porque la falta de conocimiento del usuario es una de las mayores causas de incidencias que se suelen resolver en entornos de soporte.
+
+\subsection{Actualización}
+
+La otra parte importante del mantenimiento de una aplicación, sobre la que haremos mención en muchos aspectos de este trabajo es la actualización. 
+
+Se basa en el cambio de código, APIs y librerías para obtener métodos nuevos, que están más optimizados para realizar la misma funcionalidad o también para solucionar errores que existieran en versiones anteriores. Por último, también se aplica a la implantación de nuevas funcionalidades de una misma aplicación, para que cada vez cumpa mejor la labor para la que haya sido desarrollada. En conjunto, supone una parte fundamental y necesaria para la aplicación. Cuando la actualización no se realiza con cierta periodicidad la aplicación acaba sufriendo pequeños errores o errores críticos. Cuanto más largo sea el periodo entre una actualización y la siguiente más complicado será conseguir que todo lo que se haya ido cambiando o mejorando sea aplicado de manera fácil.
 
 \section{Secciones}
 
