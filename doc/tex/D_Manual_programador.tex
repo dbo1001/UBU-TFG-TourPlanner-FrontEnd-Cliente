@@ -124,9 +124,131 @@ Las dos bibliotecas que han sustituido a SlidingMenu han sido:
 
 También los colores es algo en lo que se ha puesto cierta atención a la hora de desarrollar este menú y el resto de la aplicación, ya que consideramos que la accesibilidad de una aplicación hoy en día es un valor añadido muy importante. Se ha tratado de manejar colores que faciliten a la lectura y visualización, siguiendo los estándares de accesibilidad de W3C.
 
+\subsubsection{Librería SherlockActivity}
 
- 
+Esta es otra de las bibliotecas que más han afectado al desarrollo, ya que la mayoría de "activities" estaban construidas en torno a ella. Como Ocurrió con SlidingMenu, también  nos encontramos con que la biblioteca estaba "deprecated" u obsoleta pero, por desgracia, no se había continuado el desarrollo de la misma y por lo tanto no era una cuestión de actualizar a una versión más actualizada, porque ésta no existía. Por esto mismo se tuvo que buscar una alternativa y pasar a utilizar algo más estandarizable, siempre evitando que en un futuro suceda algo similar a lo que nos ha sucedido a nosotros.
+
+Así fue como se comenzó a implementar la librería de AppCompatActivity, pero no en todas las actividades que conformaban la aplicación, sino en la principal. Para poder explicar esto es necesario mencionar la libreria anterior de NavigationMethod, ya que en este sentido se ha conseguido solucionar los dos problemas utilizando un método estándar que está más optimizado para el manejo de aplicaciones como la nuestra, donde se maneja un número considerable de ventanas diferentes y estas poseen comunicación e interacción.
+
+Hablamos del concepto de Activity y Fragment.
+
+\begin{itemize}
+\item Activity. Se podría definir como una ventana de la aplicación. En código corresponde a una clase de Java, que contiene todos los métodos que sirva para mostrar información, aunque por otro lado la parte más visual corresponde a un archivo .xml que será el que contenga la información puramente visual, configuración de colores, tamaños, etc.
+\item Fragment. A efectos visuales contiene lo mismo que una Activity, pero en este caso la verdadera diferencia surge en la comunicación entre ellas y la optimización de la aplicación en cuanto a tiempos a la hora de navegar entre ventanas. Por otro lado, para implantar correctamente el menú del que hablábamos en el punto anterior, la manera más óptima es tenerlo instaurado dentro de una activity, y que los distintos apartados (ventanas) que tengamos dentro de ese menú sean Fragment. De esta forma conseguimos navegar desde una ventana principal hacia el resto de apartados utilizando el NavigationView.
+\end{itemize}
+
+\subsubsection{Librería Org.Apache}
+
+La última de las bibliotecas mas conflictivas a la hora de desarrollar la aplicación ha sido la de Org.Apache. Esto se debe principalmente a que, como las dos anteriores supone una carga dentro del código bastante grande, pero a diferencia de estas no obtenemos un error directo por su parte a la hora de implantarlo en nuestro codigo actualizado, sino que obtuvimos los problemas más adelante.
+
+De hecho, pese a que estuviera obsoleta, se decidió que en un principio no se modificaría, ya que suponía un cambio excesivamente grande y costoso como para invertir recursos en algo que aparentemente en un inicio funionaba correctamente. Finalmente no se ha podido recurrir a otra opción, ya que hay métodos de esta biblioteca que no dan el resultado esperado a la hora de ejecutar todo el código.
+
+El problema principal es que supone un cambio en todas las clases donde se realiza una petición de tipo HTTP o HTTPS, ya que son éstas la que utilizan los métodos provenientes de Org.Apache. 
+
+Los metodos que más utilizados estaban siendo eran:
+
+\begin{itemize}
+\item DefaultHttpClient. Éste es con diferencia el método que más implementaciones y llamadas recibía dentro de las clases de la aplicación. Era el método que servía para iniciar la conexión HTTP.
+\item HttpsClient. Ésta clase había sido implementada por los desarrolladores anteriores del proyecto y aportaba la posibilidad de realizar una conexión HTTPS o lo que es lo mismo, una conexión segura a través del protocolo SSL. El problema es que también dependía al completo de métodos obsoletos.
+\end{itemize}
+
+Finalmente, se consiguió aplicar otro cambio importante, también hacia la estandarización, ya que se han modificado todos los métodos y llamadas dentro de clases para que pasen a utilizar HttpsUrlConnection, que es la librería estándar de Android que nos ofrece el desarrollo y manejo de peticiones y conexiones HTTPS.
+
+Para realizar la conexión utilizando esta librería tendremos que seguir unos pasos mas sencillos que antes, aunque por otro lado bastante similares.
+
+\begin{itemize}
+\item Establecemos una direccion URL, que nos servirá para poder alcanzar el destino de nuestras peticiones.
+\item Instanciamos la conexión de tipo HttpsUrlConnection, utilizando la URL mencionada.
+\item Establecemos todos los parámetros que consideremos necesarios para poder establecer la conexión, como por ejemplo el tiempo de "Timeout" para poder conectarnos y evitar malgasto de recursos.
+\item Una vez está todo lo anterior configurado, simplemente realizamos la conexion a traves del método connect().
+\item por ultimo quedaría recibir respuesta, lo cual podremos obtenerlo con metodos como getResponseCode(), obteniendo la respuesta que hayamos recibido de parte del servidor, y pudiendo enviar nuevas peticiones en base a esta respuesta.
+\end{itemize}
+
+\includegraphics[scale=1]{codigoHTTPS.jpg}
+
+Como se puede ver en la imagen, realizar esta conexión supone bastante poca carga de código y al ser un método bastante parecido, si se utiliza varias veces en una misma clase, se podría realizar EXTRACT METHOD sobre varias partes, para evitar aun más la sobrecarga de código.
+
+\subsection{Cambios sobre APIs}
+
+En este caso, hablaremos sobre las APIs que antes eran utilizadas, pero con el motivo de haber quedado obsoletas, no ha sido posible seguir contando con su funcionalidad dentro de la aplicación.
+
+\subsubsection{Panoramio}
+
+Una de ellas es Panoramio, que nos proveía de imágenes para que fueran mostradas dentro de los detalles de un punto de interés. Desde que este proyecto Online fue absorvido por Google, ya no podemos contar con el servicio de obtención de imágenes gratuito y por tanto la API que nos permitía hacerlo ha ido quedando en el olvido, al no tener más sentido de existencia.
+
+\includegraphics[width=\textwidth]{panoramio.jpg}
 
 \section{Compilación, instalación y ejecución del proyecto}
+
+En este apartado se cubrirá todos los aspectos referentes a la utilización de la aplicación, por lo tanto veremos cómo instalar todo el software necesario, cómo compilar el proyecto de Android y tambien cómo ejecutarlo.
+
+Cabe destacar que sólo se va a cubrir la instalación, compilación y ejecución de la aplicación de Android, ya que la parte referente al servidor se tratará en detalle en el proyecto de mi compañero Ignacio.
+
+\subsection{Instalación}
+
+Las herramientas que vamos a necesitar tener instaladas por parte de la aplicación Android serán, básicamente Android Studio y sus componentes internos. Vamos a observar cómo lo instalaremos.
+
+\subsubsection{Android Studio}
+
+Simplemente necesitaremos acceder a la página oficial de Android, a traves del siguiente enlace (), y veremos lo siguiente:
+
+\includegraphics[width=\textwidth]{androidInstala.jpg}
+
+Cómo se puede observar, bastará con pulsar la opción para descargar Android Studio. En esta opción siempre nos ofrecerá la última versión oficial del producto. Excepto en casos excepcionales, esto es lo más recomendable, ya que al ser un software que exige bastantes recursos, cuanto más actual sea la versión que estamos utilizando mejor optimizada estará. 
+
+Si se da uno de los casos excepcionales que mencionábamos, también nos ofrecen diferentes versiones o incluso diferentes sistemas operativos con los que son compatibles.
+
+\includegraphics[width=\textwidth]{androidVersiones.jpg}
+
+Como se puede observar, también nos ofrecen la opción de acceder a las "release notes", lo cual resulta muy útil para poder descubrir más a fondo los cambios que se han desarrollado en cada versión.
+
+
+\subsubsection{SDK Manager}
+
+Esta herramienta es parte de Android Studio, pero necesitaremos configurarla por separado, para poder contar después con una experiencia fructífera:
+
+\includegraphics[scale=1]{sdkManager.jpg}
+
+Una vez pulsemos ese botón remarcado en rojo, entraremos en la configuración del SDK Manager:
+
+\includegraphics[width=\textwidth]{sdkVersiones.jpg}
+
+Como podemos ver, la primera ventana que nos ofrece este gestor, será para que seleccionemos la versión de Android sobre la que queremos trabajar en nuestor proyecto. Como ya hemos mencionado previamente, nosotros tenemos instalada la versión de Android 6.0.
+
+También contamos con otras dos ventanas:
+
+\includegraphics[width=\textwidth]{sdkCosas.jpg}
+
+Dentro de esta segunda ventana podremos configurar las herramientas adicionales que instalaremos para conseguir una mejor experiencia mientras desarrollamos las aplicaciones. En nuestro caso, tenemos instalado el emulador, que resulta totalmente necesario para hacer pruebas.
+
+Por último contamos con la ventana de actualizaciones:
+
+\includegraphics[width=\textwidth]{sdkUpdate.jpg}
+
+En esta ventana, tal como se describe, se podrá configurar los repositorios de los que se realizarán comprobaciones en busca de actualizaciones de manera automática.
+
+\subsubsection{AVD Manager}
+
+Este gestor será el que nos permita llevar un control sobre el emulador de Android, ya que aquí será donde instalaremos el dispositivo móvil virtual que después ejecutaremos para probar nuestra aplicación.
+
+\includegraphics[scale=1]{avdManager.jpg}
+
+Una vez pulsemos tendremos acceso a la configuracion de nuetros dispositivos virtuales:
+
+\includegraphics[width=\textwidth]{avdPrincipal.jpg}
+
+Aqui ya podremos ver los dispositivos que tenemos instalados, ejecutarlo, eliminarlos o modificar algunas configuraciones.
+
+Si queremos crear un dispositivo tendremos que seleccionar el botón de "Create Virtual Device":
+
+\includegraphics[width=\textwidth]{avdNuevo.jpg}
+
+En esta ventana simplemente seleccionaremos que modelo de dispositivo móvil queremos simular, descargarlo y utilizarlo.
+
+\subsection{Compilación}
+
+
+
+\subsection{Ejecución}
 
 \section{Pruebas del sistema}
