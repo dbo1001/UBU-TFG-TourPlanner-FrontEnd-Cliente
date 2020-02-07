@@ -2,15 +2,31 @@
 
 \section{Introducción}
 
-En este anexo contemplaremos varios aspectos, donde tenemos que tener en cuenta lo que quiere conseguir el cliente de este proyecto y lo que comprende el desarrollador sobre el mismo, para que todo le mundo acabe con una visión general lo más parecida posible. De esta forma evitaremos posibles decepciones por parte del cliente o demasiada carga de trabajo para el programador en cuestión.
+En este anexo contemplaremos varios aspectos, donde tenemos que tener en cuenta lo que quiere conseguir el cliente de este proyecto y lo que comprende el desarrollador sobre el mismo, para que todo le mundo acabe con una visión general lo más parecida posible. De esta forma evitaremos posibles decepciones por parte del cliente o demasiada carga de trabajo para el programador en cuestión. Recogeremos una serie de aspectos que resultan ser muy relevantes a la hora de diseñar, entender y ejecutar un proyecto. Si esta parte queda bien definida entre la figura del desarrollador y la figura del cliente, el resto resultará mucho más fácil para ambos.
 
-Se ayuda de elementos gráficos para poder visualizar la información sin tener que tener un conocimiento tecnico elevado y donde se podrán ver los requisitos generales del sistema, así como las funciones que debería cumplir.
+El objetivo principal es realizar un análisis del sistema que se va a desarrollar. Para ello, se definirán gráficos y diagramas donde se especifiquen los requisitos y requerimientos generales de nuestro proyecto. También es necesario definir las funciones que incorporaremos y las limitaciones que tendrá el sistema. Con respecto a estos dos últimos términos, cabe destacar que este trabajo se centrará más en actualización, optimización y mejora de la aplicación y no tanto en el desarrollo de funcionalidades, aunque si que habrá ciertas funcionalidades que se verán afectadas.
 
-Por último, se verán los diagramas de casos de uso, donde se podrá observar aun mejor cómo será el manejo de la aplicación.
+Se ayuda de elementos gráficos para poder visualizar la información sin tener que tener un conocimiento técnico elevado y donde se podrán ver los requisitos generales del sistema, así como las funciones que debería cumplir.
+
+Por último también se incluirá una especificación de los requisitos mediante diagramas de casos de uso, donde de nuevo surgirán algunas modificaciones sobre funcionalidades ya existentes.
 
 \section{Objetivos generales}
 
+Los objetivo que definiremos para nuestro sistema serán los siguientes:
 
+\begin{itemize}
+\item Dado que contamos con una aplicación con bastante tiempo desde su última actualización, nuestro objetivo principal será el de conseguir que esta aplicación pueda funcionar dentro de un dispositivo actual.
+	\begin{itemize}
+	\item Actualizar la versión mínima soportada por la aplicación, pasando desde la API 14 hasta la API 23, pudiendo ser utilizada hasta la última versión, que en este momento es la API 29.
+	\item Actualizar todas las bibliotecas que resulten desactualizadas.
+	\item Sustituir las bibliotecas que no puedan ser actualizadas por otras bibliotecas nuevas, tratando de encontrar más sostenibilidad.
+	\item Orientar nuestra aplicación hacia un software más estándar para Android, a través de bibliotecas propias de Android o métodos que la propia marca recomiende.
+	\item Tratar de actualizar las APIs que se encuentren desactualizadas.
+	\item Sustituir las APIs que se encuentren obsoletas y no se puedan actualizar por haber dejado de tener soporte.
+	\item Mejorar estructuralmente el código de la aplicación tratando de aplicar métodos de eliminación de Code Smells, eliminando Warnings y quitando código que no esté siendo utilizado.
+	\end{itemize}
+\item Por supuesto cabe mencionar que la aplicación esta orientada a dispositivos móviles o tabletas que utilicen el sistema operativo de Android.
+\end{itemize}
 
 \section{Catalogo de requisitos}
 
