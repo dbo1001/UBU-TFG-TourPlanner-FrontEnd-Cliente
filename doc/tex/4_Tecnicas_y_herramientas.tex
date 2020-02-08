@@ -9,19 +9,30 @@ Las técnicas utilizadas durante el desarrollo de un proyecto pueden ayudar a co
 
 \subsubsection{Refactorización}
 
-La refactorización es una técnica utilizada en programación para realizar modificaciones sobre el código de un programa en cuanto a la estructura interna, pero sin que el comportamiento externo se vea afectado. Son cambios que se pueden apreciar estructuralmente y que a simple vista podrían no tener importancia, pero a medida que un programa avanza, se actualiza o se dejan de usar ciertas técnicas para pasar a usar otras, haber hecho esta refactorización cobra mas importancia. 
+La refactorización \cite{refac1} \cite{refac2} es una técnica utilizada en programación para realizar modificaciones sobre el código de un programa en cuanto a la estructura interna, pero sin que el comportamiento externo se vea afectado. Son cambios que se pueden apreciar estructuralmente y que a simple vista podrían no tener importancia, pero a medida que un programa avanza, se actualiza o se dejan de usar ciertas técnicas para pasar a usar otras, haber hecho esta refactorización cobra mas importancia. 
 
 Si nos paramos a pensar, el termino de refactorización tiene el origen en las matemáticas, ya que la "factorización" en las matemáticas lo que puede hacer es convertir un polinomio compuesto por una variable y un numero en 2 polinomio mas simples y con una estructura mas clara de ver. El funcionamiento externo es en sí el mismo, pero se consigue una limpieza o una robustez estructural. Esto es lo que se busca al hacerlo en la programación.
 
 La refactorización abarca desde cambiar el nombre de una variable para que vaya mas acorde con la función que llevará a cabo, hasta mover un método de una clase a otra para así conseguir un acceso mas optimizado y una estructura mas lógica.
 
 Hay una serie de refactorizaciones sencillas pero que son de las que mas se realizan, debido a que solucionan los code smells que más se cometen:
+
 \begin{itemize}
 \item EXTRACT METHOD: Es el proceso por el cual, tras detectar que ciertas porciones de código se repiten en distintos métodos o incluso dentro de un mismo método en partes distintas del mismo, pero que tienen la misma estructura y en definitiva cumplen la mismo función, por lo que esas porciones de código repetido pueden ser extraídas para crear un método nuevo, de tal manera que cuando se necesite hacer el proceso que exija usar ese mismo proceso, bastará con llamar al método. 
 
 Así se consigue una estructura más robusta en el código, así como mejor mantenibilidad del mismo, ya que si en un momento dado es necesario modificar esas lineas, en vez de modificarlas en cada una de las localizaciones donde estuvieran, solo se hará en el método nuevo.
 
+Un ejemplo gráfico donde se ve lo que se acaba de explicar:
+
+\imagen{extractM}{Ejemplo sobre la técnica de refactorización \textit{extract method} \cite{extractM}}
+
+
+
 \item MOVE METHOD: En este caso, durante la detección de los posibles problemas que pueda tener el código, se observa que un método que se encuentra en una clase, no esta correctamente implementado en la misma, ya que a lo mejor esta haciendo mas uso de recursos de otra clase distinta, y así se realiza, se decide mover ese método a la clase en la que debería estar implementado, ya que esto hace que la estructura sea más lógica, y por consiguiente mas óptima.
+
+Un ejemplo gráfico donde se ve lo que se acaba de explicar:
+
+\imagen{moveM}{Ejemplo sobre la técnica de refactorización \textit{move method} \cite{moveM}}
 
 \item RENAME: Este tipo de refactorización es el más sencillo y a la vez es el que más necesario resulta en muchas ocasiones, ya que se basa en renombrar una variable, método o clase para que tenga más sentido con respecto a la labor que desempeñe. El hecho de que existan nombres excesivamente genéricos o que directamente no cumplan con lo que es realmente es un error muy frecuente, por tanto, esta refactorización es muy frecuente.
 \end{itemize}
@@ -34,11 +45,6 @@ Este tipo de migración se realiza cuando se quiere cambiar por completo un soft
 
 Para relacionar la técnica con este proyecto, hay que mencionar Android, ya que esta técnica se ha aplicado para realizar la migración desde Android hacia AndroidX, ya que éste último es la version mejorada del anterior. Pero no es una simple actualización, ya que se encuentran en librerías diferentes, pero esto se explicará mas adelante en el apartado de herramientas.
 
-\subsubsection{Actualización}
-
-Con respecto a este concepto entendemos actualización como la tecnica por la cual un software obtiene caracteristicas nuevas o arregla algunas que ya existieran a traves de las distintas versiones. Normalmente las actualizaciones resultan ser importantes ya que suelen corregir errores que pudiera tener el codigo anterior o mejoran alguas funcionalidades ya existentes.
-
-Hay ocasiones en que las actualizaciones, aunque necesarias, no son obligatorias, y por tanto se puede seguir funcionando sin aplicarlas. Otras por el contrario, obligan a aplicarse, ya sea por ser razones de seguridad o porque en el momento que cambia un sistema tiene que estar con las ultimas versiones, porque si no suele causar incompatibilidades.
 
 \subsection{Herramientas}
 
