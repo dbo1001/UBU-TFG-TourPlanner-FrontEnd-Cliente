@@ -4,15 +4,17 @@ En este apartado se describirán ciertos conceptos teóricos que resultan necesa
 
 \section{Modelo Cliente-Servidor}
 
-Una parte importante de este proyecto es el concepto del modelo cliente-servidor, ya que cumple con la estructura que estamos utilizando. En este modelo y en el proyecto hay unas caracteristicas principales y unos actores concretos que son los siguientes:
+Una parte importante de este proyecto es el concepto del modelo cliente-servidor, ya que cumple con la estructura que se está utilizando. \cite{cs1} \cite{cs2}
+
+En este modelo y en el proyecto hay unas características principales y unos actores concretos que son los siguientes:
 
 \subsection{Cliente}
 \begin{itemize}
-\item Este se encarga de lanzar solicitudes o peticiones al servidor. Si lo comparamos con el proyecto de TourPlanner, podemos ver que la parte del cliente correspondería a la aplicación de Android.
+\item Este se encarga de lanzar solicitudes o peticiones al servidor. Cuando el cliente requiere cierta información, lanza una petición al servidor, quedando a la espera de recibir una respuesta. Normalmente en esta espera se encuentra definido un tiempo de espera máximo, para evitar desperdicio de recursos.
 
-\item El cliente es capaz de lanzar peticiones a diferentes servidores, como es nuestro caso en el que lanza peticiones tanto al servidor de OpenStreetMaps para poder visualizar el mapa online, a la base de datos que desarrolla mi compañero(lanza la petición a través de Glassfish) o por ejemplo a un servidor que provee las imágenes de los puntos de interés.
+\item El cliente es capaz de lanzar peticiones a diferentes servidores, ya que pueden ser tipos de datos muy variados y sería impensable que un mismo origen de datos le ofreciera todo lo que necesite.
 
-\item Obviamente este cliente contiene la interfaz que utilizará el usuario final, por lo que la interacción es directa.
+\item Este cliente contiene la interfaz que utilizará el usuario final, por lo que se consigue una interacción directa.
 \end{itemize}
 
 \subsection{Servidor}

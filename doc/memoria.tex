@@ -391,28 +391,27 @@ En Burgos, {\large \today}
 
 \vfill\vfill\vfill
 
-% Author and supervisor
-%\begin{minipage}{0.45\textwidth}
-%\begin{flushleft} %\large
-%Vº. Bº. del Tutor:\\[2cm]
-%D. nombre tutor
-%\end{flushleft}
-%\end{minipage}
-%\hfill
-%\begin{minipage}{0.45\textwidth}
-%\begin{flushleft} %\large
-%Vº. Bº. del co-tutor:\\[2cm]
-%. nombre co-tutor
-%\end{flushleft}
-%\end{minipage}
-%\hfill
+ Author and supervisor
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft} %\large
+Vº. Bº. del Tutor:\\[2cm]
+D. Bruno Baruque Zanón
+\end{flushleft}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft} %\large
+Vº. Bº. del co-tutor:\\[2cm]
+. Santiago Porras Alfonso
+\end{flushleft}
+\end{minipage}\hfill
 
 \vfill
 
 % para casos con solo un tutor comentar lo anterior
 % y descomentar lo siguiente
-Vº. Bº. del Tutor:\\[2cm]
-D. nombre tutor
+%Vº. Bº. del Tutor:\\[2cm]
+%D. nombre tutor
 
 
 \newpage\null\thispagestyle{empty}\newpage
@@ -425,26 +424,22 @@ D. nombre tutor
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-Este proyecto se basa en realizar la ampliación, actualización y mantenimiento de la aplicación TourPlanner, la cual se encarga de la generación de rutas turísticas personalizadas a través de una serie de algoritmos de búsqueda de caminos óptimos y que esta diseñada para ser utilizada en sistemas operativos Android.
+Este proyecto se basa en la ampliación, actualización y mantenimiento de la aplicación TourPlanner, la cual se encarga de la generación de rutas turísticas personalizadas a través de una serie de algoritmos de búsqueda de caminos óptimos y que está diseñada para ser utilizada en sistemas operativos Android.
 
-Para desarrollar este trabajo hemos cooperado mi compañero, Ignacio Aparicio Blanco y yo, pero cada uno realizando dos partes separadas que finalmente cumplen una función juntas, ya que Ignacio ha realizado la parte del backEnd (algoritmos para la generación de las rutas y manejo de la base de datos) y yo me he encargado de la parte frontEnd (interfaz y funcionamiento interno de la aplicación Android).
+Para desarrollar este trabajo se ha trabajado en dos proyectos paralelos, por un lado mi compañero \cite{tfg2}, más centrado en el desarrollo del servidor y los algoritmos para la generación de rutas y por el otro, este proyecto que está más centrado en el desarrollo del FrontEnd (interfaz y funcionamiento de la aplicación Android).
 
-A continuación explicaré brevemente las mejoras que he realizado en la parte FrontEnd de la aplicación. Cabe destacar que este trabajo esta centrado en la aplicación de mejoras estructurales y en la actualización y estandarización de las librerías y métodos utilizados, para así conseguir un mantenimiento futuro mucho mas sencillo.
+A continuación se explicará brevemente las mejoras que se han realizado en el FrontEnd. Cabe destacar que este trabajo esta centrado en la aplicación de mejoras estructurales y en la actualización y estandarización de las librerías y métodos utilizados, para así conseguir un mantenimiento más sencillo y sostenible.
 
-Se ha conseguido actualizar la aplicación para que pueda funcionar en los dispositivos mas modernos, ya que esta desarrollada para la versión de Android 6.0, pero también es compatible hasta la versión Android 9.
+Se ha conseguido actualizar la aplicación para que pueda funcionar en los dispositivos más modernos, ya que está desarrollada bajo la versión de Android 6.0 (API 23), pero también es compatible hasta la última versión de Android (Android 9.0, API 29 en este momento).
 
-También se ha hecho uso de una herramienta estándar para la creación del menú de la aplicación, que se encuentra dentro del paquete de Android. Con esto se consigue que la aplicación tenga una apariencia mucho más parecida a otras aplicaciones muy utilizadas en sistemas Android, como puede ser el propio Google Maps o la aplicación de Gmail, lo cual hace que resulte mas fácil de entender su funcionamiento para el usuario medio.
-
-Otra parte de este proyecto es bastante centrada en la optimización con respecto a los recursos y al uso de ciertos métodos que contiene Android. Se ha cambiado la estructura de "activities" dentro de la aplicación, para pasar a usar una estructura mas óptima.Más adelante se explicará en que consiste.
-
-Por otro lado, como ya he dicho, este trabajo se centra en la estandarización, y por ello se han dejado de utilizar una serie de librerías que, ya sea por no tener continuidad o por no tener compatibilidad con las nuevas versiones de Android, no eran capaces de funcionar en este sistema y por tanto, se ha decidido buscar la opción mas estándar o sostenible para sustituirlas.
+Por otro lado, como ya se ha señalado, este trabajo se centra en la estandarización, y por ello se ha dejado de integrar una serie de librerías que, ya sea por no tener continuidad o por no tener compatibilidad con las nuevas versiones de Android, no eran capaces de funcionar en este sistema y por tanto, se ha decidido buscar la opción mas estándar o sostenible para sustituirlas.
 
 
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Android, actualización, mantenimiento, optimización, menú, estandarización, frontEnd
+Android, actualización, mantenimiento, optimización, estandarización, FrontEnd
 
 \ldots
 \end{abstract}
@@ -454,12 +449,21 @@ Android, actualización, mantenimiento, optimización, menú, estandarización, 
 % Abstract en inglés
 \renewcommand*\abstractname{Abstract}
 \begin{abstract}
-A \textbf{brief} presentation of the topic addressed in the project.
+
+This project is based on the extension, upgrade and maintenance of TourPlanner application. This app is used to generate custom turistic routes through some \textit{pathfinding} algoritms and it's designed to run on Android mobile devices.
+
+The development of this project has been done in two parts, the part from my team mate \cite{tfg2}, focused on the server and algoritms development, and this project part which is focused on the development of FrontEnd (interface and functioning from the Android application)
+
+On this project will be explained all the upgrades and improvements done about FrontEnd. It's important to mention that this project is focused on doing structural improvements, upgrades and standarization of the libraries and methods used on it. This will bring an easier and more sustainable maintenance.
+
+The app has been upgraded to be used on the latest devices, developed under Android 6.0 (API 23) version and with compatibility with last Android version (Android 9.0, API 23 at this moment).
+
+On the other hand, as mentioned before, this project works around standarization, so it was necessary to change the integration of some libraries, due to deprecation or incompatibility with newer Android versions. Now there are new  standarized and native Android libraries integrated.
 \end{abstract}
 
 \renewcommand*\abstractname{Keywords}
 \begin{abstract}
-keywords separated by commas.
+Android, upgrade, maintenance, optimization, standarization, FrontEnd 
 \end{abstract}
 
 \clearpage
