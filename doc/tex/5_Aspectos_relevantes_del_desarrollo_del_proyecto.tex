@@ -5,3 +5,55 @@ Debe incluir desde la exposición del ciclo de vida utilizado, hasta los detalle
 Se busca que no sea una mera operación de copiar y pegar diagramas y extractos del código fuente, sino que realmente se justifiquen los caminos de solución que se han tomado, especialmente aquellos que no sean triviales.
 Puede ser el lugar más adecuado para documentar los aspectos más interesantes del diseño y de la implementación, con un mayor hincapié en aspectos tales como el tipo de arquitectura elegido, los índices de las tablas de la base de datos, normalización y desnormalización, distribución en ficheros3, reglas de negocio dentro de las bases de datos (EDVHV GH GDWRV DFWLYDV), aspectos de desarrollo relacionados con el WWW...
 Este apartado, debe convertirse en el resumen de la experiencia práctica del proyecto, y por sí mismo justifica que la memoria se convierta en un documento útil, fuente de referencia para los autores, los tutores y futuros alumnos.
+
+En este apartado se van a destacar los aspectos que más relevancia han adquirido a lo largo del desarrollo del proyecto, bien por haber realizado cambios importantes o por haber supuesto un reto más en el trabajo.
+
+Se verán ciertos aspectos que estarán más desarrollados en los anexos, sobre todo en el anexo 4. También se tratará de justificar las modificaciones que se hayan realizado sobre el proyecto anterior \cite{tfm1}, para que quede claramente diferenciada la aportación que ha supuesto este proyecto.
+
+\section{Trabajar sobre un proyecto ya desarrollado}
+
+En esta sección se quiere mostrar los aspectos más importantes a la hora de trabajar sobre otro proyecto que ya ha sido desarrollado, ya que pueden suponer ciertas dificultades si no se tienen en cuenta.
+
+Para este proyecto, se ha comenzado con dos preámbulos ya mencionados, el primer desarrollo \cite{tfg1} donde se comenzaba el desarrollo de la aplicación y el segundo \cite{tfm1}, donde se mejoraba este desarrollo anterior. A la hora de plantear esta tercera versión del proyecto, ha sido necesario realizar un trabajo inicial de documentación para poder entrar en contexto sobre lo que se había desarrollado y lo que quedaba por desarrollar. Para ello, los apartados sobre objetivos y lineas de trabajo futuras de ambos proyectos han sido bastante útiles, ya que a través de estos brindaban la visión que tenían sobre sus proyectos y las mejoras que se podían desarrollar.
+
+También ha sido necesario investigar la antigüedad de estos proyectos, concretamente de la segunda versión \cite{tfm1}, ya que era la última, aunque más adelante se vió que ésta había sido desarrollada sobre la misma versión tanto para el cliente como para el servidor. Por tanto, una parte crucial es la de actualizar, sobre todo en lo referente al cliente, ya que la versión de la que se habla es Android 4.4 (API 14), lo cual se sitúa 7 años atrás. Además durante estos últimos años, los dispositivos móviles han sufrido muchos avances tecnológicos y esto se ha podido ver incluso durante el desarrollo del proyecto, ya que cuando se comenzó la última version de Android era la de Android 9.0 y en la actualidad ya se ha lanzado Android 10. En este artículo \cite{and1} se puede ver de una manera sencilla la evolución que ha sufrido Android a lo largo de los años.
+
+Uno de los cambios que ha supuesto toda esta evolución de Android surgió un año después del lanzamiento de Android 4.4, ya que en Android 5.0 se incluye el concepto de \textit{Material Design} que sirve desde entonces como base de diseño de aplicaciones de Android para unificar todos los dispositivos que se encontraran por encima de esta versión. Es un paso más hacia la estandarización que en este proyecto también se ha incluido.
+
+Otro aspecto importante a la hora de trabajar sobre un proyecto anterior, es la necesidad de comprender cómo se ha desarrollado el mismo y para ello toman mucha relevancia los comentarios que se realizaron sobre el código, para evitar confusiones o simplemente para conseguir que la experiencia de mejorar esta aplicación sea más llevadera.
+
+\imagen{comment1}{Ejemplo de comentarios sobre el código que ayudan a la comprensión del mismo}
+
+
+\section{Actualización y cambio de librerías}
+
+Uno de los aspectos más importantes para el desarrollo de este proyecto ha sido la actualización de varias librerías, ya que se encontraban obsoletas por haber dejado de recibir soporte o por estar desactualizadas. Tras haber visto el apartado sobre las librerías en los conceptos teóricos, se puede ver la importancia que poseen en un proyecto, por lo que sin éstas funcionando, no se puede desarrollar el resto de la aplicación.
+
+Ha sido necesario realizar un trabajo de investigación sobre cada una de estas librerías obsoletas con el fin de encontrar una alternativa más estándar y actual, tratando de conseguir más accesibilidad y soporte en un futuro. Las librerías más importantes que han tenido que ser sustituidas son:
+
+\begin{itemize}
+\item \textbf{SlidingMenu:} Librería que permitía implementar un menú deslizante para poder navegar entre ventanas.
+\item \textbf{SherlockActivity:} Librería utilizada para la implementación de cada una de las ventanas (Activities) de la aplicación.
+\item \textbf{Org.Apache:} Librería que se utilizaba para realizar todas las peticiones HTTP y HTTPS hacia el servidor.
+\end{itemize}
+
+Toda la explicación sobre el cambio de estas librerías se encuentra en el anexo 4: Manual del programador.
+
+La sustitución de librerías al completo dentro de una aplicación supone un cambio en todos los métodos que se aprovechen de ellas, ya sea a través de llamadas o variables de las mismas, para pasar a utilizar las nuevas. El problema principal es que en muchas ocasiones, aunque se consiga una nueva librería, puede que hayan cambiado la forma de hacer las llamadas a métodos o los parámetros dentro de esas llamadas y es necesario tenerlo en cuenta para poder hacer un cambio que realmente tenga un efecto positivo.
+
+\section{Cambio de la herramienta de desarrollo}
+
+Para este proyecto, también se ha modificado la herramienta de desarrollo que se estaba utilizando, ya que anteriormente se utilizó Eclipse, por ser el entorno oficial de desarrollo de aplicaciones Android, pero en 2015 se lanzó la primera versión de Android Studio, que lo sustituyó como herramienta oficial.
+
+Al iniciar este proyecto se pudo ver que se había utilizado Eclipse al ser 2014 y no existir Android Studio, pero ahora ya es necesario utulizar esta nueva herramienta, que también ofrece nuevas funcionalidades, y un entorno de desarrollo totalmente especializado para las aplicaciones de Android. 
+
+Uno de los grandes cambios que supone esta herramienta, es \textit{Gradle} \cite{gradle2} que es un sistema de automatización de construcción de código abierto, cuyos plugins iniciales están principalmente centrado en desarrollo y despliegue en Java, Groovy y Scala \cite{gradle1}. En concreto, Android Studio es una de las aplicaciones que lo integran para el desarrollo de aplicaciones, ya que permite automatizar la gestión de dependencias sobre librerías, APIs y repositorios.
+
+Se puede ver con más detalle el cambio que ha supuesto la utilización de Android Studio en el anexo 4.
+
+\section{Programación en Android}
+
+\section{Cambio de interfaz}
+
+\section{Trabajo colaborativo}
+ 
