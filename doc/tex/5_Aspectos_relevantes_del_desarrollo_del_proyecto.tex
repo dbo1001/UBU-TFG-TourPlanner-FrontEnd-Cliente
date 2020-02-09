@@ -10,7 +10,7 @@ En este apartado se van a destacar los aspectos que más relevancia han adquirid
 
 Se verán ciertos aspectos que estarán más desarrollados en los anexos, sobre todo en el anexo 4. También se tratará de justificar las modificaciones que se hayan realizado sobre el proyecto anterior \cite{tfm1}, para que quede claramente diferenciada la aportación que ha supuesto este proyecto.
 
-\section{Trabajar sobre un proyecto ya desarrollado}
+\section{Trabajo sobre un proyecto ya desarrollado}
 
 En esta sección se quiere mostrar los aspectos más importantes a la hora de trabajar sobre otro proyecto que ya ha sido desarrollado, ya que pueden suponer ciertas dificultades si no se tienen en cuenta.
 
@@ -29,7 +29,11 @@ Otro aspecto importante a la hora de trabajar sobre un proyecto anterior, es la 
 
 Uno de los aspectos más importantes para el desarrollo de este proyecto ha sido la actualización de varias librerías, ya que se encontraban obsoletas por haber dejado de recibir soporte o por estar desactualizadas. Tras haber visto el apartado sobre las librerías en los conceptos teóricos, se puede ver la importancia que poseen en un proyecto, por lo que sin éstas funcionando, no se puede desarrollar el resto de la aplicación.
 
-Ha sido necesario realizar un trabajo de investigación sobre cada una de estas librerías obsoletas con el fin de encontrar una alternativa más estándar y actual, tratando de conseguir más accesibilidad y soporte en un futuro. Las librerías más importantes que han tenido que ser sustituidas son:
+Ha sido necesario realizar un trabajo de investigación sobre cada una de estas librerías obsoletas con el fin de encontrar una alternativa más estándar y actual, tratando de conseguir más accesibilidad y soporte en un futuro.
+
+Llevándolo a este caso, se tendría por un lado una API con la que se obtienen los mapas (OpenStreeMaps). Aquí se cumplen los dos casos referentes a la estandarización, con OpenStreetMaps se consigue una API y un código válido y más sencillo, que se parecerá estructuralmente al de otros programadores y si se necesitara soporte lo obtendríamos fácilmente, pero por el otro lado, la API de Panoramio que ya no es válida, dado que el servicio de esta página web dejó de estar disponible y por tanto sería necesario buscar otra API que ofrezca las funcionalidades buscadas.
+
+Las librerías más importantes que han tenido que ser sustituidas son:
 
 \begin{itemize}
 \item \textbf{SlidingMenu:} Librería que permitía implementar un menú deslizante para poder navegar entre ventanas.
@@ -53,7 +57,33 @@ Se puede ver con más detalle el cambio que ha supuesto la utilización de Andro
 
 \section{Programación en Android}
 
+Para poder desarrollar este proyecto, ha sido necesario partir desde cero en cuanto a la programación con Android. Hay una serie de conceptos importantes sobre los que ha habido que aprender para poder realizar esta programación:
+
+\begin{itemize}
+\item \textbf{Lenguajes de programación:} Para desarrollar este proyecto ha sido necesario tener conocimientos sobre Java para implementar todo el código referente al funcionamiento interno, así como CSS para la parte visual.
+\item \textbf{Actividades:} El concepto de actividades para Android, como ya se ha visto en los conceptos teóricos, es algo crucial al desarrollar una aplicación, porque representan cada una de las ventanas que aparecen al realizar interacción con la aplicación.
+\item \textbf{Notificaciones:} El sistema que utiliza Android también es algo bastante importante, ya que hay que conocer la forma en la que las aplicaciones activan estas notificaciones y en base a que.
+\item \textbf{Permisos:} Al igual que las notificaciones, pero en este caso es algo necesario, ya que en función a lo que se quiera mostrar u obtener de la aplicación, puede que necesitemos permisos para acceder a los distintos servicios del dispositivo. Estos servicios podrían ser desde la cámara hasta la geolocalización. Si no se establece una manera correcta para gestionar estos permisos, la aplicación que se desarrolle no funcionará como debería.
+\end{itemize}
+
 \section{Cambio de interfaz}
+
+Ya que para esta aplicación ha sido necesario actualizar gran parte de las librerías y repositorios que se utilizaban, también se ha decidido realizar un cambio sobre la interfaz de la misma, para que concuerde mejor con una interfaz estándar de una aplicación Android, tanto en los colores como en el menú. Cada una de las ventanas mantiene un aspecto similar en cuanto a la estructura de lo que contenían, porque también se consideró que no era necesario que pareciera una aplicación totalmente diferente a la versión anterior. 
+
+Como ya se ha mencionado previamente, a partir de la version de Android 5.0, surgió \textit{Material Design}, que trataba de aportar una manera de desarrollar la interfaz de las aplicaciones más estándar. Esto se ha querido aplicar para este proyecto, ya que se está basando sobre una versión mínima de Android 6.0, pudiendo funcionar hasta en la última versión disponible.
+
+Este cambio sobre la interfaz se puede ver en el anexo 4 y también en el anexo 5.
 
 \section{Trabajo colaborativo}
  
+Otro aspecto relevante de este proyecto ha sido el trabajo colaborativo, que se ha realizado para desarrollar el proyecto complementario sobre el BackEnd \cite{tfg2} y este proyecto enfocado en el FrontEnd.
+
+Dado que el cliente y el servidor tienen que tener una conexión, también es necesario que el desarrollo sobre los mismos la tenga, por lo que ha sido necesario coincidir en varios puntos, incluso mantener una comunicación continua al término final del proyecto, para contrastar ciertas partes de la memoria y para brindarse ayuda en el desarrollo de partes que influían en la parte complementaria.
+
+Para que se comprenda mejor el sentido de esta colaboración, el proceso básico que también se verá en detalle mas adelante es el siguiente: el usuario interactúa directamente con la aplicación (cliente), la cual realiza la petición a GlassFish (servidor), que a su vez realiza la petición a la base de datos y se la devuelve al cliente. 
+
+Una de las partes que más colaboración ha tenido para este proyecto, ha sido la modificación de la interfaz para que ésta ofreciera nuevos métodos de cálculo sobre las rutas turísticas, pudiendo utilizar los nuevos algoritmos desarrollados en el proyecto de BackEnd \cite{tfg2}.
+
+A la hora de realizar comprobaciones en la conexión de ambas partes, ha sido necesario también mantener una comunicación, ya que a la hora de lanzar peticiones, el cliente simplemente queda a la espera de que el servidor pueda devolvérselos, pero en el momento de obtener fallos de conexión, ya es necesario observar lo que ha podido ocurrir tanto en un extremo como en el otro. Esto se consigue a través de la colaboración.
+
+Cabe destacar que en el desarrollo tanto de la memoria como de los anexos se hacen referencias continuas hacia el otro proyecto, incluso algunos apartados contienen la misma información al tratarse de un desarrollo por separado pero sobre un mismo objetivo, que es el de que funcione la aplicación que se desarrolla con todas sus funcionalidades.
