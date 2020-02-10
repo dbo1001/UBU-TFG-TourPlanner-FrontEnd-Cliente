@@ -2,33 +2,33 @@
 
 \section{Introducción}
 
-En este apartado de la memoria, nos centraremos en la parte más técnica del trabajo, entrando a detalle sobre los cambios realizados y los problemas diversos que se han encontrado y solucionado.
+En este apartado de la memoria, se verá la parte más técnica del trabajo, entrando a detalle sobre los cambios realizados y los problemas diversos que se han encontrado y solucionado.
 
-Mencionaremos algunas partes que hacen referencia al servidor, teniendo en cuenta que esta parte no la hemos desarrollado, ya que lo hizo mi compañero Ignacio.
+Se mencionarán algunas partes que hacen referencia al servidor, teniendo en cuenta que esta parte no se ha desarrollado en este proyecto, sino en el de BackEnd \cite{tfg2}.
 
-Dentro de este apartado, veremos las distintas bibliotecas que se han utilizado, las APIs, el manual del programador y también las pruebas realizadas. 
+Dentro de este apartado, se verán las distintas bibliotecas que se han utilizado, las APIs, el manual del programador y también las pruebas realizadas. 
 
-Cabe destacar que en este proyecto la mayor parte de desarrollo ha sido sobre la resolución de errores provocados por el cambio de versión y la antigüedad del proyecto, sin poder mostrar implementaciones nuevas con respecto a funcionalidades. Es un trabajo dedicado al mantenimiento y actualización de una aplicación que contaba con una versión y recursos con 7 años de antigüedad y por eso ha habido tanta base de problemas.
+Cabe destacar que en este proyecto la mayor parte de desarrollo ha sido sobre la resolución de errores provocados por el cambio de versión, sin poder mostrar implementaciones nuevas con respecto a funcionalidades. Es un trabajo dedicado al mantenimiento y la actualización.
 
-Del mismo modo que hemos hecho en algunos apartados, se mencionarán partes que ya fueron desarrolladas anteriormente y que no hayan sufrido cambios importantes.
+Del mismo modo que en otros apartados, se mencionarán partes que ya fueron desarrolladas anteriormente y que no hayan sufrido cambios importantes.
 
 \section{Estructura de directorios}
 
-En este apartado vamos a enumerar distintos contenidos que tendrá el dispositivo entregable, tanto del cliente como del servidor:
+En este apartado se enumeran distintos contenidos que tendrá el USB entregable, tanto del cliente como del servidor:
 
 \begin{itemize}
 \item Cliente
  	\begin{itemize}
-		\item Aplicación: dentro de esta subcarpeta tendremos el archivo TourPlanner.apk, para que pueda ser instalado en cualquier dispositivo.
+		\item Aplicación: dentro de esta subcarpeta se encuentra el archivo TourPlanner.apk, para que pueda ser instalado en cualquier dispositivo.
 		\item Código fuente: Contiene el código de la aplicación Android.
-		\item Javadoc: documentación sobre la aplicación.
-		\item Datos: contiene el archivo con las referencias utilizadas en el proyecto y un backup con la base de datos PostgreSQL de Burgos configurada.
+		\item Javadoc: Documentación sobre la aplicación.
+		\item Datos: Contiene el archivo con las referencias utilizadas en el proyecto y un backup con la base de datos PostgreSQL de Burgos configurada.
 		\item Máquina virtual: Dentro tendremos la máquina virtual donde estará instalado Android Studio y se podrá utilizar sin tener que hacer más instalaciones.
 		\end{itemize}
 		
 \item Servidor
  	\begin{itemize}
-		\item Aplicación: contiene el archivo osm server.war para que se pueda utilizar en cualquier momento.
+		\item Aplicación: Contiene el archivo osm server.war para que se pueda utilizar en cualquier momento.
 		\item Código fuente: Contiene el código fuente de la aplicación servidor.
 		\item Javadoc: Contiene la documentación de la aplicación servidor.
 		\item Datos: Archivo con las referencias utilizadas en el proyecto y un backup con la base de datos PostgreSQL de Burgos configurada.
@@ -43,207 +43,203 @@ En este apartado vamos a enumerar distintos contenidos que tendrá el dispositiv
 		
 \item Software
  	\begin{itemize}
-		\item Esta carpeta contendrá los distintos programas que se han ido utilizando en el desarrollo de la aplicación.
+		\item Esta carpeta contendrá ejecutables de los distintos programas que se han ido utilizando en el desarrollo de la aplicación.
 		\end{itemize}		
 \end{itemize}
 
 \section{Manual del programador}
 
-Dentro de este apartado veremos todo el proceso de desarrollo que se ha realizado en el proyecto, explicando los cambios, mejoras y arreglos sobre el mismo. Lo dividiremos en distintos puntos, ya que es necesario cubrir todos los aspectos que hacen referencia al desarrollo del código y de la aplicación.
+Dentro de este apartado se verá todo el proceso de desarrollo que se ha realizado en el proyecto, explicando los cambios, mejoras y arreglos sobre el mismo. Estará dividido en distintos puntos, ya que es necesario cubrir todos los aspectos que hacen referencia al desarrollo del código y de la aplicación.
 
-Antes de comenzar, cabe destacar que en este proyecto se ha tratado de mejorar el código de una aplicación con una antigüedad de 7 años, actualizándola a versiones compatibles con los dispositivos de hoy en día y a su vez tratando de que sea lo más estable posible. Ha habido funcionalidades que no se han podido actualizar tal y como estaban desarrolladas, por lo que se mencionarán para un futuro desarrollo.
+Antes de comenzar, cabe destacar que en este proyecto se ha tratado de mejorar el código desactualizado hacia una versión lo más estable posible. Ha habido funcionalidades que no se han podido actualizar tal y como estaban desarrolladas, por lo que se mencionarán para un futuro desarrollo.
 
 \subsection{Modificaciones sobre la estructura}
 
-En este pequeño apartado mencionaremos las modificaciones que ha sufrido la estructura dentro de la herramienta de desarrollo, partiendo de la base de que la herramienta en sí es distinta y consideramos que para este propósito Android Studio consigue una estructura más clara y sencilla, donde se pueden localizar mejor las distintas partes de las que está compuesta la aplicación, porque está organizada de forma mas homogénea.
+En este pequeño apartado se mencionarán las modificaciones que ha sufrido la estructura dentro de la herramienta de desarrollo, partiendo de la base de que la herramienta en sí es distinta, considerando que para este propósito Android Studio consigue una estructura más clara y sencilla, donde se pueden localizar mejor las distintas partes de las que está compuesta la aplicación, porque está organizada de forma mas homogénea.
 
-En el proyecto anterior contábamos con una estructura como la siguiente:
+En el proyecto anterior se tenia una estructura como la siguiente:
 
-\includegraphics[width=\textwidth]{androidAnterior.jpg}
+\imagen{androidAnterior}{Estructura de la versión anterior del proyecto Android}
 
 Aquí se puede observar que hay 3 carpetas principales:
 
 \begin{itemize}
-\item Tourplanner, la cual hace referencia a la aplicación. Dentro de esta carpeta esta la mayor parte del código de desarrollo y tambien se hace referencia a librerías y recursos.
-\item SlidingMenu, que en este proyecto es la biblioteca utilizada para generar el menú lateral con el cuenta la aplicación. Como se puede ver es necesario que esté implementada de manera individual, en vez de ser importada como el resto de librerias y también tiene código dentro de sus subcarpetas.
-\item libraries, que hace referencia a las librerías que estan utilizando en el proyecto, excepto SlidingMenu por lo que acabamos de ver.
+\item \textbf{Tourplanner}, la cual hace referencia a la aplicación. Dentro de esta carpeta esta la mayor parte del código de desarrollo y también se hace referencia a librerías y recursos.
+\item \textbf{SlidingMenu}, que en este proyecto es la biblioteca utilizada para generar el menú lateral con el cuenta la aplicación. Como se puede ver es necesario que esté implementada de manera individual, en vez de ser importada como el resto de librerías y también tiene código dentro de sus subcarpetas.
+\item \textbf{libraries}, que hace referencia a las librerías que se están utilizando en el proyecto, excepto SlidingMenu por lo visto anteriormente.
 \end{itemize}
 
-Comparando esta estructura con la que tenemos actualmente podremos ver bastantes diferencias:
+Comparando esta estructura con la que se tiene actualmente, se ven bastantes diferencias:
 
-\includegraphics[width=\textwidth]{androidNuevo.jpg}
+\imagen{androidNuevo}{Estructura de la versión nueva del proyecto Android}
 
-En este caso, podemos ver una estructura mas sencilla, ya que sólo contamos con una carpeta principal de la que aparecen el resto de elementos. 
+En este caso, podemos ver una estructura más sencilla, ya que sólo contamos con una carpeta principal de la que surgen el resto de elementos. 
 
-La carpeta java, que será donde se encuentre todo el código de desarrollo de la aplicación. No tendremos que estar desplazandonos entre otros directorios para poder encontrar código, ya que estará al completo aquí.
+La carpeta java, que será donde se encuentre todo el código de desarrollo de la aplicación. No será necesario desplazarse entre otros directorios para poder encontrar código, ya que estará al completo aquí.
 
 \subsubsection{Gradle Scripts}
 
-Por otro lado, el apartado de Gradle Scripts es algo que Android Studio implementa por defecto en todos los proyectos, y es una herramienta muy útil cuando se trabaja con un numero considerable de librerias, pudiendo manejar a la perfección qué se está importando para que sea utilizado, así como las versiones en las que lo implantamos.
+Por otro lado, el apartado de Gradle Scripts \cite{gradle1} es algo que Android Studio implementa por defecto en todos los proyectos, y es una herramienta muy útil cuando se trabaja con un numero considerable de librerías y repositorios, pudiendo manejar a la perfección qué se está importando para que sea utilizado, así como las versiones en las que lo instalamos.
 
-El hecho de poder manejar las versiones de esta manera nos permite poder mantener la aplicación lo más actualizada posible continuamente, ya que además el propio Software nos advertirá siempre que tengamos versiones de repositorios para los cuales ya hay otras más nuevas. Esto ayuda a mantenerse siempre lo más alejado posible de trabajar con "bujs" y errores de desarrollo de los propios repositorios, ya que suele ser lo que se corrige cuando se actualiza el Software.
+El hecho de poder manejar las versiones de esta manera permite poder mantener la aplicación lo más actualizada posible continuamente, ya que además el propio Software advertirá siempre que tengamos versiones de repositorios para los cuales ya hay otras más nuevas. Esto ayuda a mantenerse siempre lo más alejado posible de trabajar con \textit{bugs} y errores de desarrollo de los propios repositorios, ya que suele ser lo que se corrige cuando se actualiza el Software.
 
-El fichero más importante del apartado de Gradle será el llamado "build.gradle", ya que será con el que podremos añadir repositorios y bibliotecas para que despues podamos implementar en el código.
+El fichero más importante del apartado de Gradle será el llamado \textit{build.gradle}, ya que será con el que se pueda añadir repositorios y bibliotecas para después implementar en el código.
 
-\includegraphics[width=\textwidth]{gradle1.jpg}
+\imagen{gradle1}{Apariencia de la configuración en Gradle con Android Studio}
 
-Como se puede observar, aquí configuraremos la versión de sdk con la que estamos trabajando y la versión mínima con la que podremos hacer funcionar la aplicación. La versión mínima será la API 23, como se indica en esta configuración y la versión objetivo que se menciona aquí también será la API 29, que es la última con la que cuenta Android. Nuestra aplicación funcionará para dispositivos con versión Android 6.0 (API 23) o superior.
+Como se puede observar, aquí se configurará la versión de SDK con la que estamos trabajando y la versión mínima con la que funcionará la aplicación. La versión mínima será la API 23, como se indica en esta configuración y la versión objetivo que se menciona aquí también, será la API 29, que es la última con la que cuenta Android. La aplicación funcionará para dispositivos con versión Android 6.0 (API 23) o superior.
 
-Por último podemos ver cómo nos recomienda Android que mantengamos actualizado nuestro software y repositorios, ya que en el momento que alguno de ellos tiene una versión disponible superior, nos los marcará:
+Por último se puede ver cómo recomienda Android que se mantenga actualizado el software y repositorios, ya que en el momento en que alguno de ellos tenga una versión disponible superior, lo marcará:
 
-\includegraphics[width=\textwidth]{gradleVersion.jpg}
+\imagen{gradleVersion}{Advertencias de Android Studio sobre una versión que no es la más actual}
 
 \subsection{Modificaciones importantes sobre bibliotecas}
 
-Como ya hemos mencionado en otros apartados de la memoria, se han realizado muchas modificaciones sobre las librerías que estaban siendo utilizadas previamente y que, por desgracia, han quedado totalmente obsoletas. Esto nos ha llevado a intentar descubrir todas las novedades que se han ido implementando en el software de Android desde el desarrollo del anterior proyecto.
+Como ya se ha mencionado en otros apartados de la memoria, se han realizado muchas modificaciones sobre las librerías que estaban siendo utilizadas previamente y que han quedado obsoletas. Esto ha obligado a intentar descubrir todas las novedades que se han ido implementando en el software de Android desde el desarrollo del anterior proyecto, a través de labores de investigación y aprendizaje. Así, se ha conseguido modificar estas librerías que se mencionan a continuación.
 
 \subsubsection{Cambio de SlidingMenu}
 
-Uno de los primeros descubrimientos que nos vimos obligados a realizar fue el de una nueva herramienta par obtener el menú "deslizante" con el que contaba la aplicación, o al menos un nuevo menú que cumpliera la función que ya cumplía previamente SlidingMenu.
+Uno de los primeros descubrimientos necesarios era el de una nueva herramienta para obtener el menú "deslizante" con el que contaba la aplicación, o al menos un nuevo menú que cumpliera la función que ya cumplía previamente la librería \textit{SlidingMenu}.
 
-Esto se debe a que la librería de SlidingMenu quedo obsoleta, y no se siguió desarrollando soporte para la misma a lo largo de las nuevas versiones, por lo que al intentar utilizarla en Android Studio con la versión para la API 23, ésta no era reconocida.
+Esto se debe a que la librería de \textit{SlidingMenu} quedó obsoleta, y no se siguió desarrollando soporte para la misma a lo largo de las nuevas versiones, por lo que al intentar utilizarla en Android Studio con la versión de API 23, ésta no era reconocida.
 
-De esta forma, hemos desarrollado el nuevo menú de la aplicación, utilizando una versión más estándar proveniente de Android, lo cual nos asegurará más soporte de cara a futuro y es mucho menos probable que tenga que ser sustituida por completo en una futura versión. El menú en cuestión es NavigationMethod y es una funcionalidad de la biblioteca de androidx, la cual ha sido utilizada en muchas partes de este proyecto. Éste menú nos ofrece una funcionalidad muy parecida a lo que ya nos encontrábamos antes, pero mejorando la eficiencia y la visualización, siendo esta última bastante más parecida a la que nos podemos encontrar en cualquier dispositivo que utilice Android. Esto también ayuda a la accesibilidad de cara al usuario.
+De esta forma, se ha desarrollado el nuevo menú de la aplicación, utilizando una versión más estándar proveniente de Android, lo cual asegurará más soporte de cara a un futuro y es menos probable que tenga que ser sustituida en una futura versión por las mismas razones que en esta. El menú en cuestión es \textit{NavigationMethod} y es una funcionalidad de la biblioteca de AndroidX, la cual ha sido utilizada en muchas partes de este proyecto. Éste menú ofrece una funcionalidad muy parecida a lo que ya se tenía, pero mejorando la eficiencia y la visualización, siendo esta última bastante más parecida a la que se puede encontrar en cualquier dispositivo que utilice Android. Esto también ayuda a la accesibilidad de cara al usuario.
 
-La interfaz del menú que teníamos antes era de esta forma:
+La interfaz del menú anterior era de esta forma:
 
-\includegraphics[scale=1]{interfazVieja.jpg}
+\imagen{interfazVieja}{Apariencia de la interfaz del menú anterior}
 
-La interfaz del menú que tenemos ahora es de la forma:
+La interfaz del menú actual es de la forma:
 
-\includegraphics[scale=1]{interfazNueva.jpg}
+\imagen{interfazNueva}{Apariencia de la interfaz del menú actual}
 
-Como podemos ver, hay un cambio considerable, tanto en facilidad a la hora de visualizarlo, como de desarrollarlo en código, ya que implementar este menú, al ser un estándar de Android, nos resulta una tarea más accesible y en caso de tener dudas, también es mas sencillo conseguir documentación al respecto. Estas son las ventajas que nos ofrece estar utilizando repositorios estándar para Android.
+Como se puede ver, hay un cambio considerable, tanto en la facilidad a la hora de visualizarlo, como de desarrollarlo en código, ya que implementar este menú, al ser un estándar de Android resulta una tarea más accesible y en caso de tener dudas, también es mas sencillo conseguir documentación al respecto. Estas son las ventajas que nos ofrece estar utilizando repositorios estándar para Android.
 
-Las dos bibliotecas que han sustituido a SlidingMenu han sido:
+Las dos bibliotecas que han sustituido a \textit{SlidingMenu} han sido:
 
 \begin{itemize}
-\item NavigationMethod, y los métodos que implementa.
-\item Android.view.Menu
+\item \textbf{NavigationMethod}, y los métodos que implementa.
+\item \textbf{Android.view.Menu}
 \end{itemize}
 
-También los colores es algo en lo que se ha puesto cierta atención a la hora de desarrollar este menú y el resto de la aplicación, ya que consideramos que la accesibilidad de una aplicación hoy en día es un valor añadido muy importante. Se ha tratado de manejar colores que faciliten a la lectura y visualización, siguiendo los estándares de accesibilidad de W3C.
+También los colores es algo en lo que se ha puesto atención a la hora de desarrollar este menú y el resto de la aplicación, ya que la accesibilidad de una aplicación hoy en día es un valor añadido muy importante. Se ha tratado de manejar colores que faciliten a la lectura y visualización, siguiendo los estándares de accesibilidad de W3C \cite{w3c}.
 
 \subsubsection{Librería SherlockActivity}
 
-Esta es otra de las bibliotecas que más han afectado al desarrollo, ya que la mayoría de "activities" estaban construidas en torno a ella. Como Ocurrió con SlidingMenu, también  nos encontramos con que la biblioteca estaba "deprecated" u obsoleta pero, por desgracia, no se había continuado el desarrollo de la misma y por lo tanto no era una cuestión de actualizar a una versión más actualizada, porque ésta no existía. Por esto mismo se tuvo que buscar una alternativa y pasar a utilizar algo más estandarizable, siempre evitando que en un futuro suceda algo similar a lo que nos ha sucedido a nosotros.
+Esta es otra de las bibliotecas que más han afectado al desarrollo, ya que la mayoría de ventanas (actividades) estaban construidas en torno a ella. Como Ocurrió con \textit{SlidingMenu}, también  nos encontramos con que la biblioteca estaba obsoleta pero no se había continuado el desarrollo de la misma y por lo tanto no era una cuestión de obtener una versión más actualizada, porque ésta no existía. Por esto mismo se tuvo que buscar una alternativa y pasar a utilizar algo más estandarizable, siempre evitando que en un futuro suceda algo similar a lo que ha sucedido en este proyecto.
 
-Así fue como se comenzó a implementar la librería de AppCompatActivity, pero no en todas las actividades que conformaban la aplicación, sino en la principal. Para poder explicar esto es necesario mencionar la libreria anterior de NavigationMethod, ya que en este sentido se ha conseguido solucionar los dos problemas utilizando un método estándar que está más optimizado para el manejo de aplicaciones como la nuestra, donde se maneja un número considerable de ventanas diferentes y estas poseen comunicación e interacción.
+Así fue como se comenzó a integrar la librería de AppCompatActivity, pero no en todas las actividades que conformaban la aplicación, sino en la principal. Para poder explicar esto es necesario mencionar la libreria anterior de NavigationMethod, ya que en este sentido se ha conseguido solucionar los dos problemas utilizando un método estándar que está más optimizado para el manejo de aplicaciones como la nuestra, donde se maneja un número considerable de ventanas diferentes y estas poseen comunicación e interacción. Este es el concepto de Actividades y \textit{fragments} que se ha mencionado previamente.
 
-Hablamos del concepto de Activity y Fragment.
+Gracias a estos cambios, se obtiene una estructura donde la actividad principal sera la que muestra el mapa y a través del menú se pueda navegar a cada uno de los fragmentos, como en esta imagen:
 
-\begin{itemize}
-\item Activity. Se podría definir como una ventana de la aplicación. En código corresponde a una clase de Java, que contiene todos los métodos que sirva para mostrar información, aunque por otro lado la parte más visual corresponde a un archivo .xml que será el que contenga la información puramente visual, configuración de colores, tamaños, etc.
-\item Fragment. A efectos visuales contiene lo mismo que una Activity, pero en este caso la verdadera diferencia surge en la comunicación entre ellas y la optimización de la aplicación en cuanto a tiempos a la hora de navegar entre ventanas. Por otro lado, para implantar correctamente el menú del que hablábamos en el punto anterior, la manera más óptima es tenerlo instaurado dentro de una activity, y que los distintos apartados (ventanas) que tengamos dentro de ese menú sean Fragment. De esta forma conseguimos navegar desde una ventana principal hacia el resto de apartados utilizando el NavigationView.
-\end{itemize}
+\imagen{imagenFragments}{Ejemplo de una interfaz con fragments en el menú}
 
-\subsubsection{Librería Org.Apache}
+\subsubsection{Librería \textit{Org.Apache}}
 
-La última de las bibliotecas mas conflictivas a la hora de desarrollar la aplicación ha sido la de Org.Apache. Esto se debe principalmente a que, como las dos anteriores supone una carga dentro del código bastante grande, pero a diferencia de estas no obtenemos un error directo por su parte a la hora de implantarlo en nuestro codigo actualizado, sino que obtuvimos los problemas más adelante.
+La última de las bibliotecas más problemáticas a la hora de desarrollar la aplicación ha sido la de \textit{Org.Apache}. Esto se debe principalmente a que, como las dos anteriores, supone una carga dentro del código bastante grande, pero a diferencia de éstas no se obtiene un error directo por su parte a la hora de encontrarse en el código actualizado, sino que se obtienen los problemas más adelante.
 
-De hecho, pese a que estuviera obsoleta, se decidió que en un principio no se modificaría, ya que suponía un cambio excesivamente grande y costoso como para invertir recursos en algo que aparentemente en un inicio funionaba correctamente. Finalmente no se ha podido recurrir a otra opción, ya que hay métodos de esta biblioteca que no dan el resultado esperado a la hora de ejecutar todo el código.
+De hecho, pese a que estuviera obsoleta, se decidió que en un principio no se modificaría, ya que suponía un cambio excesivamente grande y costoso como para invertir recursos en algo que aparentemente en un inicio funcionaba correctamente. Finalmente no se ha podido recurrir a otra opción, ya que hay métodos de esta biblioteca que no dan el resultado esperado a la hora de ejecutar la aplicación al completo.
 
-El problema principal es que supone un cambio en todas las clases donde se realiza una petición de tipo HTTP o HTTPS, ya que son éstas la que utilizan los métodos provenientes de Org.Apache. 
+El problema principal es que supone un cambio en todas las clases donde se realiza una petición de tipo HTTP o HTTPS, ya que son éstas la que utilizan los métodos provenientes de \textit{Org.Apache}. 
 
-Los metodos que más utilizados estaban siendo eran:
+Los métodos que más se estaban utilizando eran:
 
 \begin{itemize}
-\item DefaultHttpClient. Éste es con diferencia el método que más implementaciones y llamadas recibía dentro de las clases de la aplicación. Era el método que servía para iniciar la conexión HTTP.
-\item HttpsClient. Ésta clase había sido implementada por los desarrolladores anteriores del proyecto y aportaba la posibilidad de realizar una conexión HTTPS o lo que es lo mismo, una conexión segura a través del protocolo SSL. El problema es que también dependía al completo de métodos obsoletos.
+\item DefaultHttpClient. Éste es el método que más implementaciones y llamadas recibía dentro de las clases de la aplicación. Era el método que servía para iniciar la conexión HTTP.
+\item HttpsClient. Ésta clase había sido implementada por el desarrollador del proyecto anterior \cite{tfm1} y aportaba la posibilidad de realizar una conexión HTTPS o lo que es lo mismo, una conexión segura a través del protocolo SSL. El problema es que también dependía al completo de métodos obsoletos.
 \end{itemize}
 
-Finalmente, se consiguió aplicar otro cambio importante, también hacia la estandarización, ya que se han modificado todos los métodos y llamadas dentro de clases para que pasen a utilizar HttpsUrlConnection, que es la librería estándar de Android que nos ofrece el desarrollo y manejo de peticiones y conexiones HTTPS.
+Finalmente, se consiguió aplicar otro cambio importante, también hacia la estandarización, ya que se han modificado todos los métodos y llamadas dentro de clases para que pasen a utilizar \textit{HttpsUrlConnection}, que es la librería estándar de Android que nos ofrece el desarrollo y manejo de peticiones y conexiones HTTPS.
 
-Para realizar la conexión utilizando esta librería tendremos que seguir unos pasos mas sencillos que antes, aunque por otro lado bastante similares.
+Para realizar la conexión utilizando esta librería es necesario seguir unos pasos más sencillos que antes, pero bastante similares.
 
 \begin{itemize}
-\item Establecemos una direccion URL, que nos servirá para poder alcanzar el destino de nuestras peticiones.
-\item Instanciamos la conexión de tipo HttpsUrlConnection, utilizando la URL mencionada.
-\item Establecemos todos los parámetros que consideremos necesarios para poder establecer la conexión, como por ejemplo el tiempo de "Timeout" para poder conectarnos y evitar malgasto de recursos.
-\item Una vez está todo lo anterior configurado, simplemente realizamos la conexion a traves del método connect().
-\item por ultimo quedaría recibir respuesta, lo cual podremos obtenerlo con metodos como getResponseCode(), obteniendo la respuesta que hayamos recibido de parte del servidor, y pudiendo enviar nuevas peticiones en base a esta respuesta.
+\item Se establece una dirección URL, que servirá para poder alcanzar el destino de nuestras peticiones.
+\item Se instancia la conexión de tipo \textit{HttpsUrlConnection}, utilizando la URL mencionada.
+\item Se establecen todos los parámetros que se consideren necesarios para poder establecer la conexión, como por ejemplo el tiempo de \textit{Timeout} para poder conectarse y evitar malgasto de recursos.
+\item Una vez está todo lo anterior configurado, simplemente se realiza la conexión a través del método connect().
+\item Por último quedaría recibir respuesta, lo cual se obtendrá con métodos como getResponseCode(), obteniendo la respuesta que se reciba de parte del servidor, y pudiendo enviar nuevas peticiones en base a esta respuesta.
 \end{itemize}
 
-\includegraphics[scale=1]{codigoHTTPS.jpg}
+\imagen{codigoHTTPS}{Código de la conexión HTTPS en un método}
 
-Como se puede ver en la imagen, realizar esta conexión supone bastante poca carga de código y al ser un método bastante parecido, si se utiliza varias veces en una misma clase, se podría realizar EXTRACT METHOD sobre varias partes, para evitar aun más la sobrecarga de código.
+Como se puede ver en la imagen, realizar esta conexión supone poca carga de código y al ser un método bastante repetitivo, si se utiliza varias veces en una misma clase, se podría realizar EXTRACT METHOD sobre varias partes, para evitar aun más la sobrecarga de código.
 
 \subsection{Cambios sobre APIs}
 
-En este caso, hablaremos sobre las APIs que antes eran utilizadas, pero con el motivo de haber quedado obsoletas, no ha sido posible seguir contando con su funcionalidad dentro de la aplicación.
+En este caso, se tratarán las APIs que antes eran utilizadas, pero con el motivo de haber quedado obsoletas, no ha sido posible seguir contando con su funcionalidad dentro de la aplicación.
 
 \subsubsection{Panoramio}
 
-Una de ellas es Panoramio, que nos proveía de imágenes para que fueran mostradas dentro de los detalles de un punto de interés. Desde que este proyecto Online fue absorvido por Google, ya no podemos contar con el servicio de obtención de imágenes gratuito y por tanto la API que nos permitía hacerlo ha ido quedando en el olvido, al no tener más sentido de existencia.
+Una de ellas es Panoramio \cite{panoramio}, que proveía de imágenes para que fueran mostradas dentro de los detalles de un punto de interés. Desde que este proyecto Online fue absorvido por Google, ya no podemos contar con el servicio de obtención de imágenes gratuito y por tanto la API que nos permitía hacerlo ha ido quedando en el olvido, al no tener más sentido de existencia.
 
-\includegraphics[width=\textwidth]{panoramio.jpg}
+\imagen{panoramio}{Resultado que se obtiene al acceder a la web de Panoramio}
 
 \section{Compilación, instalación y ejecución del proyecto}
 
-En este apartado se cubrirá todos los aspectos referentes a la utilización de la aplicación, por lo tanto veremos cómo instalar todo el software necesario, cómo compilar el proyecto de Android y tambien cómo ejecutarlo.
+En este apartado se cubrirán todos los aspectos referentes a la utilización de la aplicación, por lo tanto se verá cómo instalar todo el software necesario, cómo compilar el proyecto de Android y también cómo ejecutarlo.
 
-Cabe destacar que sólo se va a cubrir la instalación, compilación y ejecución de la aplicación de Android, ya que la parte referente al servidor se tratará en detalle en el proyecto de mi compañero Ignacio.
+Cabe destacar que sólo se va a cubrir la instalación, compilación y ejecución de la aplicación de Android, ya que la parte referente al servidor se tratará en detalle en el proyecto complementario de BackEnd \cite{tfg2}.
 
 \subsection{Instalación}
 
-Las herramientas que vamos a necesitar tener instaladas por parte de la aplicación Android serán, básicamente Android Studio y sus componentes internos. Vamos a observar cómo lo instalaremos.
+Las herramientas necesarias por parte de la aplicación Android serán, básicamente Android Studio y sus componentes internos. Vamos a observar cómo lo instalaremos.
 
 \subsubsection{Android Studio}
 
-Simplemente necesitaremos acceder a la página oficial de Android, a traves del siguiente enlace (), y veremos lo siguiente:
+Simplemente necesitaremos acceder a la página oficial de Android \cite{as1} y veremos lo siguiente:
 
-\includegraphics[width=\textwidth]{androidInstala.jpg}
+\imagen{androidInstala}{Apariencia de la web oficial de Android Studio}
 
-Cómo se puede observar, bastará con pulsar la opción para descargar Android Studio. En esta opción siempre nos ofrecerá la última versión oficial del producto. Excepto en casos excepcionales, esto es lo más recomendable, ya que al ser un software que exige bastantes recursos, cuanto más actual sea la versión que estamos utilizando mejor optimizada estará. 
+Cómo se puede observar, bastará con pulsar la opción para descargar Android Studio. En esta opción siempre ofrecerá la última versión oficial del producto. Excepto en casos excepcionales, esto es lo más recomendable, ya que al ser un software que exige bastantes recursos, cuanto más actual sea la versión que estamos utilizando mejor optimizada estará. 
 
-Si se da uno de los casos excepcionales que mencionábamos, también nos ofrecen diferentes versiones o incluso diferentes sistemas operativos con los que son compatibles.
+Si se da uno de los casos excepcionales que se mencionaban, también ofrecen diferentes versiones o incluso diferentes sistemas operativos con los que son compatibles.
 
-\includegraphics[width=\textwidth]{androidVersiones.jpg}
+\imagen{androidVersiones}{Versiones ofrecidas por Android Studio para descargar}
 
-Como se puede observar, también nos ofrecen la opción de acceder a las "release notes", lo cual resulta muy útil para poder descubrir más a fondo los cambios que se han desarrollado en cada versión.
-
+Como se puede observar, también ofrecen la opción de acceder a las \textit{release notes}, lo cual resulta muy útil para poder descubrir más a fondo los cambios que se han desarrollado en cada versión.
 
 \subsubsection{SDK Manager}
 
-Esta herramienta es parte de Android Studio, pero necesitaremos configurarla por separado, para poder contar después con una experiencia fructífera:
+Esta herramienta es parte de Android Studio, pero es necesario que sea configurada por separado, para poder contar después con una experiencia satisfactoria:
 
-\includegraphics[scale=1]{sdkManager.jpg}
+\imagen{sdkManager}{submenú dentro de Android Studio para ejecutar el SDK Manager}
 
 Una vez pulsemos ese botón remarcado en rojo, entraremos en la configuración del SDK Manager:
 
-\includegraphics[width=\textwidth]{sdkVersiones.jpg}
+\imagen{sdkVersiones}{apariencia de la configuración del SDK Manager}
 
-Como podemos ver, la primera ventana que nos ofrece este gestor, será para que seleccionemos la versión de Android sobre la que queremos trabajar en nuestor proyecto. Como ya hemos mencionado previamente, nosotros tenemos instalada la versión de Android 6.0.
+Como se puede ver, la primera ventana que ofrece este gestor, será para que seleccionar la versión de Android sobre la que se quiere trabajar en el proyecto. Como ya se ha mencionado previamente, está instalada la versión de Android 6.0.
 
-También contamos con otras dos ventanas:
+También hay otras dos ventanas para configurar el SDK Manager:
 
-\includegraphics[width=\textwidth]{sdkCosas.jpg}
+\imagen{sdkCosas}{Ventana del SDK Manager para configurar herramientas}
 
-Dentro de esta segunda ventana podremos configurar las herramientas adicionales que instalaremos para conseguir una mejor experiencia mientras desarrollamos las aplicaciones. En nuestro caso, tenemos instalado el emulador, que resulta totalmente necesario para hacer pruebas.
+Dentro de esta segunda ventana se puede configurar las herramientas adicionales que se instalarán para conseguir una mejor experiencia mientras se desarrollan las aplicaciones. En este caso, está instalado el emulador, que resulta totalmente necesario para hacer pruebas.
 
-Por último contamos con la ventana de actualizaciones:
+Por último, la ventana de actualizaciones:
 
-\includegraphics[width=\textwidth]{sdkUpdate.jpg}
+\imagen{sdkUpdate}{Configuración de SDK Manager para actualizar automáticamente}
 
 En esta ventana, tal como se describe, se podrá configurar los repositorios de los que se realizarán comprobaciones en busca de actualizaciones de manera automática.
 
 \subsubsection{AVD Manager}
 
-Este gestor será el que nos permita llevar un control sobre el emulador de Android, ya que aquí será donde instalaremos el dispositivo móvil virtual que después ejecutaremos para probar nuestra aplicación.
+Este gestor será el que permita llevar un control sobre el emulador de Android, ya que aquí será donde se instale el dispositivo móvil virtual que después será ejecutado para probar la aplicación.
 
-\includegraphics[scale=1]{avdManager.jpg}
+\imagen{avdManager}{submenú dentro de Android Studio para ejecutar el AVD Manager}
 
-Una vez pulsemos tendremos acceso a la configuracion de nuetros dispositivos virtuales:
+Una vez pulsado, se tendrá acceso a la configuración de los dispositivos virtuales:
 
-\includegraphics[width=\textwidth]{avdPrincipal.jpg}
+\imagen{avdPrincipal}{Interfaz inicial del AVD Manager}
 
-Aqui ya podremos ver los dispositivos que tenemos instalados, ejecutarlo, eliminarlos o modificar algunas configuraciones.
+Aquí ya se pueden ver los dispositivos que están instalados, ejecutarlos, eliminarlos o modificar algunas configuraciones.
 
-Si queremos crear un dispositivo tendremos que seleccionar el botón de "Create Virtual Device":
+Si se quiere crear un dispositivo es necesario seleccionar el botón de \textit{Create Virtual Device}:
 
-\includegraphics[width=\textwidth]{avdNuevo.jpg}
+\imagen{avdNuevo}{Ventana referente a la configuración de un dispositivo virtual nuevo}
 
-En esta ventana simplemente seleccionaremos que modelo de dispositivo móvil queremos simular, descargarlo y utilizarlo.
+En esta ventana simplemente se selecciona el modelo de dispositivo móvil que se quiere simular, descargar y posteriormente utilizar.
 
 \subsection{Compilación}
 
