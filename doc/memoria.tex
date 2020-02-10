@@ -8,6 +8,7 @@
 \usepackage{lmodern} % Scalable font
 \usepackage{microtype}
 \usepackage{placeins}
+\usepackage{url}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -391,27 +392,27 @@ En Burgos, {\large \today}
 
 \vfill\vfill\vfill
 
- Author and supervisor
-\begin{minipage}{0.45\textwidth}
-\begin{flushleft} %\large
-Vº. Bº. del Tutor:\\[2cm]
-D. Bruno Baruque Zanón
-\end{flushleft}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-\begin{flushleft} %\large
-Vº. Bº. del co-tutor:\\[2cm]
-. Santiago Porras Alfonso
-\end{flushleft}
-\end{minipage}\hfill
+% Author and supervisor
+%\begin{minipage}{0.45\textwidth}
+%\begin{flushleft} %\large
+%Vº. Bº. del Tutor:\\[2cm]
+%D. Bruno Baruque Zanón
+%\end{flushleft}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{0.45\textwidth}
+%\begin{flushleft} %\large
+%Vº. Bº. del co-tutor:\\[2cm]
+%. Santiago Porras Alfonso
+%\end{flushleft}
+%\end{minipage}\hfill
 
 \vfill
 
 % para casos con solo un tutor comentar lo anterior
 % y descomentar lo siguiente
-%Vº. Bº. del Tutor:\\[2cm]
-%D. nombre tutor
+Vº. Bº. del Tutor:\\[2cm]
+D. \mtutor
 
 
 \newpage\null\thispagestyle{empty}\newpage
@@ -439,9 +440,7 @@ Por otro lado, como ya se ha señalado, este trabajo se centra en la estandariza
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Android, actualización, mantenimiento, optimización, estandarización, FrontEnd
-
-\ldots
+Android, actualización, mantenimiento, optimización, estandarización, FrontEnd\ldots
 \end{abstract}
 
 \clearpage
@@ -490,7 +489,7 @@ Android, upgrade, maintenance, optimization, standarization, FrontEnd
 \include{./tex/7_Conclusiones_Lineas_de_trabajo_futuras}
 
 
-\bibliographystyle{plain}
+\bibliographystyle{plainurl}
 \bibliography{bibliografia}
 
 \end{document}
