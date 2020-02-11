@@ -114,6 +114,12 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		return inflater.inflate(R.layout.planner, container, false);
 	}
 
+	/**
+	 * Método que se invoca al entrar en esta ventana
+	 *
+	 * @param view vista con los datos
+	 * @param savedInstanceState
+	 */
 	@SuppressLint({"CutPasteId", "SetTextI18n"})
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -190,133 +196,6 @@ public class PlannerActivity extends androidx.fragment.app.Fragment implements
 		});
 	}
 
-	/**
-	 * Método que se invoca cuando la actividad es creada.
-	 * 
-	 *
-	 *            Bundle que contiene el estado de ejecuciones pasadas.
-	 */
-	/*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		context = this;
-		//setContentView(R.layout.planner);
-		setServiceDirections();
-		//new SlidingMenuController(this);
-		seekBarInitialization();
-		Calendar now = Calendar.getInstance();
-		double currentHour = now.get(Calendar.HOUR_OF_DAY);
-		double currentMinutes = now.get(Calendar.MINUTE);
-		txtTimeOrigin = (TextView) (findViewById(R.id.originTime)
-				.findViewById(R.id.txtTime));
-		txtTimeOrigin.setText(Misc.pad((int) currentHour) + ":"
-				+ Misc.pad((int) currentMinutes));
-		txtTimeTarget = (TextView) (findViewById(R.id.targetTime)
-				.findViewById(R.id.txtTime));
-		txtTimeTarget.setText(Misc.pad((int) currentHour + 1) + ":"
-				+ Misc.pad((int) currentMinutes));
-		initilizeSeekBars();
-		ImageButton btnChangeTime = (ImageButton) (findViewById(R.id.originTime)
-				.findViewById(R.id.btnTime));
-
-		btnChangeTime.setOnClickListener(new OnClickListener() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View v) {
-
-				showDialog(ORIGIN_TIME_DIALOG_ID);
-
-			}
-
-		});
-		
-		LinearLayout linearLayoutTime = (LinearLayout) (findViewById(R.id.originTime));
-
-		linearLayoutTime.setOnClickListener(new OnClickListener() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View v) {
-
-				showDialog(ORIGIN_TIME_DIALOG_ID);
-
-			}
-
-		});
-
-		linearLayoutTime = (LinearLayout) (findViewById(R.id.targetTime));
-
-		linearLayoutTime.setOnClickListener(new OnClickListener() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View v) {
-
-				((AutoCompleteTextView) findViewById(R.id.autoCompleteHotel))
-						.clearFocus();
-				showDialog(TARGET_TIME_DIALOG_ID);
-
-			}
-
-		});
-		final DialogTextView dialog = new DialogTextView(this, getResources()
-				.getStringArray(R.array.origenOptions),
-				(TextView) findViewById(R.id.textViewSelectOrigin));
-		dialog.setTitle(getResources().getString(R.string.selectOption));
-
-		((TextView) findViewById(R.id.textViewSelectOrigin))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						dialog.show();
-
-					}
-				});
-		final DialogTextView dialog2 = new DialogTextView(this, getResources()
-				.getStringArray(R.array.targetOptions),
-				(TextView) findViewById(R.id.textViewSelectTarget));
-		dialog.setTitle(getResources().getString(R.string.selectOption));
-
-		((TextView) findViewById(R.id.textViewSelectTarget))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						dialog2.show();
-
-					}
-				});
-
-		AutoCompleteTextView autoCompView = (AutoCompleteTextView) findViewById(R.id.autoCompleteCity);
-
-		autoCompView.addTextChangedListener(new TextChangeListener(true));
-		autoCompView = (AutoCompleteTextView) findViewById(R.id.autoCompleteHotel);
-		autoCompView.addTextChangedListener(new TextChangeListener(false));
-
-		Button btnEnviar = (Button) findViewById(R.id.btnEnviar);
-		btnEnviar.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				hotels = false;
-				exist = true;
-				WebServiceTask webService = new WebServiceTask(
-						WebServiceTask.POST_TASK, context);
-				webService
-						.addNameValuePair(
-								"city_name",
-								((AutoCompleteTextView) findViewById(R.id.autoCompleteCity))
-										.getText().toString());
-				webService.execute(CITY_EXIST_SERVICE_URL);
-
-			}
-
-		});
-	}
-	*/
 
 	private void seekBarInitialization() {
 		sbCulture = Objects.requireNonNull(getActivity()).findViewById(R.id.seekBarCulture);

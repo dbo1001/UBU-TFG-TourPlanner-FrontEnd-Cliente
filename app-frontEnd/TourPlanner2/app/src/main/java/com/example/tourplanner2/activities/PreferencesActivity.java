@@ -128,7 +128,7 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 			intent.putExtra("leisure", leisureValue);
 			intent.putExtra("nature", natureValue);
 			intent.putExtra("gastronomy", gastronomyValue);
-			TextView text = (TextView) view.findViewById(R.id.textViewTargetOptions);
+			TextView text = view.findViewById(R.id.textViewTargetOptions);
 			String option = text.getText().toString();
 			if (option.equals(getResources().getString(R.string.selectMap))) {
 				Objects.requireNonNull(getActivity()).setResult(MapMain.ONE_LOCATION_TGT, intent);
@@ -154,133 +154,6 @@ public class PreferencesActivity extends androidx.fragment.app.Fragment {
 			startActivityForResult(intent,1);
 		});
 	}
-	/*
-	/**
-	 * Método que se invoca cuando la actividad es creada.
-	 * 
-	 * @param savedInstanceState
-	 *            Bundle que contiene el estado de ejecuciones pasadas.
-	 */
-	/*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.preferences);
-		new SlidingMenuController(this);
-		Calendar now = Calendar.getInstance();
-		double currentHour = now.get(Calendar.HOUR_OF_DAY);
-		double currentMinutes = now.get(Calendar.MINUTE);
-		txtTime = (TextView) findViewById(R.id.txtTime);
-		txtTime.setText(Misc.pad((int) currentHour + 1) + ":"
-				+ Misc.pad((int) currentMinutes));
-		initilizeSeekBars();
-
-		final String[] data = new String[] {
-				getResources().getString(R.string.selectMap),
-				getResources().getString(R.string.originEqTarget),
-				getResources().getString(R.string.culturePoi),
-				getResources().getString(R.string.leisurePoi),
-				getResources().getString(R.string.gastronomyPoi),
-				getResources().getString(R.string.naturePoi) };
-		final DialogTextView dialog = new DialogTextView(this, data,
-				(TextView) findViewById(R.id.textViewTargetOptions));
-		dialog.setTitle(getResources().getString(R.string.selectOption));
-
-		((TextView) findViewById(R.id.textViewTargetOptions))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						dialog.show();
-					}
-				});
-
-		LinearLayout linearLayoutTime = (LinearLayout) findViewById(R.id.timePickerLayout);
-
-		linearLayoutTime.setOnClickListener(new OnClickListener() {
-
-			@SuppressWarnings("deprecation")
-			@Override
-			public void onClick(View v) {
-
-				showDialog(TIME_DIALOG_ID);
-
-			}
-
-		});
-
-		// Creamos el adaptador
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.targetOptions,
-				android.R.layout.simple_spinner_item);
-		// Añadimos el layout para el menú
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Le indicamos al spinner el adaptador a usar
-
-		Button btnEnviar = (Button) findViewById(R.id.btnEnviar);
-		btnEnviar.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				SeekBar sbCulture = (SeekBar) findViewById(R.id.seekBarCulture);
-				SeekBar sbLeisure = (SeekBar) findViewById(R.id.seekBarLeisure);
-				SeekBar sbNature = (SeekBar) findViewById(R.id.seekBarNature);
-				SeekBar sbGastronomy = (SeekBar) findViewById(R.id.seekBarGastronomy);
-				int cultureValue = sbCulture.getProgress();
-				int leisureValue = sbLeisure.getProgress();
-				int natureValue = sbNature.getProgress();
-				int gastronomyValue = sbGastronomy.getProgress();
-				if (!checkPreferences()) {
-					Toast.makeText(
-							getApplicationContext(),
-							getResources().getString(
-									R.string.mustSelectPreferences),
-							Toast.LENGTH_LONG).show();
-					return;
-				}
-				SharedPreferences pref = PreferenceManager
-						.getDefaultSharedPreferences(getApplicationContext());
-				Editor edit = pref.edit();
-				edit.putInt("cultureProgress", cultureValue);
-				edit.putInt("natureProgress", natureValue);
-				edit.putInt("gastronomyProgress", gastronomyValue);
-				edit.putInt("leisureProgress", leisureValue);
-				edit.commit();
-				double itineraryTime = getItineraryTime();
-				Intent intent = new Intent();
-				intent.putExtra("time", itineraryTime);
-				intent.putExtra("culture", cultureValue);
-				intent.putExtra("leisure", leisureValue);
-				intent.putExtra("nature", natureValue);
-				intent.putExtra("gastronomy", gastronomyValue);
-				TextView text = (TextView) findViewById(R.id.textViewTargetOptions);
-				String option = text.getText().toString();
-				if (option.equals(getResources().getString(R.string.selectMap))) {
-					setResult(MapMain.ONE_LOCATION_TGT, intent);
-				} else if (option.equals(getResources().getString(
-						R.string.originEqTarget))) {
-					setResult(MapMain.TGT_EQ_SRC, intent);
-				} else if (option.equals(getResources().getString(
-						R.string.culturePoi))) {
-					setResult(MapMain.TGT_POI, intent);
-					intent.putExtra("tgt_poi", "culture");
-				} else if (option.equals(getResources().getString(
-						R.string.leisurePoi))) {
-					setResult(MapMain.TGT_POI, intent);
-					intent.putExtra("tgt_poi", "leisure");
-				} else if (option.equals(getResources().getString(
-						R.string.gastronomyPoi))) {
-					setResult(MapMain.TGT_POI, intent);
-					intent.putExtra("tgt_poi", "gastronomy");
-				} else {
-					setResult(MapMain.TGT_POI, intent);
-					intent.putExtra("tgt_poi", "nature");
-				}
-				finish();
-			}
-
-		});
-	}*/
 
 	/**
 	 * Método que comprueba que las preferencias introducidas son validas.

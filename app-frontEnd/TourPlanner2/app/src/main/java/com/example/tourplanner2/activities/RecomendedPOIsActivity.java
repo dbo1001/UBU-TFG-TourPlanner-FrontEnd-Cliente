@@ -94,11 +94,11 @@ IWebServiceTaskResult, IServiceTask{
 	/**
 	 * Código que indica que el servicio utilizado es Wikilocation.
 	 * */
-	public final static int WIKILOCATION = 0;
+	private final static int WIKILOCATION = 0;
 	/**
 	 * Código que indica que el servicio utilizado es Panoramio.
 	 * */
-	public final static int PANORAMIO = 1;
+	private final static int PANORAMIO = 1;
 	/**
 	 * Button correspondiente a la informaci�n adicional del POI.
 	 * */
@@ -183,54 +183,6 @@ IWebServiceTaskResult, IServiceTask{
 		searchView.addTextChangedListener(new TextChangeListener());
 	}
 
-	/*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.recommended_pois);
-		setServiceDirections();
-		serviceContext = this;
-
-		//new SlidingMenuController(this);
-		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this,
-				getResources().getString(R.string.gettingRecommendedPois));
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		wst.addNameValuePair("transport", pref.getString("transport", "fo_"));
-		wst.addNameValuePair("lat", getIntent().getExtras().getString("lat"));
-		wst.addNameValuePair("lon", getIntent().getExtras().getString("lon"));
-		wst.execute(new String[] { RECOMMENDED_POI_SERVICE_URL });
-		((Button) findViewById(R.id.buttonCalculate))
-		.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				int contador = 0;
-				Intent intent = new Intent();
-				ArrayList<RowItineraryList> rows = new ArrayList<RowItineraryList>();
-				for (RowItineraryList row : rowsItinerary) {
-					if (row.isSelected()) {
-						rows.add(row);
-						contador++;
-					}
-				}
-				if (contador > 0) {
-					intent.putExtra("count", contador);
-					intent.putExtra("pois", rows.toArray());
-					setResult(MapMain.GET_ROUTE, intent);
-					finish();
-				} else {
-					Toast.makeText(
-							getApplicationContext(),
-							getResources().getString(
-									R.string.mustSelectPoi),
-									Toast.LENGTH_LONG).show();
-				}
-			}
-		});
-
-		searchView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewPoi);
-		searchView.addTextChangedListener(new TextChangeListener());
-	}*/
 	/**
 	 * Método que establece las direcciones de los servicios usados.
 	 */

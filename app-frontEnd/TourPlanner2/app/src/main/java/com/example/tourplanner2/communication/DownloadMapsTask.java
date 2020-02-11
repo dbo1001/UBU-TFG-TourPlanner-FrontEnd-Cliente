@@ -1,23 +1,17 @@
 package com.example.tourplanner2.communication;
 
-//import java.io.BufferedInputStream;
-//import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-//import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
-//import org.apache.http.NameValuePair;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +21,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
@@ -48,8 +41,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	 * Tiempo de conexi�n m�ximo en milisegundos
 	 */
 	private static final int CONN_TIMEOUT = 300000;
-	public static final String REQUEST_METHOD = "GET";
-	public static final int READ_TIMEOUT = 15000;
+	private static final String REQUEST_METHOD = "GET";
+	private static final int READ_TIMEOUT = 15000;
 	/**
 	 * Tiempo de espera de datos m�ximo en milisegundos
 	 */
@@ -61,7 +54,7 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	/**
 	 * C�digo de petici�n GET.
 	 */
-	public static final int GET_TASK = 2;
+	private static final int GET_TASK = 2;
 	/**
 	 * Tipo de petici�n.
 	 */
@@ -179,95 +172,8 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 		}
 		return result;
 
-		/*
-		String url = urls[0];
-
-		HttpResponse response = doResponse(url);
-
-		if (response == null || response.getEntity() == null) {
-			return null;
-		} else {
-			HttpEntity entity =  response.getEntity();
-			if (entity != null){
-
-				try {
-					int fileLength = (int) entity.getContentLength();
-					byte data[] = new byte[1024];
-					long total = 0;
-					int count;
-
-					InputStream input = new BufferedInputStream(entity.getContent());
-					File filePath = new File(Environment.getExternalStorageDirectory() + "/tourplanner/maps/");
-
-					if (!filePath.exists())
-						filePath.mkdirs();
-
-					OutputStream output = new BufferedOutputStream(new FileOutputStream(filePath.getAbsolutePath() 
-							+ "/" + mapNotification.getMapName() + ".map"));
-
-					Calendar lastUpdate = Calendar.getInstance();
-
-					while ((count = input.read(data)) != -1){
-						
-						// Si la descarga es cancelada, abortamos la petici�n HTTP.
-						if (isCancelled()){
-							httpclient.getConnectionManager().shutdown();
-							break;
-						}
-						
-						output.write(data, 0, count);
-						total += count;
-
-						Calendar now = Calendar.getInstance();
-						if (now.getTimeInMillis() - lastUpdate.getTimeInMillis() >= 500) {
-							lastUpdate = now;
-							publishProgress((int) (total * 100 / fileLength));
-						}
-
-
-					}
-
-					input.close();
-					output.flush();
-					output.close();
-
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		JSONObject jso = new JSONObject();
-		try {
-			jso.put("map", mapNotification.getMapName());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jso.toString();
-
-		 */
 	}
 
-	/**
-	 * M�todo que establece los tiempos de espera.
-	 * @return par�metros http
-	 */
-	/*
-	private HttpParams getHttpParams() {
-
-		HttpParams htpp = new BasicHttpParams();
-
-		HttpConnectionParams.setConnectionTimeout(htpp, CONN_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(htpp, SOCKET_TIMEOUT);
-
-		return htpp;
-	}
-
-	 */
 
 	/**
 	 * M�todo que se ejecuta cuando responde el servidor.
@@ -339,28 +245,6 @@ public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 			e.printStackTrace();
 			response = null;
 		}
-/*
-		try {
-			switch (taskType) {
-
-			case POST_TASK:
-				HttpPost httppost = new HttpPost(url);
-				// Add parameters
-				httppost.setEntity(new UrlEncodedFormEntity(params));
-				response = httpclient.execute(httppost);
-				break;
-			case GET_TASK:
-				HttpGet httpget = new HttpGet(url);
-				response = httpclient.execute(httpget);
-				break;
-			}
-		} catch (Exception e) {
-
-			Log.e(TAG, e.getLocalizedMessage(), e);
-
-		}
-
- */
 
 		return response;
 	}

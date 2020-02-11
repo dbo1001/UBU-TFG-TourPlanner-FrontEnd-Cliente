@@ -85,48 +85,7 @@ public class ProfileActivity extends androidx.fragment.app.Fragment implements
 		wst.addNameValuePair("email", pref.getString("email", ""));
 		wst.execute(PROFILE_SERVICE_URL);
 	}
-/*
-	/**
-	 * Método que se invoca cuando la actividad es creada.
-	 * 
-	 * @param savedInstanceState
-	 *            Bundle que contiene el estado de ejecuciones pasadas.
-	 */
-/*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.profile);
-		setServiceDirections();
-		new SlidingMenuController(this);
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		TextView txtUser = (TextView) findViewById(R.id.textViewUserName);
-		txtUser.setText(pref.getString("username", ""));
-		((Button) findViewById(R.id.buttonLogout))
-				.setOnClickListener(new View.OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						SharedPreferences pref = PreferenceManager
-								.getDefaultSharedPreferences(getApplicationContext());
-						Editor edit = pref.edit();
-						edit.clear();
-						edit.commit();
-						Toast.makeText(
-								getApplicationContext(),
-								getResources()
-										.getString(R.string.sessionClosed),
-								Toast.LENGTH_LONG).show();
-						finish();
-					}
-				});
-		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this,
-				getResources().getString(R.string.gettingRecommendedPois));
-
-		wst.addNameValuePair("email", pref.getString("email", ""));
-		wst.execute(new String[] { PROFILE_SERVICE_URL });
-	}*/
 	/**
 	 * Método que establece las direcciones del servicio usado.
 	 */

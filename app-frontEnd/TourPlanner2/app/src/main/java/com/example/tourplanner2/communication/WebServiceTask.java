@@ -216,31 +216,6 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 			result = null;
 		}
 		return result;
-
-		/*
-		String url = urls[0];
-		String result = "";
-
-		HttpResponse response = doResponse(url);
-
-		if (response == null || response.getEntity() == null) {
-			return result;
-		} else {
-
-			try {
-
-				result = inputStreamToString(response.getEntity().getContent());
-
-			} catch (IllegalStateException e) {
-				Log.e(TAG, e.getLocalizedMessage(), e);
-
-			} catch (IOException e) {
-				Log.e(TAG, e.getLocalizedMessage(), e);
-			}
-
-		}
-
-		return result;*/
 	}
 
 	private static void trustAllHosts() {
@@ -249,14 +224,12 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 
 			public void checkClientTrusted(
 					X509Certificate[] chain,
-					String authType) throws CertificateException {
-				// Oh, I am easy!
+					String authType) {
 			}
 
 			public void checkServerTrusted(
 					X509Certificate[] chain,
-					String authType) throws CertificateException {
-				// Oh, I am easy!
+					String authType) {
 			}
 
 			public X509Certificate[] getAcceptedIssuers() {
@@ -298,21 +271,6 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	}
 
 	/**
-	 * M�todo que establece los tiempos de espera.
-	 * @return par�metros http
-	 */
-	/*
-	private HttpURLConnection getHttpParams() throws IOException {
-
-		HttpURLConnection http = (HttpURLConnection)this.urlConnect.openConnection();
-		http.setConnectTimeout(CONN_TIMEOUT);
-
-		//HttpConnectionParams.setConnectionTimeout(htpp, CONN_TIMEOUT);
-		//HttpConnectionParams.setSoTimeout(htpp, SOCKET_TIMEOUT);
-
-		return http;
-	}*/
-	/**
 	 * M�todo que se ejecuta cuando responde el servidor.
 	 * @param url de respuesta del servidor
 	 * @return respuesta del servidor
@@ -344,20 +302,9 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 			switch (connection.getResponseCode()){
 				case POST_TASK:
 					connection.setRequestMethod("POST");
-					/*
-					HttpPost httppost = new HttpPost(url);
-					// Add parameters
-					httppost.setEntity(new UrlEncodedFormEntity(params));
-					response = httpclient.execute(httppost);
-					 */
 					break;
 				case GET_TASK:
 					connection.setRequestMethod(REQUEST_METHOD);
-					/*
-					HttpGet httpget = new HttpGet(url);
-					response = httpclient.execute(httpget);
-
-					 */
 					break;
 			}
 			//Create a new InputStreamReader
@@ -383,60 +330,7 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 				e.printStackTrace();
 				response = null;
 			}
-/*
-		try {
-			switch (taskType) {
-
-			case POST_TASK:
-				HttpPost httppost = new HttpPost(url);
-				// Add parameters
-				httppost.setEntity(new UrlEncodedFormEntity(params));
-				response = httpclient.execute(httppost);
-				break;
-			case GET_TASK:
-				HttpGet httpget = new HttpGet(url);
-				response = httpclient.execute(httpget);
-				break;
-			}
-		} catch (Exception e) {
-
-			Log.e(TAG, e.getLocalizedMessage(), e);
-
-		}
-
- */
 
 		return response;
 	}
-
-	/**
-	 * M�todo que convierte un InputSream a String
-	 * @param is inputStream a convertir
-	 * @return cadena del inputStream
-	 */
-	/*
-	private String inputStreamToString(InputStream is) {
-
-		String line;
-		StringBuilder total = new StringBuilder();
-
-		// Wrap a BufferedReader around the InputStream
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-
-		try {
-			// Read response until the end
-			while ((line = rd.readLine()) != null) {
-				total.append(line);
-			}
-		} catch (IOException e) {
-			Log.e(TAG, e.getLocalizedMessage(), e);
-		}
-
-		// Return full string
-		return total.toString();
-	}
-
-	 */
-	
-
 }

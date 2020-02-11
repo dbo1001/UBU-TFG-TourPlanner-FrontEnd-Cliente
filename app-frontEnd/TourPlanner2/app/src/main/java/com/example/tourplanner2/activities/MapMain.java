@@ -100,6 +100,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * Clase que se corresponde con la actividad principal de la aplicación, el mapa.
+ *
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
+ * @author Alejandro Cuevas �lvarez.
+ * @author aca0073@alu.ubu.es
+ *
+ */
 public class MapMain extends AppCompatActivity implements
 		IWebServiceTaskResult, IServiceTask, CheckLocationService.ServiceClient, NavigationView.OnNavigationItemSelectedListener {
 
@@ -341,9 +350,9 @@ public class MapMain extends AppCompatActivity implements
 		navigationView.setNavigationItemSelectedListener(this);
 
 		View vHeader = navigationView.getHeaderView(0);
-		ImageView mImgView= (ImageView) vHeader.findViewById(R.id.mapa);
+		ImageView mImgView= vHeader.findViewById(R.id.mapa);
 
-		LinearLayout header = (LinearLayout) vHeader.findViewById(R.id.header);
+		LinearLayout header = vHeader.findViewById(R.id.header);
 		header.setOnClickListener(v -> {
 			Intent myIntent;
 			myIntent = new Intent(MapMain.this, MapMain.class);
@@ -665,38 +674,6 @@ public class MapMain extends AppCompatActivity implements
 	}
 
 	/**
-	 * Método que crea el menu deslizante.
-	 *
-	 * @param rows
-	 *            filas del menu
-	 */
-	/*private void createSlidingMenu(RowListView[] rows) {
-		rows[0] = new RowListView(getResources().getString(R.string.ms_cfg),
-				R.drawable.ic_action_place);
-		rows[1] = new RowListView(getResources().getString(R.string.planner),
-				R.drawable.ic_action_map);
-		rows[2] = new RowListView(
-				getResources().getString(R.string.speedRoute),
-				R.drawable.ic_action_good);
-		rows[3] = new RowListView(getResources().getString(
-				R.string.recomendedPlaces), R.drawable.ic_action_edit);
-		rows[4] = new RowListView(getResources().getString(R.string.route),
-				R.drawable.ic_action_save);
-		rows[5] = new RowListView(getResources().getString(
-				R.string.advancedOptions), R.drawable.ic_action_settings);
-		rows[6] = new RowListView(getResources().getString(R.string.profile),
-				R.drawable.ic_action_person);
-		setBehindContentView(R.layout.menu_slide);
-		getSlidingMenu().setShadowWidthRes(R.dimen.shadow_width);
-		getSlidingMenu().setShadowDrawable(R.drawable.shadow);
-		getSlidingMenu().setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		getSlidingMenu().setFadeDegree(0.35f);
-		setSlidingActionBarEnabled(true);
-		getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		Objects.requireNonNull(getActionBar()).setDisplayHomeAsUpEnabled(true);
-	}*/
-
-	/**
 	 * Método que inicia una actividad en función de un código.
 	 *
 	 * @param request
@@ -767,7 +744,7 @@ public class MapMain extends AppCompatActivity implements
 
 		wst.addNameValuePair("transport", pref.getString("transport", "fo_"));
 		wst.addNameValuePair("route_mode", pref.getString("route_mode", "fast"));
-		wst.execute(new String[] { EXPRESS_ITINERARY_SERVICE_URL });
+		wst.execute(EXPRESS_ITINERARY_SERVICE_URL);
 	}
 
 	/**
@@ -786,52 +763,44 @@ public class MapMain extends AppCompatActivity implements
 		}
 		ItineraryListAdapter adaptadorItinerary = new ItineraryListAdapter(
 				this, rowsItinerary, startTime);
-		ListView lstItinerary = (ListView) dialog
+		ListView lstItinerary = dialog
 				.findViewById(R.id.listRatingDialog);
 		lstItinerary.setOnItemClickListener(new ItineraryListListener(
 				adaptadorItinerary));
 		lstItinerary.setAdapter(adaptadorItinerary);
 
-		Button dialogButton = (Button) dialog
+		Button dialogButton = dialog
 				.findViewById(R.id.buttonDialogCancel);
-		dialogButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		dialogButton = (Button) dialog.findViewById(R.id.buttonDialogSend);
-		dialogButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				int cont = 0;
-				SharedPreferences pref = PreferenceManager
-						.getDefaultSharedPreferences(getApplicationContext());
-				if (pref.getBoolean("registered", false)) {
-					WebServiceTask wst = new WebServiceTask(
-							WebServiceTask.POST_TASK, context);
-					for (RowItineraryList row : rowsItinerary) {
-						if (row.getPoiId() != -1L) {
-							wst.addNameValuePair("poi_id" + cont,
-									String.valueOf(row.getPoiId()));
-							wst.addNameValuePair("rating" + cont,
-									String.valueOf(row.getRating() * 20));
-							wst.addNameValuePair("opinion" + cont,
-									row.getOpinion());
-							cont++;
-						}
+		dialogButton.setOnClickListener(v -> dialog.dismiss());
+		dialogButton = dialog.findViewById(R.id.buttonDialogSend);
+		dialogButton.setOnClickListener(v -> {
+			int cont = 0;
+			SharedPreferences pref = PreferenceManager
+					.getDefaultSharedPreferences(getApplicationContext());
+			if (pref.getBoolean("registered", false)) {
+				WebServiceTask wst = new WebServiceTask(
+						WebServiceTask.POST_TASK, context);
+				for (RowItineraryList row : rowsItinerary) {
+					if (row.getPoiId() != -1L) {
+						wst.addNameValuePair("poi_id" + cont,
+								String.valueOf(row.getPoiId()));
+						wst.addNameValuePair("rating" + cont,
+								String.valueOf(row.getRating() * 20));
+						wst.addNameValuePair("opinion" + cont,
+								row.getOpinion());
+						cont++;
 					}
-					wst.addNameValuePair("count", String.valueOf(cont));
-
-					wst.addNameValuePair("email", pref.getString("email", ""));
-					wst.execute(new String[]{RATING_SERVICE_URL});
-					dialog.dismiss();
-				} else {
-					DialogProfile dialog = new DialogProfile((Context) context);
-					dialog.setTitle(getResources().getString(
-							R.string.registerTourPlanner));
-					dialog.show();
 				}
+				wst.addNameValuePair("count", String.valueOf(cont));
+
+				wst.addNameValuePair("email", pref.getString("email", ""));
+				wst.execute(RATING_SERVICE_URL);
+				dialog.dismiss();
+			} else {
+				DialogProfile dialog1 = new DialogProfile((Context) context);
+				dialog1.setTitle(getResources().getString(
+						R.string.registerTourPlanner));
+				dialog1.show();
 			}
 		});
 		dialog.show();
@@ -851,7 +820,7 @@ public class MapMain extends AppCompatActivity implements
 
 
 		myOpenMapView.getController().setCenter(center);
-		myOpenMapView.getController().setZoom(6);
+		myOpenMapView.getController().setZoom(6.0);
 		myOpenMapView.setMultiTouchControls(true);
 		updatePoints();
 	}
@@ -880,20 +849,10 @@ public class MapMain extends AppCompatActivity implements
 		builder.setMessage(getResources().getString(R.string.networkOffline))
 				.setCancelable(false)
 				.setPositiveButton((getResources().getString(R.string.yes)),
-						new DialogInterface.OnClickListener() {
-							public void onClick(final DialogInterface dialog,
-							                    final int id) {
-								startActivity(new Intent(
-										android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS));
-							}
-						})
+						(dialog, id) -> startActivity(new Intent(
+								android.provider.Settings.ACTION_DATA_ROAMING_SETTINGS)))
 				.setNegativeButton((getResources().getString(R.string.no)),
-						new DialogInterface.OnClickListener() {
-							public void onClick(final DialogInterface dialog,
-							                    final int id) {
-								dialog.cancel();
-							}
-						});
+						(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -907,26 +866,12 @@ public class MapMain extends AppCompatActivity implements
 		builder.setMessage(getResources().getString(R.string.gpsNotEnabled))
 				.setCancelable(false)
 				.setPositiveButton((getResources().getString(R.string.yes)),
-						new DialogInterface.OnClickListener() {
-							public void onClick(final DialogInterface dialog,
-							                    final int id) {
-								startActivity(new Intent(
-										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-							}
-						})
+						(dialog, id) -> startActivity(new Intent(
+								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
 				.setNegativeButton((getResources().getString(R.string.no)),
-						new DialogInterface.OnClickListener() {
-							public void onClick(final DialogInterface dialog,
-							                    final int id) {
-								dialog.cancel();
-							}
-						});
+						(dialog, id) -> dialog.cancel());
 		final AlertDialog alert = builder.create();
 		alert.show();
-	}
-
-	public void onArticleSelected(Intent intent){
-
 	}
 
 	/**
@@ -947,6 +892,7 @@ public class MapMain extends AppCompatActivity implements
 		if (data != null && data.getExtras() != null
 				&& data.getExtras().containsKey("city_coordinates")) {
 			cityCoordinates = data.getExtras().getString("city_coordinates");
+			assert cityCoordinates != null;
 			String lon = cityCoordinates.substring(
 					cityCoordinates.indexOf("(") + 1,
 					cityCoordinates.indexOf(" "));
@@ -964,6 +910,7 @@ public class MapMain extends AppCompatActivity implements
 		}
 		if (resultCode == TGT_POI || resultCode == TGT_EQ_SRC) {
 			cleanMap();
+			assert data != null;
 			routeTime = data.getExtras().getDouble("time");
 			cultureScore = data.getExtras().getInt("culture");
 			natureScore = data.getExtras().getInt("nature");
@@ -1001,6 +948,7 @@ public class MapMain extends AppCompatActivity implements
 				|| resultCode == ONE_LOCATION_TGT_POI
 				|| resultCode == TWO_LOCATIONS) {
 			cleanMap();
+			assert data != null;
 			routeTime = data.getExtras().getDouble("time");
 			cultureScore = data.getExtras().getInt("culture");
 			natureScore = data.getExtras().getInt("nature");
@@ -1065,6 +1013,7 @@ public class MapMain extends AppCompatActivity implements
 						.getDefaultSharedPreferences(getApplicationContext());
 				wst.addNameValuePair("transport",
 						pref.getString("transport", "fo_"));
+				assert data != null;
 				Bundle bundle = data.getExtras();
 				wst.addNameValuePair("count",
 						String.valueOf(bundle.getInt("count")));
@@ -1080,7 +1029,7 @@ public class MapMain extends AppCompatActivity implements
 							String.valueOf(row.getScore() * 20));
 					i++;
 				}
-				wst.execute(new String[]{ROUTE_SERVICE_URL});
+				wst.execute(ROUTE_SERVICE_URL);
 				recommendedPois = true;
 			} else {
 				if (resultCode == EXPRESS_ROUTE) {
@@ -1099,26 +1048,10 @@ public class MapMain extends AppCompatActivity implements
 
 		if (resultCode == SHOW_SAVE_ROUTE) {
 			cleanMap();
+			assert data != null;
 			loadCoordinates = data.getExtras().getString("load_coordinates");
 			handleResponse(loadCoordinates);
 		}
-		/*
-		if (resultCode == SHOW_MAP){
-			String filepath = Environment.getExternalStorageDirectory() +
-					"/tourplanner/maps/" + data.getExtras().getString("map_name") + ".map";
-			mapView.setMapFile(new File(filepath));
-			mapView.getM
-			mapView.setClickable(true);
-			mapView.setBuiltInZoomControls(true);
-
-			setContentView(mapView);
-			itemizedOverlay = new MapMain.MyItem(getResources().getDrawable(
-					R.drawable.marker_red));
-
-			mapView.getOverlays().add(itemizedOverlay);
-		}*/
-
-
 	}
 
 	/**
@@ -1156,14 +1089,14 @@ public class MapMain extends AppCompatActivity implements
 					categories += cat + ",";
 				}
 			} catch (ClassCastException e) {
-
+				e.printStackTrace();
 			}
 		}
 		if (categories.length() != 0) {
 			categories = categories.substring(0, categories.length() - 1);
 		}
 		wst.addNameValuePair("setOfTags", categories);
-		wst.execute(new String[] { ITINERARY_SERVICE_URL });
+		wst.execute(ITINERARY_SERVICE_URL);
 
 	}
 
@@ -1198,9 +1131,9 @@ public class MapMain extends AppCompatActivity implements
 					if (json.getJSONArray("photos").length() > 0){
 						JSONArray photos = json.getJSONArray("photos");
 						JSONObject photo;
-						imageUrls = new ArrayList<String>();
-						authors = new ArrayList<String>();
-						authorsUrl = new ArrayList<String>();
+						imageUrls = new ArrayList<>();
+						authors = new ArrayList<>();
+						authorsUrl = new ArrayList<>();
 						for (int i = 0; i < photos.length(); i++){
 							photo = photos.getJSONObject(i);
 							imageUrls.add(photo.getString("photo_file_url"));
@@ -1225,9 +1158,7 @@ public class MapMain extends AppCompatActivity implements
 						textDistance.setVisibility(TextView.INVISIBLE);
 					}
 
-				} catch (JSONException e) {
-					e.printStackTrace();
-				} catch (NullPointerException e) {
+				} catch (JSONException | NullPointerException e) {
 					e.printStackTrace();
 				}
 
@@ -1240,7 +1171,7 @@ public class MapMain extends AppCompatActivity implements
 	public void handleResponse(String response) {
 		try {
 			RoadManager roadManager = new OSRMRoadManager(this);
-			ArrayList<GeoPoint> wayPois;
+			ArrayList wayPois;
 			JSONParser parser = new JSONParser(response, itemizedOverlay,MapMain.this);
 			if (response.equals("")) {
 				return;
@@ -1289,7 +1220,7 @@ public class MapMain extends AppCompatActivity implements
 						.getDefaultSharedPreferences(getApplicationContext());
 				SharedPreferences.Editor edit = pref.edit();
 				edit.putString("last_map", jso.getString("city_name"));
-				edit.commit();
+				edit.apply();
 			} else {
 				coordinates = response;
 			}
@@ -1301,25 +1232,7 @@ public class MapMain extends AppCompatActivity implements
 			} else {
 				color = Color.RED;
 			}
-			/*
-			Paint routePaint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
-			routePaint1.setStyle(Paint.Style.STROKE);
-			routePaint1.setColor(color);
-			routePaint1.setAlpha(160);
-			routePaint1.setStrokeWidth(7);
-			routePaint1.setStrokeCap(Paint.Cap.BUTT);
-			routePaint1.setStrokeJoin(Paint.Join.ROUND);
-			routePaint1.setPathEffect(new DashPathEffect(
-					new float[] { 20, 20 }, 0));
 
-			Paint routePaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-			routePaint2.setStyle(Paint.Style.STROKE);
-			routePaint2.setColor(color);
-			routePaint2.setAlpha(96);
-			routePaint2.setStrokeWidth(7);
-			routePaint2.setStrokeCap(Paint.Cap.BUTT);
-			routePaint2.setStrokeJoin(Paint.Join.ROUND);
-			*/
 			Polyline routeOverlay = route;
 			routeOverlay.getPaint().setStyle(Paint.Style.STROKE);
 			routeOverlay.getPaint().setColor(color);
@@ -1404,12 +1317,12 @@ public class MapMain extends AppCompatActivity implements
 				+ Math.sin(lat1) * Math.sin(lat2));
 
 		// Formateamos la distancia para mostrarla s�lo cuando tengamos la m�nima.
-		if (ok == true){
+		if (ok){
 			DecimalFormat df = new DecimalFormat("0.00");
 			df.format(poiDistance);
 
-			String measure = "km";
-			String distance = "";
+			String measure;
+			String distance;
 			if (poiDistance < 1){
 				measure = "m";
 				poiDistance *= 1000;
@@ -1450,7 +1363,7 @@ public class MapMain extends AppCompatActivity implements
 	 * @return lista de coordenadas.
 	 */
 	private List<String> getItineraryCoordinates() {
-		List<String> coordinates = new ArrayList<String>();
+		List<String> coordinates = new ArrayList<>();
 		for (RowItineraryList row : rowsItinerary) {
 			coordinates.add(row.getCoordinates());
 		}
@@ -1466,7 +1379,7 @@ public class MapMain extends AppCompatActivity implements
 	 */
 	@SuppressWarnings("static-access")
 	private List<OverlayItem> sortPois(JSONArray listOfPois) {
-		List<OverlayItem> items = new ArrayList<OverlayItem>();
+		List<OverlayItem> items = new ArrayList<>();
 		try {
 			RowItineraryList[] rows = new RowItineraryList[listOfPois.length()];
 			int cont = 0;
@@ -1534,20 +1447,20 @@ public class MapMain extends AppCompatActivity implements
 					cont++;
 					itemizedOverlay.getDisplayedItems().add(item);
 				} else {
-					for (int j = 0; j < rowsItinerary.length; j++) {
-						if (rowsItinerary[j].getPoiId() == id) {
-							rows[cont] = rowsItinerary[j];
+					for (RowItineraryList rowItineraryList : rowsItinerary) {
+						if (rowItineraryList.getPoiId() == id) {
+							rows[cont] = rowItineraryList;
 							double lati5Int = Double
-									.parseDouble(rowsItinerary[j]
+									.parseDouble(rowItineraryList
 											.getCoordinates().substring(
 													0,
-													rowsItinerary[j]
+													rowItineraryList
 															.getCoordinates()
 															.indexOf(" ")));
 							double lati5Int2 = Double
-									.parseDouble(rowsItinerary[j]
+									.parseDouble(rowItineraryList
 											.getCoordinates().substring(
-													rowsItinerary[j]
+													rowItineraryList
 															.getCoordinates()
 															.indexOf(" ") + 1));
 							;
@@ -1558,11 +1471,11 @@ public class MapMain extends AppCompatActivity implements
 							rows[cont].setCoordinates(coordinates);
 							cont++;
 							GeoPoint gPoint = new GeoPoint(latiE62, latiE6);
-							OverlayItem item = new OverlayItem(rowsItinerary[j].getTextName(),String.valueOf(cont - 1),gPoint);
+							OverlayItem item = new OverlayItem(rowItineraryList.getTextName(), String.valueOf(cont - 1), gPoint);
 							//item.setSnippet(String.valueOf(cont - 1));
 							//item.setPoint(gPoint);
 							item.setMarker(itemizedOverlay
-									.boundToHotspot(getResources().getDrawable((rowsItinerary[j].getImageTagResId())),
+									.boundToHotspot(getResources().getDrawable((rowItineraryList.getImageTagResId())),
 											OverlayItem.HotspotPlace.CENTER));
 							items.add(item);
 							break;
@@ -1585,7 +1498,7 @@ public class MapMain extends AppCompatActivity implements
 	 * @return lista de Geopoints
 	 */
 	private List<GeoPoint> geoPointsListFromHugeString(String hugeString) {
-		List<GeoPoint> poly = new ArrayList<GeoPoint>();
+		List<GeoPoint> poly = new ArrayList<>();
 		String[] data;
 		double lati5Int, lati5Int2;
 		int latiE6, latiE62;
@@ -1711,7 +1624,7 @@ public class MapMain extends AppCompatActivity implements
 				convertedObjects[i] = (T) objects[i];
 			}
 		} catch (ClassCastException e) {
-
+			e.printStackTrace();
 		}
 
 		return convertedObjects;
@@ -1738,6 +1651,7 @@ public class MapMain extends AppCompatActivity implements
 				final String providerName = values
 						.getString(SocialAuthAdapter.PROVIDER);
 				Log.d("ShareButton", "Provider Name = " + providerName);
+				assert providerName != null;
 				if (providerName.equals("facebook") || providerName.equals("twitter")){
 					String ruta = "He realizado una ruta con #TourPlannerApp y he visitado ";
 					int culture = 0, gastronomy = 0, nature = 0, leisure = 0;
@@ -1872,9 +1786,6 @@ public class MapMain extends AppCompatActivity implements
 				urlConnection.connect();
 				InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 				image = BitmapFactory.decodeStream(in);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -58,11 +58,9 @@ public class WikilocationTask extends AsyncTask<String, Void, String> {
 
 				result = inputStreamToString(response.getEntity().getContent());
 
-			} catch (IllegalStateException e) {
+			} catch (IllegalStateException | IOException e) {
 				Log.e(TAG, e.getLocalizedMessage(), e);
 
-			} catch (IOException e) {
-				Log.e(TAG, e.getLocalizedMessage(), e);
 			}
 
 		}
@@ -83,8 +81,6 @@ public class WikilocationTask extends AsyncTask<String, Void, String> {
 		HttpResponse response = null;
 		try {
 			response = httpClient.execute(httpGet);
-		} catch (ClientProtocolException e) {
-			Log.e(TAG, e.getLocalizedMessage(), e);
 		} catch (IOException e) {
 			Log.e(TAG, e.getLocalizedMessage(), e);
 		}

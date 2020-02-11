@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  * 
  * @author Alejandro Cuevas �lvarez.
  * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  * 
  * */
 public class GalleryActivity extends androidx.fragment.app.Fragment {
@@ -49,6 +50,12 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 		return inflater.inflate(R.layout.gallery_view, container, false);
 	}
 
+	/**
+	 * Metodo que se invoca cuando la actividad es creada.
+	 *
+	 * @param savedInstanceState
+	 *            Bundle que contiene el estado de ejecuciones pasadas.
+	 */
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -57,11 +64,6 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 		imageUrls = getArguments().getStringArrayList("imageUrls");
 		authors = getArguments().getStringArrayList("authors");
 		authorsUrl = getArguments().getStringArrayList("authorsUrl");
-
-		//Bundle bundle = getIntent().getExtras();
-		//imageUrls = bundle.getStringArrayList("imageUrls");
-		//authors = bundle.getStringArrayList("authors");
-		//authorsUrl = bundle.getStringArrayList("authorsUrl");
 
 		final ImageLoader imageLoader = ImageLoader.getInstance();
 		imageLoader.init(ImageLoaderConfiguration.createDefault(view.getContext()));
@@ -84,11 +86,6 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 			args.putStringArrayList("authorUrls", authorsUrl);
 			FullScreenViewActivity fScreen = new FullScreenViewActivity();
 			fScreen.setArguments(args);
-			//Intent i = new Intent(GalleryActivity.this, FullScreenViewActivity.class);
-			//i.putExtra("position", position);
-			//i.putExtra("imageUrls", imageUrls);
-			//i.putExtra("authors", authors);
-			//i.putExtra("authorUrls", authorsUrl);
 			imageLoader.destroy();
 
 			fManager.beginTransaction()
@@ -97,51 +94,4 @@ public class GalleryActivity extends androidx.fragment.app.Fragment {
 		});
 
 	}
-/*
-	/**
-	 * Metodo que se invoca cuando la actividad es creada.
-	 * 
-	 * @param savedInstanceState
-	 *            Bundle que contiene el estado de ejecuciones pasadas.
-	 *//*
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gallery_view);
-		setContentView(R.layout.gallery_view);
-		
-		Bundle bundle = getIntent().getExtras();
-		imageUrls = bundle.getStringArrayList("imageUrls");
-		authors = bundle.getStringArrayList("authors");
-		authorsUrl = bundle.getStringArrayList("authorsUrl");
-	
-		final ImageLoader imageLoader = ImageLoader.getInstance();
-		imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-
-		@SuppressWarnings("deprecation")
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.cacheInMemory()
-		.cacheOnDisc()
-		.bitmapConfig(Bitmap.Config.RGB_565)
-		.build();
-
-		GridView gridView = (GridView) findViewById(R.id.gridview);
-		gridView.setAdapter(new GalleryAdapter(imageUrls, options, this, imageLoader));
-		gridView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				 Intent i = new Intent(GalleryActivity.this, FullScreenViewActivity.class);
-		         i.putExtra("position", position);
-		         i.putExtra("imageUrls", imageUrls);
-		         i.putExtra("authors", authors);
-		         i.putExtra("authorUrls", authorsUrl);
-		         imageLoader.destroy();
-		         startActivity(i);
-				
-			}
-		});
-
-	}*/
 }

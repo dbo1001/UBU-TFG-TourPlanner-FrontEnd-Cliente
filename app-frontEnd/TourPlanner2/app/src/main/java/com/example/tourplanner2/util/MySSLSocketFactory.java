@@ -17,7 +17,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-//import org.apache.http.conn.ssl.SSLSocketFactory;
 /**
  * SSLSocketFactory personalizada para aceptar certificados SSL.
  * 

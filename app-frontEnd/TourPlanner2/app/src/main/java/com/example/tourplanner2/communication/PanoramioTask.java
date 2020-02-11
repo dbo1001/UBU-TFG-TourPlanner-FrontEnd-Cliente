@@ -57,10 +57,7 @@ public class PanoramioTask extends AsyncTask<String, Void, String> {
 		} else {
 			try {
 				result = inputStreamToString(response.getEntity().getContent());
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (IllegalStateException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -84,8 +81,6 @@ public class PanoramioTask extends AsyncTask<String, Void, String> {
 		HttpResponse response = null;
 		try {
 			response = httpClient.execute(httpGet);
-		} catch (ClientProtocolException e) {
-			Log.e(TAG, e.getLocalizedMessage(), e);
 		} catch (IOException e) {
 			Log.e(TAG, e.getLocalizedMessage(), e);
 		}
