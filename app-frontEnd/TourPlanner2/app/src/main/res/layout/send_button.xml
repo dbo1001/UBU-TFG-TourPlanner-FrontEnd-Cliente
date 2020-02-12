@@ -7,8 +7,9 @@
         android:id="@+id/btnEnviar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/GhostWhite"
         android:text="@string/sendButton" 
         android:background="@drawable/action"
-        android:backgroundTint="@color/Orange"/>
+        android:backgroundTint="@color/colorPrimaryDark"/>
 
 </RelativeLayout>

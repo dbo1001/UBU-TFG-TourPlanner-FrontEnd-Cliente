@@ -9,19 +9,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/my_shape"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/GhostWhite"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/GhostWhite"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView1"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -63,12 +63,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/GhostWhite"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView1"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -89,13 +89,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/GhostWhite"
             android:layout_marginTop="3dp"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView1"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -114,12 +114,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/GhostWhite"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textViewTargetOptions"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -145,14 +145,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/GhostWhite"
             android:orientation="vertical"
             android:layout_marginTop="3dp"
             android:layout_marginBottom="5dp" >
 
             <TextView
                 android:id="@+id/textView1"
-                android:textColor="@color/GhostWhite"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -176,8 +176,9 @@
                 android:id="@+id/btnEnviar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/GhostWhite"
                 android:layout_alignParentBottom="true"
-                android:backgroundTint="@color/Orange"
+                android:backgroundTint="@color/colorPrimaryDark"
                 android:background="@drawable/action"
                 android:text="@string/plan" />
         </RelativeLayout>

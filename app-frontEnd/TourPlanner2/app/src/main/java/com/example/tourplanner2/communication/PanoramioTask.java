@@ -14,7 +14,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 /**
- * 
+ * Clase que se mantiene en el codigo para favorecer la comprension de la estructura, pero que no
+ * tiene utilidad, ya que esta inactiva. Las llamadas tambien se mantienen
+ *
  * */
 public class PanoramioTask extends AsyncTask<String, Void, String> {
 	/**

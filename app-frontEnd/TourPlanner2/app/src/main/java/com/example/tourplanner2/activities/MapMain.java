@@ -107,6 +107,7 @@ import java.util.List;
  * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  * @author Alejandro Cuevas �lvarez.
  * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  *
  */
 public class MapMain extends AppCompatActivity implements
@@ -459,7 +460,7 @@ public class MapMain extends AppCompatActivity implements
 	private void loadMaps() {
 		GeoPoint burgos = new GeoPoint(42.3499677, -3.6822051);
 
-		myOpenMapView = (MapView) findViewById(R.id.openmapview);
+		myOpenMapView = findViewById(R.id.openmapview);
 		myOpenMapView.setBuiltInZoomControls(true);
 		myMapController = (MapController) myOpenMapView.getController();
 		myMapController.setCenter(burgos);
@@ -468,7 +469,7 @@ public class MapMain extends AppCompatActivity implements
 		myOpenMapView.setMultiTouchControls(true);
 
 		// Añadir un punto en el mapa
-		points.add(new OverlayItem("Madrid", "Ciudad de Madrid", burgos));
+		points.add(new OverlayItem("Burgos", "Ciudad de Burgos", burgos));
 		updatePoints();
 	}
 
@@ -639,7 +640,7 @@ public class MapMain extends AppCompatActivity implements
 			wst.addNameValuePair("latitude", locationService.getLatitude());
 			wst.addNameValuePair("longitude", locationService.getLongitude());
 
-			wst.execute(new String[] { GET_CITY_SERVICE });
+			wst.execute(GET_CITY_SERVICE);
 		}
 	}
 

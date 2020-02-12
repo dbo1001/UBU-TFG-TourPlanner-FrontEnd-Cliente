@@ -18,6 +18,7 @@ import com.example.tourplanner2.util.RowListView;
  * 
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  */
 public class OptionsAdapter extends ArrayAdapter<RowListView> {
 	/**

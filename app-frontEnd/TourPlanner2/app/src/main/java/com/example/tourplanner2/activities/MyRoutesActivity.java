@@ -63,6 +63,7 @@ import androidx.annotation.Nullable;
  * 
  * @author Alejandro Cuevas �lvarez. 
  * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  */
 @SuppressLint("SimpleDateFormat")
 public class MyRoutesActivity extends androidx.fragment.app.Fragment

@@ -30,7 +30,7 @@
                 android:clickable="true"
                 android:text="@string/rememberPassword"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/DodgerBlue" />
+                android:textColor="@color/colorPrimary" />
 
     <Button
         android:id="@+id/btnEnviar"

@@ -35,9 +35,10 @@
     <Button
         android:id="@+id/btnEnviar"
         android:layout_width="match_parent"
+        android:textColor="@color/GhostWhite"
         android:layout_height="wrap_content"
         android:background="@drawable/action_profile"
-        android:backgroundTint="@color/Orange"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/register" />
 
 </LinearLayout>

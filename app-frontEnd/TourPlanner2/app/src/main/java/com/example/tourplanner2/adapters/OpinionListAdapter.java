@@ -12,6 +12,13 @@ import android.widget.TextView;
 import com.example.tourplanner2.R;
 import com.example.tourplanner2.util.OpinionItem;
 
+/**
+ * Clase implementa el adaptador del OpinionListAdapter.
+ *
+ * @author Alejandro Cuevas �lvarez.
+ * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
+ */
 public class OpinionListAdapter extends ArrayAdapter<OpinionItem> {
 	/**
 	 * Contexto de la activity.

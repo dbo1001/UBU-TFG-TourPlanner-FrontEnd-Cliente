@@ -21,6 +21,8 @@
     <string name="map_activity">TourPlanner2</string>
     <string name="fast">Rápida</string>
     <string name="exhaustive">Exhaustiva</string>
+    <string name="algoritm1">Colonia Hormigas</string>
+    <string name="algoritm2">Evolutivo</string>
     <string name="originEqTarget">Origen y destino iguales</string>
     <string name="leisurePoi">Punto de interes de ocio</string>
     <string name="culturePoi">Punto de interes de cultura</string>

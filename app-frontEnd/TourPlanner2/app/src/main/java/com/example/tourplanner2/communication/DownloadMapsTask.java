@@ -31,6 +31,7 @@ import androidx.core.util.Pair;
  * 
  * @author Alejandro Cuevas �lvarez. 
  * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  */
 public class DownloadMapsTask extends AsyncTask<String, Integer, String> {
 	/**

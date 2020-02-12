@@ -33,11 +33,12 @@
             android:id="@+id/dialogButtonAccept"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/GhostWhite"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="63dp"
             android:background="@drawable/poi_info"
-            android:backgroundTint="@color/Orange"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/accept" />
 
         <Button

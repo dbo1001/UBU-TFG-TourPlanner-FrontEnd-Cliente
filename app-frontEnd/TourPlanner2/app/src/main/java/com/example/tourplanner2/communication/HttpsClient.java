@@ -10,6 +10,11 @@ import org.apache.http.params.HttpParams;
 
 import com.example.tourplanner2.util.SSLFactory;
 
+/**
+ * Clase que anteriormente realizaba la conexion, y que al estar deprecated queda comentada hasta localizar sustitucion valida
+ *
+ *
+ */
 public class HttpsClient extends DefaultHttpClient{
 	
 	public HttpsClient(HttpParams params){

@@ -37,6 +37,7 @@ import javax.net.ssl.X509TrustManager;
  * 
  * @author Inigo Vázquez - Roberto Villuela
  * @author ivg0007@alu.ubu.es - rvu0003@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  */
 public class WebServiceTask extends AsyncTask<String, Integer, String> {
 	/**
@@ -152,11 +153,11 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> {
 
 		String stringUrl = urls[0];
 		//Conexion por HTTPS
-		HttpsURLConnection urlHttpsConnection = null;
+		HttpsURLConnection urlHttpsConnection;
 		String result = null;
 		String inputLine;
 
-		HttpURLConnection connection = null;
+		HttpURLConnection connection;
 		
 		try {
 			//Create a URL object holding our url

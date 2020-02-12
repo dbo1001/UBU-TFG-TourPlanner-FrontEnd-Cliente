@@ -71,17 +71,22 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 
 		final String[] data = new String[] {
 				getResources().getString(R.string.fast),
-				getResources().getString(R.string.exhaustive) };
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(view.getContext().getApplicationContext());
+				getResources().getString(R.string.exhaustive),
+				getResources().getString(R.string.algoritm1),
+				getResources().getString(R.string.algoritm2)};
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(view.getContext().getApplicationContext());
 		TextView textView = (view.findViewById(R.id.textViewRoutingOptions));
 		final DialogTextView dialog = new DialogTextView(getActivity(), data, textView);
 		dialog.setTitle(getResources().getString(R.string.selectMode));
 		if (pref.getString("route_mode", "fast").equals("fast")) {
 
 			textView.setText(getResources().getString(R.string.fast));
-		} else {
+		} else if (pref.getString("route_mode", "exhaustive").equals("exhaustive")){
 			textView.setText(getResources().getString(R.string.exhaustive));
+		} else if (pref.getString("route_mode", "algoritm1").equals("algoritm1")){
+			textView.setText(getResources().getString(R.string.algoritm1));
+		} else{
+			textView.setText(getResources().getString(R.string.algoritm2));
 		}
 
 		textView.setOnClickListener(v -> dialog.show());
@@ -93,8 +98,14 @@ public class AdvancedOptionsActivity extends androidx.fragment.app.Fragment {
 					if (data[arg2].equals(getResources().getString(
 							R.string.fast))) {
 						edit.putString("route_mode", "fast");
-					} else {
+					} else if (data[arg2].equals(getResources().getString(
+							R.string.exhaustive))){
 						edit.putString("route_mode", "exhaustive");
+					} else if (data[arg2].equals(getResources().getString(
+							R.string.algoritm1))){
+						edit.putString("route_mode", "algoritm1");
+					} else{
+						edit.putString("route_mode", "algoritm2");
 					}
 					edit.apply();
 					((TextView) view.findViewById(R.id.textViewRoutingOptions))

@@ -18,7 +18,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  * Clase que implementa el adaptador del GridView de la galeria de fotos.
  * 
  * @author Alejandro Cuevas �lvarez.
- * @author aca0073@alu.ubu.es 
+ * @author aca0073@alu.ubu.es
+ * @author Jesús Manuel Calvo Ruiz de Temiño - jcr0069@alu.ubu.es
  * 
  * */
 public class GalleryAdapter extends BaseAdapter {

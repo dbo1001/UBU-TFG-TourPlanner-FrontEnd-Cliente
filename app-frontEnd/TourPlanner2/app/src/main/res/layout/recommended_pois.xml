@@ -20,7 +20,7 @@
         android:text="@string/calculateIterary"
         android:layout_alignParentBottom="true"
         android:visibility="invisible"
-        android:background="@drawable/action"/>
+        android:background="@color/colorPrimaryDark"/>
 
     <ListView
         android:id="@+id/listViewRecommendPois"

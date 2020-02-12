@@ -33,9 +33,10 @@
         <Button
             android:id="@+id/buttonDialogSend"
             android:layout_width="fill_parent"
+            android:textColor="@color/GhostWhite"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/action_rating"
+            android:background="@color/colorPrimaryDark"
             android:text="@string/broadcast" />
     </LinearLayout>
 
