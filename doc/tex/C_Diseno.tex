@@ -28,19 +28,45 @@ Igualmente, el modelo de datos, las tablas generales y la tabla que almacena las
 
 La estructura de paquetes del servidor ha trabajo realizado en el proyecto complementario de BackEnd \cite{tfg2}, para la cual se han realizado modificaciones con respecto a lo anterior, aunque manteniendo una estructura general bastante parecida. 
 
-Los cambios más relevantes en esta estructura son los referentes al añadido de nuevos algoritmos de cálculo de rutas y también a la implementación de nuevas estructura con herencia. Estos cambios se pueden ver en las siguientes imágenes que pertenecen al proyecto que se menciona, por lo que si se quiere información más detallada es preferible acceder directamente a este.
+Los cambios más relevantes en esta estructura son los referentes al añadido de nuevos algoritmos de cálculo de rutas y también a la implementación de nuevas estructura con herencia. Estos cambios se pueden ver en las siguientes imágenes que pertenecen al proyecto que se menciona, por lo que si se quiere información más detallada es preferible acceder directamente a este citado anteriormente.
 
 \subsection{Estructura de paquetes del cliente}
 
 Ésta parte tendrá mas detalle que la anterior, ya que este proyecto se ha centrado en la interfaz de la aplicación y por tanto también se han hecho modificaciones en la estructura de paquetes de la misma.
 
+La estructura general de paquetes que afecta al grueso de la aplicación es igual:
+
+\imagen{estructuraGrande}{Estructura de paquetes general del cliente}
+
+\imagen{estructuraGrande2}{Estructura de paquetes en Android Studio}
+
 \subsubsection{Paquete activities}
+
+Este paquete ha recibido modificaciones en su interior, pero no son muy notables estructuralmente:
+
+\imagen{estruActivities}{Estructura del paquete Activities}
+
+Como se puede ver, el cambio que se ha realizado con respecto a la anterior estructura ha sido la clase de MapMain, que ha pasado a sustituir a MapSimple. Por lo demás en cuanto a estructura no ha habido mayor diferencia.
+
+Cabe mencionar que aunque no sean cambios estructurales, es importante destacar que todas estas clases han sido modificadas internamente, debido a cambios en utilización de librería. En todas ellas también ha habido otro cambio notable excepto en MapMain, ya que han pasado a ser Fragments, cuando antes eran actividades.
 
 \subsubsection{Paquete adapters}
 
+En este caso, no ha habido cambios importantes, solamente los necesarios como en el resto de clases para que utilizaran librerías y métodos actualizados:
+
+\imagen{estruAdapters}{Estructura del paquete Adapters}
+
 \subsubsection{Paquete communication}
 
+Para este paquete, sí que se han modificado principalmente los servicios que utilizaban llamadas hacia los métodos obsoletos de la librería de Org.Apache, que será explicada más en profundidad en el anexo 4.
+
+\imagen{estruCommu}{Estructura del paquete Communication}
+
 \subsubsection{Paquete útil}
+
+Por último, el paquete de útil contiene la siguiente estructura:
+
+\imagen{estruUtil}{Estructura del paquete Útil}
 
 \subsection{Diagrama de despliegue}
 
@@ -52,13 +78,20 @@ El cliente realiza peticiones del tipo REST hacia el servidor. Para que esa peti
 
 \section{Diseño procedimental}
 
-\subsection{Diagramas de secuencia}
+En este apartado se trata de ver el funcionamiento de la aplicación a nivel de procesos, viendo cómo funcionan los métodos que se están utilizando y el flujo de funcionamiento general que posee el proyecto. Al contar con dos proyectos anteriores \cite{tfg1} \cite{tfm1}, este funcionamiento en cuanto a metodos y procesos no ha sido modificado, ya que este proyecto consistía en actualizar estos métodos que se estaban utilizando, así como asegurarse de que funcionen con las últimas librerías, pero no añadir funcionalidades. Por esta razón, si se quiere ver en detalle lo referente a diagramas de secuencia para entender el proceso que sigue esta aplicación, será preferible verlo en cualquiera de los otros dos proyectos anteriores.
+
+En este caso, sólo se mencionarán dos aspectos, que son:
+
+\begin{itemize}
+\item La clase que se muestra en la mayoría de diagramas de secuencia en estos proyectos (MapSimple) correspondía a la actividad principal. Ahora esta \textit{Actividad principal} será MapMain, ya que tiene una funcionalidad parecida a la que tenía MapSimple, pero habiendo modificado su interior.
+\item Como el resto de clases que antes eran utilizadas como actividades se han modificado para que sean fragmentos, los métodos que realizan las llamadas hacia ellas también han cambiado, pero no es algo que vaya a afectar de cara a estos diagramas de secuencia.
+\end{itemize} 
 
 \section{Diseño arquitectónico}
 
 En este apartado se pueden ver los distintos patrones de diseño que han sido aplicados sobre el código para lograr una estructura mucho mas homogénea y reutilizable a futuro.
 
-Como se comentó en el proyecto anterior, se aplicaron los patrones Singleton y Facade para dos partes distintas del desarrollo de la estructura del proyecto.
+Como se comentó en el proyecto anterior, se aplicaron los patrones Singleton \cite{sing} y Facade \cite{fac} para dos partes distintas del desarrollo de la estructura del proyecto.
 
 El patrón Facade se implementó para acceder al servicio de Panoramio, el cual ya no se encuentra activo, por lo que objetivamente no se está poniendo en práctica real para este proyecto. De todas formas, es un patrón perfectamente válido y una vez localizada una API que pueda sustituir los servicios prestados por Panoramio, se podría volver a aplicar sin ningún problema.
 

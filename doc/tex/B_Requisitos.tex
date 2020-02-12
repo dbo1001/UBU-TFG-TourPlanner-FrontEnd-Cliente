@@ -28,8 +28,91 @@ Los objetivo que definiremos para nuestro sistema serán los siguientes:
 \item Cabe mencionar que la aplicación esta orientada a dispositivos móviles o tabletas que utilicen el sistema operativo de Android.
 \end{itemize}
 
-\section{Catalogo de requisitos}
+\section{Catálogo de requisitos}
+
+En este apartado se verán los distintos requisitos del sistema. Cabe destacar que la aplicación contará con todos los requisitos de la version anterior \cite{tfm1}. En este caso se incluirán los requisitos más genéricos o importantes y algunos nuevos.
+
+\subsection{Requisitos generales del sistema}
+
+\begin{itemize}
+\item La aplicación debe utilizar una conexión segura a traves de HTTPS
+\item Se dará la posibilidad al usuario de mostrar tu ubicación en el mapa cuando él quiera a través de un botón.
+\item Se dará la posibilidad al usuario de filtrar puntos de interés a la hora de realizar una ruta a su gusto mediante un buscador y de esa forma, agilizar la creación de la ruta.
+\item Se dará la posibilidad al usuario de eliminar las rutas almacenadas y los mapas descargados.
+\item La aplicación realizará comprobaciones sobre los permisos para acceder a servicios como el GPS.
+\item La aplicación será capaz de realizar mensajes de tipo JSON para poder comunicarse con el servidor.
+\end{itemize}
+
+\subsection{Descripción de actores}
+
+Tal como se ha explicado anteriormente en conceptos teóricos, se está trabajando con un sistema cliente servidor, por lo que se tratará de un sistema multiusuario, ya que cualquiera debe poder acceder a la aplicación y lanzar peticiones hacia el servidor. No hay restricciones entre usuarios.
+
+\subsection{Restricciones de requisitos}
+
+Para este proyecto ha habido una serie de requisitos que poseen restricciones o no ha sido posible implementarlos correctamente debido a las complicaciones durante el desarrollo.
+
+\begin{itemize}
+\item Obtención de imágenes sobre un punto de interés, no se podrá realizar a través de la API de Panoramio.
+\item La aplicación requiere que la localización GPS se encuentre habilitada, en caso contrario se mostrará un mensaje de error.
+\item La aplicación requiere que los permisos sobre la localización GPS estén concedidos, por el contrario los pedirá cuando se abra la aplicación o mostrará un mensaje de error.
+\item Para poder realizar cálculo de rutas, obtención de puntos de interés o acceso al usuario será necesaria conexión con el servidor.
+\item Sólo se podrán guardar rutas si el usuario esta autentificado en e servidor.
+\item Sólo se puede acceder al buscador de los puntos de interés desde la propia pestaña y teniendo conexión con el servidor.
+\end{itemize}
+
+\subsection{Requisitos no funcionales}
+
+Todos aquellos requisitos que no son funcionales, aunque suponen un peso bastante grande dentro de la funcionalidad de la aplicación.
+
+\begin{itemize}
+\item Esta aplicación se deberá poder ejecutar en cualquier dispositivo movil o tableta que posea desde la versión Android 6.0 (API 23) hasta la última versión disponible.
+\item La interfaz será amigable.
+\item La interfaz cumplirá con los estándares definidos por \textit{material design} \cite{matDes} de Android.
+\item El dispositivo en el que se instale tiene que contar con localización GPS, aunque en caso de no tener se aporta una localización por defecto.
+\item La aplicación funcionará de manera fluida, sin tener cortes ni tiempos de espera demasiado largos.
+\item La aplicación asegurará la privacidad y la seguridad de los datos de los usuarios que la utilicen. 
+\end{itemize}
 
 \section{Especificación de requisitos}
 
+\subsection{Diagrama de casos de uso general}
 
+En esta sección se mostrarán los casos de uso que pueden suceder a cualquier usuario al utilizar la aplicación. Cabe destacar que como este proyecto está enfocado hacia la actualización y mantenimiento, prácticamente no habrá modificaciones en estos casos de uso en comparación al proyecto anterior. En algunos casos se señalarán aquellas funciones que han dejado de estar disponibles tras haber actualizado por falta de una sustitución.
+
+\subsubsection{Diagrama de caso de uso general}
+
+Cabe destacar que, aunque los nombres de algunas ventanas han sido modificados, los casos de uso se siguen aplicando para todo lo que aparecerá en la imagen:
+
+\imagen{diagramaGeneral}{diagrama general de casos de uso}
+
+Tras ver en este diagrama todas las ventanas con las que contamos, se pasará a explicar algunos casos de uso más particulares.
+
+\subsubsection{Caso de uso del buscador de puntos de interés}
+
+En esta sección se puede ver el diagrama en el que se basa el funcionamiento del buscador, que es bastante simple:
+
+\imagen{dgusto}{diagrama sobre la ventana del buscador de puntos de interés}
+
+También cabe destacar que para este proyecto, esta ventana posee otro nombre, que se corresponde con \textit{Buscador de puntos de interés}
+
+\subsubsection{Caso de uso de \textit{Mis Rutas}}
+
+Aquí se podrá ver el caso de uso referente a la ventana de mis rutas, donde será necesario estar identificado con un usuario.
+
+\imagen{misRutas}{Diagrama sobre la ventana \textit{Mis Rutas}}
+
+De este primer diagrama, se puede desarrollar un segundo, más detallado, para observar como trabaja la aplicación al guardar la ruta:
+
+\imagen{dGuardarRuta}{Diagrama sobre la funcionalidad de guardar rutas}
+
+También se podría desarrollar la funcionalidad de cargar rutas, pero sería la misma estructura, cambiando el caso de guardar por el de cargar.
+
+\subsubsection{Caso de uso de la información del punto}
+
+En este caso de uso se puede ver el diagrama que corresponde a la información de un punto de interés. Cabe destacar que en este diagrama la parte referente a la imagen del punto de interés se ha marcado con una X.
+
+\imagen{dinfoPunto}{Diagrama sobre la información del POI}
+
+\subsection{Plantillas de casos de uso}
+
+En este caso, se plantea un caso parecido al de los diagramas de casos de uso, con la diferencia de que las plantillas de casos de uso no han sufrido cambios realmente, por lo que serán las mismas que las que se podrían encontrar en el anterior proyecto \cite{tfm1}. Por esta razón, se decide no incluirlas y en caso de necesitas acceder a observar en qué consisten, bastará con visitar el anterior proyecto.

@@ -21,17 +21,11 @@ En este apartado se enumeran distintos contenidos que tendrá el USB entregable,
  	\begin{itemize}
 		\item Aplicación: dentro de esta subcarpeta se encuentra el archivo TourPlanner.apk, para que pueda ser instalado en cualquier dispositivo.
 		\item Código fuente: Contiene el código de la aplicación Android.
-		\item Javadoc: Documentación sobre la aplicación.
-		\item Datos: Contiene el archivo con las referencias utilizadas en el proyecto y un backup con la base de datos PostgreSQL de Burgos configurada.
 		\item Máquina virtual: Dentro tendremos la máquina virtual donde estará instalado Android Studio y se podrá utilizar sin tener que hacer más instalaciones.
 		\end{itemize}
 		
 \item Servidor
  	\begin{itemize}
-		\item Aplicación: Contiene el archivo osm server.war para que se pueda utilizar en cualquier momento.
-		\item Código fuente: Contiene el código fuente de la aplicación servidor.
-		\item Javadoc: Contiene la documentación de la aplicación servidor.
-		\item Datos: Archivo con las referencias utilizadas en el proyecto y un backup con la base de datos PostgreSQL de Burgos configurada.
 		\item contiene la máquina virtual del servidor configurada para ser utilizada.
 		\end{itemize}
 		
@@ -243,8 +237,30 @@ En esta ventana simplemente se selecciona el modelo de dispositivo móvil que se
 
 \subsection{Compilación}
 
+Este apartado estará centrado en la compilación de cliente, para que la aplicación pueda ser utilizada por cualquier dispositivo sin dificultades.
 
+Como se explica en la memoria de la primera versión de este proyecto \cite{tfg1}, en el proyecto TourPlanner se encuentra un archivo llamado \textit{connection settings} en el directorio res -> raw, en el cual hay que establecer los campos ip y port con la dirección IP y puerto del servidor.
+
+Dentro de Android Studio, cuando el proyecto se encuentre en condiciones de ser utilizado como una APK definitiva, será necesario acceder a la siguiente configuración:
+
+\imagen{androidApk1}{Selección para compilar el proyecto en APK}
+
+Después aparecerá un menú donde será necesario configurar la \textit{KeyStore}:
+
+\imagen{androidApk2}{Configuración de Key Store para compilar proyecto}
+
+Si no se dispone de una, será necesario crearla donde pedirá lo siguiente:
+
+\imagen{androidApk3}{Configuración de nueva Key Store}
+
+Por último, simplemente habrá que pulsar si se quiere una versión para hacer debug o una versión definitiva, con la configuración que se en esta última imagen:
+
+\imagen{androidApk4}{Configuración APK pantalla release o debug}
+
+Con esto último, ya estará generado el fichero .apk, que podrá ser instalado en cualquier dispositivo de Android.
 
 \subsection{Ejecución}
 
-\section{Pruebas del sistema}
+Para poder realizar la ejecución del emulador, tras haber realizado todas las configuraciones anteriores, será necesario pulsar en el siguiente botón, con lo que conseguiremos que se lance el emulador y la aplicación instalada y lanzada en él:
+
+\imagen{androidEjecutar}{Imagen del botón para ejecutar la aplicación desde Android Studio}
